@@ -1,0 +1,1659 @@
+{
+ "Score 2008": {
+  "year": 2008,
+  "courses": [
+   "Kristianstad",
+   "Lilla Vik",
+   "Lilla Vk",
+   "Halmstad Norra"
+  ],
+  "players": [
+   {
+    "name": "Stekarn",
+    "rounds": [
+     28,
+     32,
+     33,
+     23
+    ],
+    "total": 116,
+    "placering": 3
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     32,
+     33,
+     26,
+     null
+    ],
+    "total": 91,
+    "placering": 6
+   },
+   {
+    "name": "Vessla",
+    "rounds": [
+     31,
+     29,
+     34,
+     29
+    ],
+    "total": 123,
+    "placering": 2
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     31,
+     39,
+     36,
+     33
+    ],
+    "total": 139,
+    "placering": 1
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     33,
+     31,
+     26,
+     23
+    ],
+    "total": 113,
+    "placering": 4
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     31,
+     29,
+     36,
+     null
+    ],
+    "total": 96,
+    "placering": 5
+   }
+  ]
+ },
+ "Score 2009": {
+  "year": 2009,
+  "courses": [
+   "Gumbalde",
+   "Slite",
+   "Slite",
+   "Visby"
+  ],
+  "players": [
+   {
+    "name": "Krabba",
+    "rounds": [
+     34,
+     29,
+     37,
+     28
+    ],
+    "total": 128,
+    "placering": 1
+   },
+   {
+    "name": "Jorge",
+    "rounds": [
+     32,
+     28,
+     33,
+     32
+    ],
+    "total": 125,
+    "placering": 2
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     37,
+     24,
+     39,
+     23
+    ],
+    "total": 123,
+    "placering": 3
+   },
+   {
+    "name": "Stekarn",
+    "rounds": [
+     32,
+     27,
+     32,
+     27
+    ],
+    "total": 118,
+    "placering": 4
+   },
+   {
+    "name": "Vessla",
+    "rounds": [
+     34,
+     29,
+     30,
+     24
+    ],
+    "total": 117,
+    "placering": 5
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     24,
+     34,
+     30,
+     25
+    ],
+    "total": 113,
+    "placering": 6
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     28,
+     32,
+     32,
+     19
+    ],
+    "total": 111,
+    "placering": 7
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     26,
+     28,
+     26,
+     23
+    ],
+    "total": 103,
+    "placering": 8
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     32,
+     29,
+     21,
+     19
+    ],
+    "total": 101,
+    "placering": 9
+   }
+  ]
+ },
+ "Score 2010": {
+  "year": 2010,
+  "courses": [
+   "Holms",
+   "Tylösand",
+   "Tylösand",
+   "Ringenäs"
+  ],
+  "players": [
+   {
+    "name": "Stekarn",
+    "rounds": [
+     35,
+     29,
+     32,
+     30
+    ],
+    "total": 126,
+    "placering": 1
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     36,
+     30,
+     29,
+     26
+    ],
+    "total": 121,
+    "placering": 2
+   },
+   {
+    "name": "Vessla",
+    "rounds": [
+     29,
+     27,
+     28,
+     32
+    ],
+    "total": 116,
+    "placering": 3
+   },
+   {
+    "name": "Jorge",
+    "rounds": [
+     31,
+     27,
+     27,
+     28
+    ],
+    "total": 113,
+    "placering": 4
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     43,
+     21,
+     20,
+     25
+    ],
+    "total": 109,
+    "placering": 5
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     25,
+     25,
+     31,
+     22
+    ],
+    "total": 103,
+    "placering": 6
+   }
+  ]
+ },
+ "Score 2011": {
+  "year": 2011,
+  "courses": [
+   "North",
+   "South",
+   "West"
+  ],
+  "players": [
+   {
+    "name": "Kotte",
+    "rounds": [
+     39,
+     27,
+     27
+    ],
+    "total": 93,
+    "placering": 2
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     34,
+     38,
+     null
+    ],
+    "total": 72,
+    "placering": 4
+   },
+   {
+    "name": "Jorge",
+    "rounds": [
+     33,
+     38,
+     null
+    ],
+    "total": 71,
+    "placering": 5
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     31,
+     null,
+     42
+    ],
+    "total": 73,
+    "placering": 3
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     30,
+     32,
+     37
+    ],
+    "total": 99,
+    "placering": 1
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     25,
+     null,
+     null
+    ],
+    "total": 25,
+    "placering": 7
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     25,
+     21,
+     null
+    ],
+    "total": 46,
+    "placering": 6
+   }
+  ]
+ },
+ "Score 2012": {
+  "year": 2012,
+  "courses": [
+   "North",
+   "West",
+   "South"
+  ],
+  "players": [
+   {
+    "name": "Chuleta",
+    "rounds": [
+     31,
+     36,
+     null
+    ],
+    "total": 67,
+    "placering": 3
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     27,
+     33,
+     null
+    ],
+    "total": 60,
+    "placering": 4
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     30,
+     29,
+     30
+    ],
+    "total": 89,
+    "placering": 2
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     30,
+     29,
+     null
+    ],
+    "total": 59,
+    "placering": 5
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     24,
+     31,
+     42
+    ],
+    "total": 97,
+    "placering": 1
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     25,
+     27,
+     null
+    ],
+    "total": 52,
+    "placering": 6
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     24,
+     28,
+     null
+    ],
+    "total": 52,
+    "placering": 7
+   }
+  ]
+ },
+ "Score 2013": {
+  "year": 2013,
+  "courses": [
+   "Pormarnock GC",
+   "The Island",
+   "Pormarnock Links",
+   "Baltray"
+  ],
+  "players": [
+   {
+    "name": "Chuleta",
+    "rounds": [
+     20,
+     40,
+     null,
+     45
+    ],
+    "total": 105,
+    "placering": 1
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     26,
+     31,
+     null,
+     19
+    ],
+    "total": 76,
+    "placering": 6
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     29,
+     28,
+     null,
+     32
+    ],
+    "total": 89,
+    "placering": 3
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     20,
+     22,
+     null,
+     23
+    ],
+    "total": 65,
+    "placering": 7
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     28,
+     31,
+     null,
+     31
+    ],
+    "total": 90,
+    "placering": 2
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     32,
+     23,
+     null,
+     24
+    ],
+    "total": 79,
+    "placering": 4
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     26,
+     27,
+     null,
+     24
+    ],
+    "total": 77,
+    "placering": 5
+   }
+  ]
+ },
+ "Score 2014": {
+  "year": 2014,
+  "courses": [
+   "Dag1",
+   "Dag2",
+   "Dag3"
+  ],
+  "players": [
+   {
+    "name": "Chuleta",
+    "rounds": [
+     28,
+     36,
+     null
+    ],
+    "total": 64,
+    "placering": 6
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     31,
+     29,
+     20
+    ],
+    "total": 80,
+    "placering": 5
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     30,
+     null,
+     null
+    ],
+    "total": 30,
+    "placering": 8
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     25,
+     25,
+     31
+    ],
+    "total": 81,
+    "placering": 4
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     29,
+     34,
+     35
+    ],
+    "total": 98,
+    "placering": 1
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     null,
+     null,
+     31
+    ],
+    "total": 31,
+    "placering": 7
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     31,
+     33,
+     33
+    ],
+    "total": 97,
+    "placering": 2
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     30,
+     35,
+     32
+    ],
+    "total": 97,
+    "placering": 3
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     null,
+     null,
+     25
+    ],
+    "total": 25,
+    "placering": 9
+   }
+  ]
+ },
+ "Score 2015": {
+  "year": 2015,
+  "courses": [
+   "Stadium",
+   "Tour",
+   "Tour",
+   "Stadium "
+  ],
+  "players": [
+   {
+    "name": "Kotte",
+    "rounds": [
+     36,
+     35,
+     33,
+     28
+    ],
+    "total": 132,
+    "placering": 1
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     34,
+     null,
+     30,
+     29
+    ],
+    "total": 93,
+    "placering": 3
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     32,
+     null,
+     null,
+     28
+    ],
+    "total": 60,
+    "placering": 8
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     30,
+     26,
+     28,
+     20
+    ],
+    "total": 104,
+    "placering": 2
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     31,
+     null,
+     27,
+     20
+    ],
+    "total": 78,
+    "placering": 5
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     27,
+     null,
+     null,
+     24
+    ],
+    "total": 51,
+    "placering": 9
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     21,
+     27,
+     null,
+     29
+    ],
+    "total": 77,
+    "placering": 6
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     17,
+     null,
+     24,
+     23
+    ],
+    "total": 64,
+    "placering": 7
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     19,
+     23,
+     25,
+     16
+    ],
+    "total": 83,
+    "placering": 4
+   }
+  ]
+ },
+ "Score 2016": {
+  "year": 2016,
+  "courses": [
+   "Tour",
+   "Tour",
+   "Stadium ",
+   "Stadium "
+  ],
+  "players": [
+   {
+    "name": "Kotte",
+    "rounds": [
+     31,
+     28,
+     30,
+     29
+    ],
+    "total": 118,
+    "placering": 1
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 2
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 3
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 4
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 5
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 6
+   }
+  ]
+ },
+ "Score 2017": {
+  "year": 2017,
+  "courses": [
+   "Praia del Rey",
+   "Royal Obidos",
+   "Royal Obidos",
+   "West Cliffs"
+  ],
+  "players": [
+   {
+    "name": "Kotte",
+    "rounds": [
+     33,
+     35,
+     35,
+     27
+    ],
+    "total": 130,
+    "placering": 2
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     35,
+     34,
+     36,
+     31
+    ],
+    "total": 136,
+    "placering": 1
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     32,
+     39,
+     null,
+     24
+    ],
+    "total": 95,
+    "placering": 3
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     28,
+     29,
+     null,
+     28
+    ],
+    "total": 85,
+    "placering": 5
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     30,
+     34,
+     null,
+     28
+    ],
+    "total": 92,
+    "placering": 4
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     28,
+     26,
+     null,
+     23
+    ],
+    "total": 77,
+    "placering": 8
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     26,
+     34,
+     null,
+     25
+    ],
+    "total": 85,
+    "placering": 6
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     30,
+     23,
+     null,
+     24
+    ],
+    "total": 77,
+    "placering": 9
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     25,
+     29,
+     null,
+     25
+    ],
+    "total": 79,
+    "placering": 7
+   }
+  ]
+ },
+ "Score 2018": {
+  "year": 2018,
+  "courses": [
+   "Garda, Bianco & Rosso",
+   "Jack Nicklaus",
+   "Jack Nicklaus",
+   "Garda, Rosso & Giallo"
+  ],
+  "players": [
+   {
+    "name": "Kotte",
+    "rounds": [
+     37,
+     29,
+     34,
+     28
+    ],
+    "total": 128,
+    "placering": 1
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     38,
+     30,
+     30,
+     29
+    ],
+    "total": 127,
+    "placering": 2
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     32,
+     33,
+     32,
+     29
+    ],
+    "total": 126,
+    "placering": 3
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     31,
+     27,
+     31,
+     31
+    ],
+    "total": 120,
+    "placering": 4
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     30,
+     25,
+     29,
+     35
+    ],
+    "total": 119,
+    "placering": 5
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     31,
+     29,
+     26,
+     25
+    ],
+    "total": 111,
+    "placering": 6
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     31,
+     30,
+     27,
+     20
+    ],
+    "total": 108,
+    "placering": 7
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     27,
+     33,
+     20,
+     26
+    ],
+    "total": 106,
+    "placering": 8
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     27,
+     36,
+     20,
+     22
+    ],
+    "total": 105,
+    "placering": 9
+   }
+  ]
+ },
+ "Score 2019": {
+  "year": 2019,
+  "courses": [
+   "Pink Course",
+   "Yellow Course",
+   "Pink Course",
+   "Yellow Course"
+  ],
+  "players": [
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 1
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 2
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 3
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 4
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 5
+   },
+   {
+    "name": "Vessla",
+    "rounds": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "total": 0,
+    "placering": 6
+   }
+  ]
+ },
+ "Score 2020": {
+  "year": 2020,
+  "courses": [
+   "Master Course",
+   "Donald Steele",
+   "Donald Steele",
+   "Master Course"
+  ],
+  "players": [
+   {
+    "name": "Jet Set",
+    "rounds": [
+     38,
+     29,
+     18,
+     32
+    ],
+    "total": 117,
+    "placering": 1
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     36,
+     37,
+     11,
+     32
+    ],
+    "total": 116,
+    "placering": 2
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     28,
+     35,
+     22,
+     30
+    ],
+    "total": 115,
+    "placering": 3
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     33,
+     29,
+     15,
+     35
+    ],
+    "total": 112,
+    "placering": 4
+   },
+   {
+    "name": "Mad Dogg",
+    "rounds": [
+     31,
+     31,
+     16,
+     33
+    ],
+    "total": 111,
+    "placering": 5
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     24,
+     29,
+     10,
+     31
+    ],
+    "total": 94,
+    "placering": 6
+   },
+   {
+    "name": "Vessla",
+    "rounds": [
+     26,
+     25,
+     9,
+     27
+    ],
+    "total": 87,
+    "placering": 7
+   }
+  ]
+ },
+ "Score 2021": {
+  "year": 2021,
+  "courses": [
+   "Alcanada",
+   "Son Vida R1",
+   "Son Vida R2",
+   "Son Gual"
+  ],
+  "players": [
+   {
+    "name": "Chuleta",
+    "rounds": [
+     35,
+     28,
+     19,
+     34
+    ],
+    "total": 116,
+    "placering": 1
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     29,
+     31,
+     18,
+     32
+    ],
+    "total": 110,
+    "placering": 2
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     29,
+     34,
+     16,
+     28
+    ],
+    "total": 107,
+    "placering": 3
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     27,
+     29,
+     17,
+     26
+    ],
+    "total": 99,
+    "placering": 4
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     27,
+     29,
+     19,
+     23
+    ],
+    "total": 98,
+    "placering": 5
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     26,
+     21,
+     16,
+     31
+    ],
+    "total": 94,
+    "placering": 6
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     28,
+     23,
+     13,
+     23
+    ],
+    "total": 87,
+    "placering": 7
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     22,
+     25,
+     21,
+     18
+    ],
+    "total": 86,
+    "placering": 8
+   }
+  ]
+ },
+ "Score 2022": {
+  "year": 2022,
+  "courses": [
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "players": [
+   {
+    "name": "Krabba",
+    "rounds": [
+     30,
+     28,
+     32,
+     37
+    ],
+    "total": 127,
+    "placering": 1
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     28,
+     30,
+     32,
+     30
+    ],
+    "total": 120,
+    "placering": 2
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     26,
+     33,
+     29,
+     32
+    ],
+    "total": 120,
+    "placering": 3
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     24,
+     28,
+     26,
+     32
+    ],
+    "total": 110,
+    "placering": 4
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     30,
+     27,
+     24,
+     29
+    ],
+    "total": 110,
+    "placering": 5
+   },
+   {
+    "name": "Mädz",
+    "rounds": [
+     21,
+     24,
+     25,
+     28
+    ],
+    "total": 98,
+    "placering": 6
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     22,
+     25,
+     19,
+     21
+    ],
+    "total": 87,
+    "placering": 7
+   }
+  ]
+ },
+ "Score 2023": {
+  "year": 2023,
+  "courses": [
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "players": [
+   {
+    "name": "Krabba",
+    "rounds": [
+     34,
+     40,
+     39,
+     31
+    ],
+    "total": 144,
+    "placering": 1
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     43,
+     29,
+     32,
+     36
+    ],
+    "total": 140,
+    "placering": 2
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     35,
+     39,
+     32,
+     33
+    ],
+    "total": 139,
+    "placering": 3
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     36,
+     28,
+     32,
+     43
+    ],
+    "total": 139,
+    "placering": 4
+   },
+   {
+    "name": "Choke",
+    "rounds": [
+     28,
+     29,
+     37,
+     45
+    ],
+    "total": 139,
+    "placering": 5
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     37,
+     37,
+     34,
+     29
+    ],
+    "total": 137,
+    "placering": 6
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     28,
+     31,
+     40,
+     27
+    ],
+    "total": 126,
+    "placering": 7
+   },
+   {
+    "name": "Mädz",
+    "rounds": [
+     33,
+     31,
+     32,
+     26
+    ],
+    "total": 122,
+    "placering": 8
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     42,
+     29,
+     17,
+     27
+    ],
+    "total": 115,
+    "placering": 9
+   }
+  ]
+ },
+ "Score 2024": {
+  "year": 2024,
+  "courses": [
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "players": [
+   {
+    "name": "Krabba",
+    "rounds": [
+     33,
+     33,
+     42,
+     33
+    ],
+    "total": 141,
+    "placering": 3
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     30,
+     26,
+     36,
+     36
+    ],
+    "total": 128,
+    "placering": 5
+   },
+   {
+    "name": "Mädz",
+    "rounds": [
+     29,
+     26,
+     25,
+     23
+    ],
+    "total": 103,
+    "placering": 7
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     31,
+     37,
+     40,
+     35
+    ],
+    "total": 143,
+    "placering": 1
+   },
+   {
+    "name": "Jet Set",
+    "rounds": [
+     35,
+     26,
+     39,
+     31
+    ],
+    "total": 131,
+    "placering": 4
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     30,
+     25,
+     32,
+     41
+    ],
+    "total": 128,
+    "placering": 6
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     39,
+     32,
+     36,
+     35
+    ],
+    "total": 142,
+    "placering": 2
+   }
+  ]
+ },
+ "Score 2025": {
+  "year": 2025,
+  "courses": [
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "players": [
+   {
+    "name": "Jet Set",
+    "rounds": [
+     37,
+     34,
+     34,
+     37
+    ],
+    "total": 142,
+    "placering": 1
+   },
+   {
+    "name": "Hjärna",
+    "rounds": [
+     38,
+     38,
+     30,
+     34
+    ],
+    "total": 140,
+    "placering": 2
+   },
+   {
+    "name": "Wåffla",
+    "rounds": [
+     36,
+     38,
+     23,
+     39
+    ],
+    "total": 136,
+    "placering": 3
+   },
+   {
+    "name": "Krabba",
+    "rounds": [
+     28,
+     33,
+     35,
+     36
+    ],
+    "total": 132,
+    "placering": 4
+   },
+   {
+    "name": "Besserwisser",
+    "rounds": [
+     28,
+     37,
+     30,
+     36
+    ],
+    "total": 131,
+    "placering": 5
+   },
+   {
+    "name": "Chuleta",
+    "rounds": [
+     32,
+     33,
+     29,
+     28
+    ],
+    "total": 122,
+    "placering": 6
+   },
+   {
+    "name": "Kotte",
+    "rounds": [
+     27,
+     34,
+     23,
+     21
+    ],
+    "total": 105,
+    "placering": 7
+   }
+  ]
+ }
+}

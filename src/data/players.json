@@ -1,0 +1,48 @@
+[
+  {
+    "id": "david-hedlund",
+    "fullName": "David Hedlund",
+    "nicknames": ["Besserwisser", "Fjäril"]
+  },
+  {
+    "id": "jonas-jacobsson",
+    "fullName": "Jonas Jacobsson",
+    "nicknames": ["Mad Dogg", "Mädz"]
+  },
+  {
+    "id": "henrik-lindeberg",
+    "fullName": "Henrik Lindeberg",
+    "nicknames": ["Choke"]
+  },
+  {
+    "id": "martin-werner",
+    "fullName": "Martin Werner",
+    "nicknames": ["Krabba"]
+  },
+  {
+    "id": "david-malmstrom",
+    "fullName": "David Malmström",
+    "nicknames": ["Kotte", "Stekarn"],
+    "photo": "/players/david-malmstrom.jpg"
+  },
+  {
+    "id": "niklas-ostborn",
+    "fullName": "Niklas Östborn",
+    "nicknames": ["Chuleta", "Kotlett"]
+  },
+  {
+    "id": "erik-ifwarsson",
+    "fullName": "Erik Ifwarsson",
+    "nicknames": ["Hjärna", "Brainz"]
+  },
+  {
+    "id": "christopher-westerberg",
+    "fullName": "Christopher Westerberg",
+    "nicknames": ["Vessla", "Wåffla", "Wessla"]
+  },
+  {
+    "id": "andreas-ceder",
+    "fullName": "Andreas Ceder",
+    "nicknames": ["Jorge", "Jet Set", "A+"]
+  }
+]

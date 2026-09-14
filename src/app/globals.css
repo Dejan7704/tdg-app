@@ -5,11 +5,27 @@
   --foreground: #171717;
 }
 
+/* TDG-paletten - inspirerad av masters.com: djupgrön för mörka
+   "info-rutor", ljusgrå för lugnare rutor, och en gul accentfärg för text
+   mot den mörkgröna bakgrunden (gul syns dåligt mot ljusgrå/vitt, så den
+   används bara på mörkgrön botten). Satta genom att pipettera exakta
+   färgvärden ur skärmdumpar David skickade från masters.com. */
+:root {
+  --color-tdg-green: #2b664a;
+  --color-tdg-green-dark: #284834;
+  --color-tdg-gray-light: #f2f2f2;
+  --color-tdg-yellow: #f8e44c;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-tdg-green: var(--color-tdg-green);
+  --color-tdg-green-dark: var(--color-tdg-green-dark);
+  --color-tdg-gray-light: var(--color-tdg-gray-light);
+  --color-tdg-yellow: var(--color-tdg-yellow);
 }
 
 @media (prefers-color-scheme: dark) {
