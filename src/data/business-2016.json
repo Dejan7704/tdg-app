@@ -1,0 +1,175 @@
+{
+ "year": 2016,
+ "stakePerPlayer": 1100,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Wåffla",
+     "amount": 600
+    },
+    {
+     "category": "longest",
+     "nickname": "Hjärna",
+     "amount": 600
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Wåffla",
+     "amount": 500
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Köttöga",
+     "amount": 650
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Krabba",
+     "amount": 600
+    },
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 600
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Köttöga",
+     "amount": 2300
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Krabba",
+     "amount": 600
+    },
+    {
+     "category": "longest",
+     "nickname": "Wåffla",
+     "amount": 600
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Wåffla",
+     "amount": 400
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Köttöga",
+     "amount": 300
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "totalen",
+     "nickname": "Chuleta",
+     "amount": 600
+    },
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 600
+    },
+    {
+     "category": "longest",
+     "nickname": "Hjärna",
+     "amount": 600
+    },
+    {
+     "category": "totalen",
+     "nickname": "Köttöga",
+     "amount": 1200
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chuleta",
+   "belopp": 7538
+  },
+  {
+   "nickname": "Krabba",
+   "belopp": 2593
+  },
+  {
+   "nickname": "Wåffla",
+   "belopp": 3356
+  },
+  {
+   "nickname": "Kotte",
+   "belopp": 23326
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 2851
+  },
+  {
+   "nickname": "Köttöga",
+   "belopp": 1370
+  }
+ ],
+ "poker": [
+  {
+   "nickname": "Chuleta",
+   "netto": -400
+  },
+  {
+   "nickname": "Krabba",
+   "netto": -300
+  },
+  {
+   "nickname": "Wåffla",
+   "netto": -300
+  },
+  {
+   "nickname": "Kotte",
+   "netto": 100
+  },
+  {
+   "nickname": "Hjärna",
+   "netto": -400
+  },
+  {
+   "nickname": "Köttöga",
+   "netto": 1300
+  }
+ ],
+ "settlementNotes": [
+  {
+   "nickname": "Chuleta",
+   "note": "Kotte"
+  },
+  {
+   "nickname": "Krabba",
+   "note": "Kotte"
+  },
+  {
+   "nickname": "Wåffla",
+   "note": "Kotte"
+  },
+  {
+   "nickname": "Hjärna",
+   "note": "Kotte"
+  },
+  {
+   "nickname": "Köttöga",
+   "note": "Kotte"
+  }
+ ]
+}

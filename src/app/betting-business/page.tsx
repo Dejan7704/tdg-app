@@ -45,7 +45,7 @@ function RoundCard({ business, round }: { business: BusinessYear; round: number 
       <div className="bg-tdg-green-dark px-4 py-2 text-sm font-semibold text-white">
         Runda {round}
       </div>
-      <div className="grid divide-y divide-white sm:grid-cols-5 sm:divide-x sm:divide-y-0">
+      <div className="grid divide-y divide-white sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:grid-cols-6">
         {CATEGORY_ORDER.map((cat) => {
           const wins = roundData.wins.filter((w) => w.category === cat);
           return (

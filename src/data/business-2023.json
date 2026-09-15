@@ -1,0 +1,170 @@
+{
+ "year": 2023,
+ "stakePerPlayer": 1900,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Wåffla",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Wåffla",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "A+",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "A+",
+     "amount": 900
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "andraNio",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Kotte",
+     "amount": 900
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Wåffla",
+     "amount": 900
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Brainz",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Brainz",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "A+",
+     "amount": 900
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Chuleta",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Choke",
+     "amount": 900
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Choke",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Besserwisser",
+     "amount": 900
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chris",
+   "belopp": 2565
+  },
+  {
+   "nickname": "Mossa",
+   "belopp": 360
+  },
+  {
+   "nickname": "Skaldjur",
+   "belopp": 5724
+  },
+  {
+   "nickname": "Frontalloob",
+   "belopp": 180
+  },
+  {
+   "nickname": "Kotlett",
+   "belopp": 8295
+  },
+  {
+   "nickname": "Choke",
+   "belopp": 270
+  },
+  {
+   "nickname": "Fjäril",
+   "belopp": 792
+  }
+ ],
+ "poker": [],
+ "settlementNotes": [
+  {
+   "nickname": "Mossa",
+   "note": "Betalar till Kotlett"
+  },
+  {
+   "nickname": "Frontalloob",
+   "note": "Betalar 1130 till Kotlett, resterande 1300 till Skaldjur"
+  },
+  {
+   "nickname": "Choke",
+   "note": "Betalar till Kotlett"
+  },
+  {
+   "nickname": "Fjäril",
+   "note": "Betalar till Skaldjur"
+  }
+ ]
+}

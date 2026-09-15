@@ -7,22 +7,22 @@
   {
     "id": "jonas-jacobsson",
     "fullName": "Jonas Jacobsson",
-    "nicknames": ["Mad Dogg", "Mädz"]
+    "nicknames": ["Mad Dogg", "Mädz", "Madz", "Köttöga"]
   },
   {
     "id": "henrik-lindeberg",
     "fullName": "Henrik Lindeberg",
-    "nicknames": ["Choke"]
+    "nicknames": ["Choke", "Uv"]
   },
   {
     "id": "martin-werner",
     "fullName": "Martin Werner",
-    "nicknames": ["Krabba"]
+    "nicknames": ["Krabba", "Skaldjur"]
   },
   {
     "id": "david-malmstrom",
     "fullName": "David Malmström",
-    "nicknames": ["Kotte", "Stekarn"],
+    "nicknames": ["Kotte", "Stekarn", "Stekare", "Mossa"],
     "photo": "/players/david-malmstrom.jpg"
   },
   {
@@ -43,6 +43,6 @@
   {
     "id": "andreas-ceder",
     "fullName": "Andreas Ceder",
-    "nicknames": ["Jorge", "Jet Set", "A+"]
+    "nicknames": ["Jorge", "Jet Set", "A+", "Arslet"]
   }
 ]

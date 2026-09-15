@@ -179,64 +179,223 @@
  {
   "year": 2007,
   "roman": "IV",
-  "hasRoundData": false,
+  "hasRoundData": true,
   "sections": {
    "poängbogey": {
-    "courses": [],
+    "courses": [
+     "Båstad",
+     "Halmstad Norra",
+     "Halmstad Södra",
+     "Holms"
+    ],
     "standings": [
      {
       "name": "Vessla",
       "placering": 1,
-      "total": null,
-      "rounds": []
+      "total": 122,
+      "rounds": [
+       29,
+       35,
+       30,
+       28
+      ]
      },
      {
       "name": "Hjärna",
       "placering": 2,
-      "total": null,
-      "rounds": []
+      "total": 124,
+      "rounds": [
+       32,
+       34,
+       26,
+       32
+      ]
      },
      {
       "name": "Krabba",
       "placering": 3,
-      "total": null,
-      "rounds": []
+      "total": 119,
+      "rounds": [
+       30,
+       34,
+       19,
+       36
+      ]
      },
      {
       "name": "Mad Dogg",
       "placering": 4,
-      "total": null,
-      "rounds": []
+      "total": 117,
+      "rounds": [
+       32,
+       29,
+       28,
+       28
+      ]
      },
      {
       "name": "Choke",
       "placering": 5,
-      "total": null,
-      "rounds": []
+      "total": 112,
+      "rounds": [
+       29,
+       31,
+       26,
+       26
+      ]
      },
      {
       "name": "Kotte",
       "placering": 6,
-      "total": null,
-      "rounds": []
+      "total": 112,
+      "rounds": [
+       29,
+       22,
+       30,
+       31
+      ]
      },
      {
       "name": "Besserwisser",
       "placering": 7,
-      "total": null,
-      "rounds": []
+      "total": 116,
+      "rounds": [
+       29,
+       32,
+       34,
+       21
+      ]
      },
      {
       "name": "Jorge",
       "placering": 8,
-      "total": null,
-      "rounds": []
+      "total": 104,
+      "rounds": [
+       27,
+       30,
+       23,
+       24
+      ]
      },
      {
       "name": "Chuleta",
       "placering": 9,
-      "total": null,
-      "rounds": []
+      "total": 54,
+      "rounds": [
+       29,
+       null,
+       null,
+       25
+      ]
+     }
+    ]
+   },
+   "nettoslag": {
+    "courses": [
+     "Båstad",
+     "Halmstad Norra",
+     "Halmstad Södra",
+     "Holms"
+    ],
+    "standings": [
+     {
+      "name": "Chuleta",
+      "placering": 1,
+      "total": 164,
+      "rounds": [
+       78,
+       null,
+       null,
+       86
+      ]
+     },
+     {
+      "name": "Hjärna",
+      "placering": 2,
+      "total": 311,
+      "rounds": [
+       75,
+       74,
+       85,
+       77
+      ]
+     },
+     {
+      "name": "Vessla",
+      "placering": 3,
+      "total": 311,
+      "rounds": [
+       77,
+       73,
+       80,
+       81
+      ]
+     },
+     {
+      "name": "Krabba",
+      "placering": 4,
+      "total": 314,
+      "rounds": [
+       77,
+       74,
+       90,
+       73
+      ]
+     },
+     {
+      "name": "Mad Dogg",
+      "placering": 5,
+      "total": 318,
+      "rounds": [
+       74,
+       79,
+       81,
+       84
+      ]
+     },
+     {
+      "name": "Choke",
+      "placering": 6,
+      "total": 320,
+      "rounds": [
+       79,
+       77,
+       82,
+       82
+      ]
+     },
+     {
+      "name": "Besserwisser",
+      "placering": 7,
+      "total": 323,
+      "rounds": [
+       79,
+       80,
+       75,
+       89
+      ]
+     },
+     {
+      "name": "Kotte",
+      "placering": 8,
+      "total": 325,
+      "rounds": [
+       77,
+       86,
+       80,
+       82
+      ]
+     },
+     {
+      "name": "Jorge",
+      "placering": 9,
+      "total": 334,
+      "rounds": [
+       81,
+       78,
+       86,
+       89
+      ]
      }
     ]
    }

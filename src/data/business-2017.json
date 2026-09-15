@@ -1,0 +1,200 @@
+{
+ "year": 2017,
+ "stakePerPlayer": 800,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "Vessla",
+     "amount": 450
+    },
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 450
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Fjäril",
+     "amount": 2250
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Vessla",
+     "amount": 950
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "Hjärna",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Kotte",
+     "amount": 1900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Vessla",
+     "amount": 2200
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Fjäril",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Jet Set",
+     "amount": 2250
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Vessla",
+     "amount": 2050
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Hjärna",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "Madz",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Fjäril",
+     "amount": 2400
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Krabba",
+     "amount": 1300
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chuleta",
+   "belopp": 2970
+  },
+  {
+   "nickname": "Krabba",
+   "belopp": 2100
+  },
+  {
+   "nickname": "Uv",
+   "belopp": 2970
+  },
+  {
+   "nickname": "Fjäril",
+   "belopp": 2475
+  },
+  {
+   "nickname": "Jet Set",
+   "belopp": 0
+  },
+  {
+   "nickname": "Vessla",
+   "belopp": 3861
+  },
+  {
+   "nickname": "Kotte",
+   "belopp": 2722
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 4554
+  },
+  {
+   "nickname": "Madz",
+   "belopp": 950
+  }
+ ],
+ "poker": [
+  {
+   "nickname": "Chuleta",
+   "netto": 500
+  },
+  {
+   "nickname": "Krabba",
+   "netto": -200
+  },
+  {
+   "nickname": "Uv",
+   "netto": -200
+  },
+  {
+   "nickname": "Fjäril",
+   "netto": -200
+  },
+  {
+   "nickname": "Jet Set",
+   "netto": -200
+  },
+  {
+   "nickname": "Vessla",
+   "netto": -200
+  },
+  {
+   "nickname": "Kotte",
+   "netto": 900
+  },
+  {
+   "nickname": "Hjärna",
+   "netto": -200
+  },
+  {
+   "nickname": "Madz",
+   "netto": -200
+  }
+ ],
+ "settlementNotes": [
+  {
+   "nickname": "Krabba",
+   "note": "250 till Fjäril, 550 till Hjärna"
+  },
+  {
+   "nickname": "Uv",
+   "note": "3050 till Vessla, 1050 till Kotte, 150 till Chuleta"
+  },
+  {
+   "nickname": "Jet Set",
+   "note": "3150 till Fjäril"
+  },
+  {
+   "nickname": "Madz",
+   "note": "3850 till Vessla"
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "year": 2007,
+ "stakePerPlayer": 0,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Krabba",
+     "amount": 0
+    },
+    {
+     "category": "longest",
+     "nickname": "Arslet",
+     "amount": 0
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Vessla",
+     "amount": 0
+    },
+    {
+     "category": "longest",
+     "nickname": "Mad Dogg",
+     "amount": 0
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Vessla",
+     "amount": 0
+    },
+    {
+     "category": "longest",
+     "nickname": "Mad Dogg",
+     "amount": 0
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Besserwisser",
+     "amount": 0
+    },
+    {
+     "category": "longest",
+     "nickname": "Choke",
+     "amount": 0
+    }
+   ]
+  }
+ ],
+ "utlagg": [],
+ "poker": [],
+ "settlementNotes": []
+}

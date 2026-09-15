@@ -1,0 +1,170 @@
+{
+ "year": 2014,
+ "stakePerPlayer": 1500,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Choke",
+     "amount": 800
+    },
+    {
+     "category": "longest",
+     "nickname": "Kotte",
+     "amount": 800
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Mad Dogg",
+     "amount": 800
+    },
+    {
+     "category": "totalen",
+     "nickname": "Mad Dogg",
+     "amount": 800
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Krabba",
+     "amount": 400
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Wåffla",
+     "amount": 400
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Besserwisser",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "Mad Dogg",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Jet Set",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Chuleta",
+     "amount": 900
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Hjärna",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "Mad Dogg",
+     "amount": 900
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Mad Dogg",
+     "amount": 900
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Jet Set",
+     "amount": 900
+    },
+    {
+     "category": "totalen",
+     "nickname": "Kotte",
+     "amount": 900
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chuleta",
+   "belopp": 500
+  },
+  {
+   "nickname": "Krabba",
+   "belopp": 1240
+  },
+  {
+   "nickname": "Wåffla",
+   "belopp": 0
+  },
+  {
+   "nickname": "Choke",
+   "belopp": 0
+  },
+  {
+   "nickname": "Kotte",
+   "belopp": 36500
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 300
+  },
+  {
+   "nickname": "Besserwisser",
+   "belopp": 0
+  },
+  {
+   "nickname": "Mad Dogg",
+   "belopp": 700
+  },
+  {
+   "nickname": "Jet Set",
+   "belopp": 11000
+  }
+ ],
+ "poker": [],
+ "settlementNotes": [
+  {
+   "nickname": "Chuleta",
+   "note": "Betalar till Jet Set"
+  },
+  {
+   "nickname": "Krabba",
+   "note": "Betalar till Kotte"
+  },
+  {
+   "nickname": "Wåffla",
+   "note": "Betalar till Kotte"
+  },
+  {
+   "nickname": "Choke",
+   "note": "Betalar till Kotte"
+  },
+  {
+   "nickname": "Hjärna",
+   "note": "Betalar till Kotte"
+  },
+  {
+   "nickname": "Besserwisser",
+   "note": "Betalar till Kotte"
+  },
+  {
+   "nickname": "Mad Dogg",
+   "note": "Betalar till Kotte"
+  }
+ ]
+}

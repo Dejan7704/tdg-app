@@ -1,0 +1,179 @@
+{
+ "year": 2018,
+ "stakePerPlayer": 800,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Krabba",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "Fjäril",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Fjäril",
+     "amount": 4500
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Madz",
+     "amount": 4900
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "longest",
+     "nickname": "Vessla",
+     "amount": 900
+    },
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Kotte",
+     "amount": 800
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Madz",
+     "amount": 900
+    },
+    {
+     "category": "longest",
+     "nickname": "Madz",
+     "amount": 900
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Jet Set",
+     "amount": 2700
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chuleta",
+   "belopp": 7655
+  },
+  {
+   "nickname": "Krabba",
+   "belopp": 600
+  },
+  {
+   "nickname": "Uv",
+   "belopp": 2700
+  },
+  {
+   "nickname": "Fjäril",
+   "belopp": 3892
+  },
+  {
+   "nickname": "Jet Set",
+   "belopp": 7145
+  },
+  {
+   "nickname": "Vessla",
+   "belopp": 2900
+  },
+  {
+   "nickname": "Kotte",
+   "belopp": 812
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 2059
+  },
+  {
+   "nickname": "Madz",
+   "belopp": 0
+  }
+ ],
+ "poker": [
+  {
+   "nickname": "Chuleta",
+   "netto": -200
+  },
+  {
+   "nickname": "Krabba",
+   "netto": 700
+  },
+  {
+   "nickname": "Uv",
+   "netto": 700
+  },
+  {
+   "nickname": "Fjäril",
+   "netto": -200
+  },
+  {
+   "nickname": "Jet Set",
+   "netto": -200
+  },
+  {
+   "nickname": "Vessla",
+   "netto": -200
+  },
+  {
+   "nickname": "Kotte",
+   "netto": -200
+  },
+  {
+   "nickname": "Hjärna",
+   "netto": -200
+  },
+  {
+   "nickname": "Madz",
+   "netto": -200
+  }
+ ],
+ "settlementNotes": [
+  {
+   "nickname": "Krabba",
+   "note": "3600 till Jet Set, 100 till Fjäril"
+  },
+  {
+   "nickname": "Uv",
+   "note": "Madz"
+  },
+  {
+   "nickname": "Vessla",
+   "note": "Fjäril"
+  },
+  {
+   "nickname": "Kotte",
+   "note": "3500 till Chuleta, 200 till Madz"
+  },
+  {
+   "nickname": "Hjärna",
+   "note": "Fjäril"
+  }
+ ]
+}

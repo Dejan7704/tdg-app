@@ -1,0 +1,111 @@
+{
+ "year": 2011,
+ "stakePerPlayer": 0,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "forstaNio",
+     "nickname": "Kotte",
+     "amount": 0
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Jorge",
+     "amount": 350
+    },
+    {
+     "category": "totalen",
+     "nickname": "Kotte",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "forstaNio",
+     "nickname": "Chuleta",
+     "amount": 0
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Wåffla",
+     "amount": 350
+    },
+    {
+     "category": "totalen",
+     "nickname": "Chuleta",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "forstaNio",
+     "nickname": "Besserwisser",
+     "amount": 0
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Wåffla",
+     "amount": 350
+    },
+    {
+     "category": "totalen",
+     "nickname": "Besserwisser",
+     "amount": 700
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Chris",
+   "belopp": 3100
+  },
+  {
+   "nickname": "Mossa",
+   "belopp": 8100
+  },
+  {
+   "nickname": "Skaldjur",
+   "belopp": 2500
+  },
+  {
+   "nickname": "Ceders",
+   "belopp": 2800
+  },
+  {
+   "nickname": "Choke",
+   "belopp": 600
+  },
+  {
+   "nickname": "Mad Dogg",
+   "belopp": 0
+  }
+ ],
+ "poker": [],
+ "settlementNotes": [
+  {
+   "nickname": "Skaldjur",
+   "note": "Till Stekare"
+  },
+  {
+   "nickname": "Ceders",
+   "note": "Till Stekare"
+  },
+  {
+   "nickname": "Choke",
+   "note": "950 till Vessla, 1600 till Stekare"
+  },
+  {
+   "nickname": "Mad Dogg",
+   "note": "Till Stekare"
+  }
+ ]
+}

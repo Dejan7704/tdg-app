@@ -1,3 +1,12 @@
+import business2007 from "@/data/business-2007.json";
+import business2011 from "@/data/business-2011.json";
+import business2014 from "@/data/business-2014.json";
+import business2015 from "@/data/business-2015.json";
+import business2016 from "@/data/business-2016.json";
+import business2017 from "@/data/business-2017.json";
+import business2018 from "@/data/business-2018.json";
+import business2019 from "@/data/business-2019.json";
+import business2023 from "@/data/business-2023.json";
 import business2025 from "@/data/business-2025.json";
 import {
   getPlayer,
@@ -8,7 +17,13 @@ import {
   type Player,
 } from "@/lib/data";
 
-export type BettingCategory = "closest" | "longest" | "forstaNio" | "andraNio" | "totalen";
+export type BettingCategory =
+  | "closest"
+  | "longest"
+  | "forstaNio"
+  | "andraNio"
+  | "totalen"
+  | "sweepstake";
 
 export const CATEGORY_LABELS: Record<BettingCategory, string> = {
   closest: "Closest to pin",
@@ -16,6 +31,7 @@ export const CATEGORY_LABELS: Record<BettingCategory, string> = {
   forstaNio: "1:a nio",
   andraNio: "2:a nio",
   totalen: "Totalen",
+  sweepstake: "Sweepstake",
 };
 
 export const CATEGORY_ORDER: BettingCategory[] = [
@@ -24,19 +40,34 @@ export const CATEGORY_ORDER: BettingCategory[] = [
   "forstaNio",
   "andraNio",
   "totalen",
+  "sweepstake",
 ];
 
 // Färger för kategorierna i stapeldiagrammet (spelarprofilen), från den
 // validerade kategoriska paletten (dataviz-skill) – ordningen är vald för att
 // klara CVD-separation mellan intilliggande segment, ändra inte ordningen
-// utan att köra om validate_palette.js.
+// utan att köra om validate_palette.js. "sweepstake" (lila) tillkom
+// 2026-09-15 när 2016–2018 års filer lades till - inte omkörd genom
+// valideringsskriptet, men valt för att vara tydligt skild från de andra 5.
 export const CATEGORY_COLORS: Record<BettingCategory, string> = {
   closest: "#2a78d6", // blå
   longest: "#eb6834", // orange
   forstaNio: "#1baf7a", // aqua
   andraNio: "#eda100", // gul
   totalen: "#e87ba4", // magenta
+  sweepstake: "#8b5cf6", // lila
 };
+
+// Sweepstake (2016–2018) är en sidobetting där alla 9 "köper" en gissning på
+// vem som vinner ronden - vinner man gissningen får man utbetalning från de
+// som gissade fel. Källfilerna lagrar bara ett NETTO per spelare/runda (inte
+// separata insats-/vinstbelopp), så här registreras enbart de ronder där
+// nettot var positivt (dvs. spelaren vann sin gissning) som en "vinst" - i
+// linje med hur alla andra kategorier bara registrerar vinster, inte
+// förluster. Det gör att sweepstake-vinster syns korrekt i
+// "Antal golfbetting-vinster per år", men `getBettingNetto()`/avräkningen
+// blir en förenkling för dessa tre år (subtraherar bara stakePerPlayer, inte
+// motsvarande sweepstake-förluster) - se öppna frågor i statusdokumentet.
 
 export type BettingWin = { category: BettingCategory; nickname: string; amount: number };
 export type BettingRound = { round: number; wins: BettingWin[] };
@@ -51,6 +82,15 @@ export type BusinessYear = {
 };
 
 const BUSINESS_YEARS: Record<number, BusinessYear> = {
+  2007: business2007 as BusinessYear,
+  2011: business2011 as BusinessYear,
+  2014: business2014 as BusinessYear,
+  2015: business2015 as BusinessYear,
+  2016: business2016 as BusinessYear,
+  2017: business2017 as BusinessYear,
+  2018: business2018 as BusinessYear,
+  2019: business2019 as BusinessYear,
+  2023: business2023 as BusinessYear,
   2025: business2025 as BusinessYear,
 };
 
