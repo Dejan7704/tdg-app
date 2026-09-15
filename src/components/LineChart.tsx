@@ -304,17 +304,34 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
   const hoverLeftY = hoverLeftVal != null ? leftScale.yFor(hoverLeftVal) : null;
   const hoverRightY = hoverRightVal != null ? rightScale.yFor(hoverRightVal) : null;
 
-  let hoverLabel: { x: number; y: number; text: string; anchor: "start" | "middle" | "end" } | null = null;
+  // Etikettens innehåll byggs som separata segment (istället för en enda
+  // sträng) så varje serie kan färgas i sin egen kurvfärg i pop-up-rutan -
+  // neutralt grått bara för årtalet och skiljetecknen mellan serierna.
+  const NEUTRAL_LABEL_COLOR = "#57534e"; // stone-600
+  type LabelSegment = { text: string; color: string };
+  let hoverLabel: { x: number; y: number; segments: LabelSegment[]; anchor: "start" | "middle" | "end" } | null =
+    null;
   if (hoverYear != null && hoverX != null) {
     const candidateYs = [hoverLeftY, hoverRightY].filter((y): y is number => y != null);
     const topY = candidateYs.length ? Math.min(...candidateYs) : PADDING_TOP + 10;
     const labelY = Math.max(PADDING_TOP + 10, topY - 14);
-    const parts: string[] = [];
-    if (hoverLeftVal != null) parts.push(`${left.label}: ${formatValue(hoverLeftVal, left.format)}`);
-    if (hoverRightVal != null) parts.push(`${right.label}: ${formatValue(hoverRightVal, right.format)}`);
-    const text = parts.length ? `${hoverYear} · ${parts.join("  ·  ")}` : `${hoverYear}: Ingen data`;
+    const valueSegments: LabelSegment[] = [];
+    if (hoverLeftVal != null) {
+      valueSegments.push({ text: `${left.label}: ${formatValue(hoverLeftVal, left.format)}`, color: left.color });
+    }
+    if (hoverRightVal != null) {
+      valueSegments.push({ text: `${right.label}: ${formatValue(hoverRightVal, right.format)}`, color: right.color });
+    }
+    const segments: LabelSegment[] = valueSegments.length
+      ? [
+          { text: `${hoverYear}  ·  `, color: NEUTRAL_LABEL_COLOR },
+          ...valueSegments.flatMap((seg, i) =>
+            i === 0 ? [seg] : [{ text: "   ·   ", color: NEUTRAL_LABEL_COLOR }, seg]
+          ),
+        ]
+      : [{ text: `${hoverYear}: Ingen data`, color: NEUTRAL_LABEL_COLOR }];
     const anchor = hoverX < padLeft + 100 ? "start" : hoverX > WIDTH - padRight - 100 ? "end" : "middle";
-    hoverLabel = { x: hoverX, y: labelY, text, anchor };
+    hoverLabel = { x: hoverX, y: labelY, segments, anchor };
   }
 
   return (
@@ -459,7 +476,8 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
         {hoverLabel && (
           <g pointerEvents="none">
             {(() => {
-              const bgWidth = estimateTextWidth(hoverLabel.text, AXIS_VALUE_FONT_SIZE) + 20;
+              const fullText = hoverLabel.segments.map((s) => s.text).join("");
+              const bgWidth = estimateTextWidth(fullText, AXIS_VALUE_FONT_SIZE) + 20;
               const bgHeight = 20;
               let bgX =
                 hoverLabel.anchor === "middle"
@@ -488,7 +506,11 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
                     fontWeight={AXIS_VALUE_FONT_WEIGHT}
                     fill="#292524"
                   >
-                    {hoverLabel.text}
+                    {hoverLabel.segments.map((seg, i) => (
+                      <tspan key={i} fill={seg.color}>
+                        {seg.text}
+                      </tspan>
+                    ))}
                   </text>
                 </>
               );
@@ -510,12 +532,12 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
         />
       </svg>
 
-      <div className="mt-1 flex flex-wrap items-center gap-4 text-sm font-semibold text-stone-600">
-        <span className="inline-flex items-center gap-1.5">
+      <div className="mt-1 flex flex-wrap items-center gap-4 text-sm font-semibold">
+        <span className="inline-flex items-center gap-1.5" style={{ color: left.color }}>
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: left.color }} />
           {left.label}
         </span>
-        <span className="inline-flex items-center gap-1.5">
+        <span className="inline-flex items-center gap-1.5" style={{ color: right.color }}>
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: right.color }} />
           {right.label}
         </span>
