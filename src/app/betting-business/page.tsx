@@ -125,6 +125,14 @@ function TotalsTable({ business }: { business: BusinessYear }) {
 function SettlementTable({ business }: { business: BusinessYear }) {
   const rows = getSettlement(business).sort((a, b) => b.justering - a.justering);
 
+  if (rows.length === 0) {
+    return (
+      <div className="rounded-xl border border-stone-200 bg-white px-4 py-6 text-center text-sm text-stone-400">
+        Data saknas
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
       <table className="w-full text-sm">
