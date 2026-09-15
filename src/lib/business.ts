@@ -1,5 +1,6 @@
 import business2007 from "@/data/business-2007.json";
 import business2011 from "@/data/business-2011.json";
+import business2012 from "@/data/business-2012.json";
 import business2014 from "@/data/business-2014.json";
 import business2015 from "@/data/business-2015.json";
 import business2016 from "@/data/business-2016.json";
@@ -84,6 +85,7 @@ export type BusinessYear = {
 const BUSINESS_YEARS: Record<number, BusinessYear> = {
   2007: business2007 as BusinessYear,
   2011: business2011 as BusinessYear,
+  2012: business2012 as BusinessYear,
   2014: business2014 as BusinessYear,
   2015: business2015 as BusinessYear,
   2016: business2016 as BusinessYear,

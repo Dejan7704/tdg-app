@@ -1,0 +1,49 @@
+{
+ "year": 2012,
+ "stakePerPlayer": 1200,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Hjärna",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Besserwisser",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Wåffla",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Besserwisser",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Kotte",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Chuleta",
+     "amount": 700
+    }
+   ]
+  }
+ ],
+ "utlagg": [],
+ "poker": [],
+ "settlementNotes": []
+}
