@@ -82,14 +82,10 @@ export default async function PlayerPage({
           <div>
             <h1 className="text-2xl font-bold text-stone-900">{player.fullName}</h1>
             {player.nicknames.length > 0 && (
-              <p className="mt-0.5 text-stone-400">Känd som: {player.nicknames.join(" / ")}</p>
+              <p className="mt-0.5 text-stone-900">Känd som: {player.nicknames.join(" / ")}</p>
             )}
           </div>
         </div>
-        <p className="mt-2 max-w-2xl rounded-lg bg-tdg-gray-light px-4 py-3 text-sm text-stone-600">
-          Presentation saknas ännu – lägg till en kort text om {player.fullName} här
-          (bakgrund, spelstil, klassiska citat, etc).
-        </p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
@@ -99,10 +95,7 @@ export default async function PlayerPage({
       </div>
 
       <div className="flex flex-col gap-4">
-        <ChartCard
-          title="Placering & snitt nettoslag per år"
-          subtitle="Vänsteraxeln (grön) visar placering – lägre är bättre, 1:an ligger högst upp. Högeraxeln (orange) visar snitt nettoslag per rond."
-        >
+        <ChartCard title="Placering & snitt nettoslag per år">
           <DualAxisLineChart
             left={{ data: placeringSeries, color: "#065f46", label: "Placering", invert: true, format: "placering" }}
             right={{ data: nettoSeries, color: "#b45309", label: "Snitt nettoslag", format: "decimal1" }}
@@ -115,10 +108,7 @@ export default async function PlayerPage({
           <StackedBarChart data={bettingByCategory} categories={bettingCategories} yearDomain={yearDomain} />
         </ChartCard>
 
-        <ChartCard
-          title="Ackumulerad betting-vinst & utlägg"
-          subtitle="Summan av allt spelaren vunnit i golfbetting respektive lagt ut, år för år över hela historiken. Bruten linje betyder att det året saknar data ännu."
-        >
+        <ChartCard title="Ackumulerad betting-vinst & utlägg">
           <DualAxisLineChart
             left={{ data: cumulativeBetting, color: "#065f46", label: "Ackumulerad betting-vinst", format: "sek" }}
             right={{ data: cumulativeUtlagg, color: "#b45309", label: "Ackumulerat utlägg", format: "sek" }}
