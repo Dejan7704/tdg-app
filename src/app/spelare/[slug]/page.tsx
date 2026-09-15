@@ -13,7 +13,14 @@ import {
   EDITIONS_MIN_YEAR,
   EDITIONS_MAX_YEAR,
 } from "@/lib/data";
-import { getPlayerBettingWinsByCategorySeries, CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS } from "@/lib/business";
+import {
+  getPlayerBettingWinsByCategorySeries,
+  getPlayerCumulativeBettingSeries,
+  getPlayerCumulativeUtlaggSeries,
+  CATEGORY_ORDER,
+  CATEGORY_LABELS,
+  CATEGORY_COLORS,
+} from "@/lib/business";
 import { DualAxisLineChart } from "@/components/LineChart";
 import { StackedBarChart } from "@/components/StackedBarChart";
 
@@ -41,6 +48,8 @@ export default async function PlayerPage({
   const nettoSeries = getPlayerNettoAverageSeries(player.id);
   const missedYears = getPlayerMissedYears(player.id);
   const bettingByCategory = getPlayerBettingWinsByCategorySeries(player.id);
+  const cumulativeBetting = getPlayerCumulativeBettingSeries(player.id);
+  const cumulativeUtlagg = getPlayerCumulativeUtlaggSeries(player.id);
   const bettingCategories = CATEGORY_ORDER.map((key) => ({
     key,
     label: CATEGORY_LABELS[key],
@@ -107,6 +116,18 @@ export default async function PlayerPage({
           subtitle="Färgkodat per kategori (Closest to pin, Longest Drive, 1:a nio, 2:a nio, Totalen). Samma år-skala som diagrammet ovan – bara 2025 har data ännu, fler år tillkommer."
         >
           <StackedBarChart data={bettingByCategory} categories={bettingCategories} yearDomain={yearDomain} />
+        </ChartCard>
+
+        <ChartCard
+          title="Ackumulerad betting-vinst & utlägg"
+          subtitle="Summan av allt spelaren vunnit i golfbetting respektive lagt ut, år för år över hela historiken. Bruten linje betyder att det året saknar data ännu."
+        >
+          <DualAxisLineChart
+            left={{ data: cumulativeBetting, color: "#065f46", label: "Ackumulerad betting-vinst", format: "sek" }}
+            right={{ data: cumulativeUtlagg, color: "#b45309", label: "Ackumulerat utlägg", format: "sek" }}
+            yearDomain={yearDomain}
+            missedYears={missedYears}
+          />
         </ChartCard>
       </div>
     </div>

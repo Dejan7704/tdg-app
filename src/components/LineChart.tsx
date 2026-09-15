@@ -7,7 +7,7 @@ export type LineChartPoint = {
   value: number | null;
 };
 
-export type LineChartFormat = "placering" | "decimal1" | "integer";
+export type LineChartFormat = "placering" | "decimal1" | "integer" | "sek";
 
 function formatValue(v: number, format: LineChartFormat): string {
   switch (format) {
@@ -17,6 +17,8 @@ function formatValue(v: number, format: LineChartFormat): string {
       return v.toFixed(1);
     case "integer":
       return String(Math.round(v));
+    case "sek":
+      return `${Math.round(v).toLocaleString("sv-SE")} kr`;
   }
 }
 

@@ -6,11 +6,14 @@ import {
   getCategoryTotals,
   getSettlement,
   getUnknownParticipants,
+  getYearlyTotals,
   resolveBusinessPlayer,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   type BusinessYear,
 } from "@/lib/business";
+import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR } from "@/lib/data";
+import { DualAxisLineChart } from "@/components/LineChart";
 
 function formatSek(n: number): string {
   const rounded = Math.round(n);
@@ -172,6 +175,7 @@ export default async function BettingBusinessPage({
   const requestedYear = Number(resolvedSearchParams?.year);
   const year = allYears.includes(requestedYear) ? requestedYear : yearsWithData[0];
   const business = getBusinessYear(year);
+  const yearlyTotals = getYearlyTotals();
 
   return (
     <div className="flex flex-col gap-6">
@@ -182,6 +186,36 @@ export default async function BettingBusinessPage({
           samlat på ett ställe per resa.
         </p>
       </div>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+          Utveckling över åren
+        </h2>
+        <div className="rounded-xl border border-stone-200 bg-white p-4">
+          <p className="text-xs text-stone-400">
+            Totalt betting-vunnet och totalt utlägg per år, summerat över alla spelare –
+            visar vilka år vi spelat om och lagt ut mest, oavsett vem. Bruten linje betyder
+            att det året saknar data ännu.
+          </p>
+          <div className="mt-2">
+            <DualAxisLineChart
+              left={{
+                data: yearlyTotals.map((d) => ({ year: d.year, value: d.bettingTotal })),
+                color: "#065f46",
+                label: "Betting-vunnet totalt",
+                format: "sek",
+              }}
+              right={{
+                data: yearlyTotals.map((d) => ({ year: d.year, value: d.utlaggTotal })),
+                color: "#b45309",
+                label: "Utlägg totalt",
+                format: "sek",
+              }}
+              yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: EDITIONS_MAX_YEAR }}
+            />
+          </div>
+        </div>
+      </section>
 
       <div className="flex flex-wrap gap-2 text-sm">
         {allYears.map((y) => {

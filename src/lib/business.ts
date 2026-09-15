@@ -229,6 +229,79 @@ export function getPlayerBettingWinsByCategorySeries(
   });
 }
 
+// Totalt betting-vunnet och totalt utlägg per år, summerat över alla
+// spelare - visar hur "dyra"/omfattande de olika årens resor var ekonomiskt,
+// oberoende av vem som vann eller lade ut mest. Spänner hela
+// TDG-historiken (EDITIONS_MIN_YEAR–EDITIONS_MAX_YEAR); år utan
+// betting-/utläggsdata får `null` så linjediagrammet bryter av där (samma
+// mönster som övriga serier i den här filen), i stället för att dra en
+// missvisande linje rakt över de saknade åren.
+export function getYearlyTotals(): {
+  year: number;
+  bettingTotal: number | null;
+  utlaggTotal: number | null;
+}[] {
+  const years: number[] = [];
+  for (let y = EDITIONS_MIN_YEAR; y <= EDITIONS_MAX_YEAR; y++) years.push(y);
+  return years.map((year) => {
+    const business = getBusinessYear(year);
+    if (!business) return { year, bettingTotal: null, utlaggTotal: null };
+    const bettingTotal = business.rounds.reduce(
+      (sum, r) => sum + r.wins.reduce((s, w) => s + w.amount, 0),
+      0
+    );
+    const utlaggTotal = business.utlagg.reduce((sum, u) => sum + u.belopp, 0);
+    return { year, bettingTotal, utlaggTotal };
+  });
+}
+
+// Ackumulerad betting-vinst per spelare, år för år, över hela
+// TDG-historikens år-spann (samma mönster som getPlayerBettingWinsByCategorySeries
+// - även år utan betting-data finns med, för att kunna dela x-axel med de
+// andra diagrammen på spelarprofilen). Värdet är summan av allt spelaren
+// vunnit i golfbetting till och med det året (inte netto efter insats - se
+// getBettingNetto för nettobilden per år).
+export function getPlayerCumulativeBettingSeries(
+  playerId: string
+): { year: number; value: number | null }[] {
+  const player = getPlayer(playerId);
+  if (!player) return [];
+  let cumulative = 0;
+  const years: number[] = [];
+  for (let y = EDITIONS_MIN_YEAR; y <= EDITIONS_MAX_YEAR; y++) years.push(y);
+  return years.map((year) => {
+    const business = getBusinessYear(year);
+    if (business) {
+      for (const r of business.rounds) {
+        for (const w of r.wins) {
+          if (player.nicknames.includes(w.nickname)) cumulative += w.amount;
+        }
+      }
+    }
+    return { year, value: cumulative };
+  });
+}
+
+// Ackumulerat utlägg per spelare, år för år, samma år-spann/mönster som
+// getPlayerCumulativeBettingSeries ovan.
+export function getPlayerCumulativeUtlaggSeries(
+  playerId: string
+): { year: number; value: number | null }[] {
+  const player = getPlayer(playerId);
+  if (!player) return [];
+  let cumulative = 0;
+  const years: number[] = [];
+  for (let y = EDITIONS_MIN_YEAR; y <= EDITIONS_MAX_YEAR; y++) years.push(y);
+  return years.map((year) => {
+    const business = getBusinessYear(year);
+    if (business) {
+      const entry = business.utlagg.find((u) => player.nicknames.includes(u.nickname));
+      if (entry) cumulative += entry.belopp;
+    }
+    return { year, value: cumulative };
+  });
+}
+
 export type SettlementRow = {
   nickname: string;
   utlagg: number;
