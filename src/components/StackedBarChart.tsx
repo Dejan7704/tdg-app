@@ -10,7 +10,15 @@ import {
   mergeYearTicks,
   MISSED_BAND_WIDTH,
   MISSED_TICK_COLOR,
+  AXIS_VALUE_FONT_SIZE,
+  AXIS_VALUE_FONT_WEIGHT,
+  formatValue,
 } from "@/components/LineChart";
+
+// Neutral, mörk färg för den ackumulerade kurvan - avsiktligt inte grön/orange
+// (som de betting-/utläggsfärgade diagrammen ovanför) så den inte konkurrerar
+// med kategoristaplarnas färger, men syns tydligt ovanpå dem.
+const CUMULATIVE_LINE_COLOR = "#292524"; // stone-800
 
 export type StackedBarPoint = {
   year: number;
@@ -75,6 +83,20 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
   const rawMax = Math.max(1, ...totals);
   const niceMax = Math.ceil(rawMax);
   const pxPerUnit = innerH / niceMax;
+
+  // Ackumulerad kurva (höger axel): löpande summa av totalt antal vinster,
+  // år för år över hela diagrammets spann.
+  const cumulative = totals.reduce<number[]>((acc, t) => {
+    acc.push((acc[acc.length - 1] ?? 0) + t);
+    return acc;
+  }, []);
+  const cumulativeMax = Math.max(1, ...cumulative);
+  const cumulativePxPerUnit = innerH / cumulativeMax;
+  const yForCumulative = (v: number) => bottomY - v * cumulativePxPerUnit;
+  const cumulativeTickStep = cumulativeMax <= 4 ? 1 : Math.ceil(cumulativeMax / 3);
+  const cumulativeTicks: number[] = [0];
+  for (let v = cumulativeTickStep; v < cumulativeMax; v += cumulativeTickStep) cumulativeTicks.push(v);
+  if (cumulativeTicks[cumulativeTicks.length - 1] !== cumulativeMax) cumulativeTicks.push(cumulativeMax);
 
   const yearCount = Math.max(1, domain.maxYear - domain.minYear + 1);
   const stepWidth = yearCount > 1 ? innerW / (yearCount - 1) : innerW;
@@ -152,12 +174,32 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
           return (
             <g key={i}>
               <line x1={PADDING_LEFT} x2={WIDTH - PADDING_RIGHT} y1={y} y2={y} stroke="#e7e5e4" strokeWidth={1} />
-              <text x={PADDING_LEFT - 8} y={y + 3} textAnchor="end" fontSize={10} fill="#a8a29e">
+              <text
+                x={PADDING_LEFT - 8}
+                y={y + 4}
+                textAnchor="end"
+                fontSize={AXIS_VALUE_FONT_SIZE}
+                fontWeight={AXIS_VALUE_FONT_WEIGHT}
+                fill="#78716c"
+              >
                 {t}
               </text>
             </g>
           );
         })}
+        {cumulativeTicks.map((t, i) => (
+          <text
+            key={`ct-${i}`}
+            x={WIDTH - PADDING_RIGHT + 8}
+            y={yForCumulative(t) + 4}
+            textAnchor="start"
+            fontSize={AXIS_VALUE_FONT_SIZE}
+            fontWeight={AXIS_VALUE_FONT_WEIGHT}
+            fill={CUMULATIVE_LINE_COLOR}
+          >
+            {formatValue(t, "integer")}
+          </text>
+        ))}
 
         {bars.map((bar) => {
           const cx = xForYear(bar.year);
@@ -190,6 +232,23 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
           );
         })}
 
+        {/* Ackumulerad kurva (höger axel) - ritad ovanpå staplarna, ofylld och i en
+            neutral mörk färg så den syns tydligt utan att konkurrera med
+            kategoristaplarnas färger. */}
+        <polyline
+          points={bars.map((bar, i) => `${xForYear(bar.year)},${yForCumulative(cumulative[i])}`).join(" ")}
+          fill="none"
+          stroke={CUMULATIVE_LINE_COLOR}
+          strokeWidth={2}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        {bars.map((bar, i) => (
+          <circle key={`cum-${bar.year}`} cx={xForYear(bar.year)} cy={yForCumulative(cumulative[i])} r={2.5} fill={CUMULATIVE_LINE_COLOR}>
+            <title>{`${bar.year} · Ackumulerat: ${cumulative[i]}`}</title>
+          </circle>
+        ))}
+
         {mergeYearTicks(domain.minYear, domain.maxYear, missedYears).map((y) => {
           const missed = missedYears.includes(y);
           return (
@@ -198,9 +257,9 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
               x={xForYear(y)}
               y={height - PADDING_BOTTOM + 16}
               textAnchor="middle"
-              fontSize={10}
-              fontWeight={missed ? 700 : 400}
-              fill={missed ? MISSED_TICK_COLOR : "#a8a29e"}
+              fontSize={AXIS_VALUE_FONT_SIZE}
+              fontWeight={AXIS_VALUE_FONT_WEIGHT}
+              fill={missed ? MISSED_TICK_COLOR : "#78716c"}
             >
               {y}
             </text>
@@ -208,15 +267,19 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
         })}
       </svg>
 
-      <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-stone-500">
+      <div className="mt-1 flex flex-wrap items-center gap-4 text-sm font-semibold text-stone-600">
         {categories.map((c) => (
-          <span key={c.key} className="inline-flex items-center gap-1.5">
+          <span key={c.key} className="inline-flex items-center gap-1.5" style={{ color: c.color }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
             {c.label}
           </span>
         ))}
-        <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-2.5 rounded-full bg-stone-300" />
+        <span className="inline-flex items-center gap-1.5" style={{ color: CUMULATIVE_LINE_COLOR }}>
+          <span className="inline-block h-0.5 w-2.5 rounded-full" style={{ backgroundColor: CUMULATIVE_LINE_COLOR }} />
+          Ackumulerat totalt
+        </span>
+        <span className="inline-flex items-center gap-1.5 text-xs font-normal text-stone-500">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: MISSED_TICK_COLOR, opacity: 0.35 }} />
           Deltog inte
         </span>
       </div>

@@ -111,10 +111,7 @@ export default async function PlayerPage({
           />
         </ChartCard>
 
-        <ChartCard
-          title="Antal golfbetting-vinster per år"
-          subtitle="Färgkodat per kategori (Closest to pin, Longest Drive, 1:a nio, 2:a nio, Totalen). Samma år-skala som diagrammet ovan – bara 2025 har data ännu, fler år tillkommer."
-        >
+        <ChartCard title="Antal golfbetting-vinster per år">
           <StackedBarChart data={bettingByCategory} categories={bettingCategories} yearDomain={yearDomain} />
         </ChartCard>
 
@@ -140,13 +137,13 @@ function ChartCard({
   children,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-4">
       <h2 className="text-sm font-semibold text-stone-700">{title}</h2>
-      <p className="mt-0.5 text-xs text-stone-400">{subtitle}</p>
+      {subtitle && <p className="mt-0.5 text-xs text-stone-400">{subtitle}</p>}
       <div className="mt-2">{children}</div>
     </div>
   );

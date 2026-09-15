@@ -232,8 +232,12 @@ function buildScale(series: AxisSeries, innerH: number) {
 // Fontstorlek/vikt för axelvärdena (kronbelopp, placering, snittslag) - gjorda
 // fetstilade och lite större 2026-09-15 på Davids begäran, så de syns
 // tydligare mot den tunna rutnätslinjen.
-const AXIS_VALUE_FONT_SIZE = 11;
-const AXIS_VALUE_FONT_WEIGHT = 700;
+export const AXIS_VALUE_FONT_SIZE = 11;
+export const AXIS_VALUE_FONT_WEIGHT = 700;
+
+// Delad med LineChartFormat/formatValue så andra diagram (StackedBarChart) kan
+// formatera sina egna axelvärden (t.ex. en ackumulerad kronsumma) konsekvent.
+export { formatValue };
 
 export function DualAxisLineChart({ left, right, height = 260, yearDomain: forcedDomain, missedYears = [] }: DualAxisLineChartProps) {
   const uid = useId();
