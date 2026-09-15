@@ -28,10 +28,10 @@ export const PADDING_RIGHT = 44;
 export const PADDING_TOP = 16;
 export const PADDING_BOTTOM = 28;
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 
 /** Bygger en mjuk kurva (Catmull-Rom -> kubiska Bezier-segment) genom punkterna. */
-function smoothPath(points: Point[]): string {
+export function smoothPath(points: Point[]): string {
   if (points.length === 0) return "";
   if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
   let d = `M ${points[0].x} ${points[0].y}`;

@@ -13,6 +13,8 @@ import {
   AXIS_VALUE_FONT_SIZE,
   AXIS_VALUE_FONT_WEIGHT,
   formatValue,
+  smoothPath,
+  type Point,
 } from "@/components/LineChart";
 
 // Neutral, mörk färg för den ackumulerade kurvan - avsiktligt inte grön/orange
@@ -235,8 +237,8 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
         {/* Ackumulerad kurva (höger axel) - ritad ovanpå staplarna, ofylld och i en
             neutral mörk färg så den syns tydligt utan att konkurrera med
             kategoristaplarnas färger. */}
-        <polyline
-          points={bars.map((bar, i) => `${xForYear(bar.year)},${yForCumulative(cumulative[i])}`).join(" ")}
+        <path
+          d={smoothPath(bars.map((bar, i): Point => ({ x: xForYear(bar.year), y: yForCumulative(cumulative[i]) })))}
           fill="none"
           stroke={CUMULATIVE_LINE_COLOR}
           strokeWidth={2}
