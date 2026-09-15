@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 export type LineChartPoint = {
   year: number;
@@ -88,6 +88,14 @@ function areaPath(line: string, seg: Point[], bottomY: number): string {
   const first = seg[0];
   const last = seg[seg.length - 1];
   return `${line} L ${last.x} ${bottomY} L ${first.x} ${bottomY} Z`;
+}
+
+/** Grov uppskattning av textbredd i pixlar (ingen canvas-mätning tillgänglig
+ * i SVG utan ref-trick) - används för att ge axlarna tillräckligt med
+ * vänster-/högerutrymme åt breda etiketter som "21 600 kr" (annars klipps
+ * siffrorna av mot diagrammets kant, se buggen med kronbelopp 2026-09-15). */
+function estimateTextWidth(text: string, fontSize: number): number {
+  return text.length * fontSize * 0.58;
 }
 
 // ---------- Enkelserie-diagram (t.ex. antal betting-vinster per år) ----------
@@ -221,32 +229,103 @@ function buildScale(series: AxisSeries, innerH: number) {
   };
 }
 
+// Fontstorlek/vikt för axelvärdena (kronbelopp, placering, snittslag) - gjorda
+// fetstilade och lite större 2026-09-15 på Davids begäran, så de syns
+// tydligare mot den tunna rutnätslinjen.
+const AXIS_VALUE_FONT_SIZE = 11;
+const AXIS_VALUE_FONT_WEIGHT = 700;
+
 export function DualAxisLineChart({ left, right, height = 260, yearDomain: forcedDomain, missedYears = [] }: DualAxisLineChartProps) {
   const uid = useId();
-  const innerW = WIDTH - PADDING_LEFT - PADDING_RIGHT;
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [hoverYear, setHoverYear] = useState<number | null>(null);
+
   const innerH = height - PADDING_TOP - PADDING_BOTTOM;
   const bottomY = PADDING_TOP + innerH;
 
   const { minYear, maxYear } = forcedDomain ?? yearDomain([left.data, right.data]);
-  const xForYear = (year: number) =>
-    PADDING_LEFT + (maxYear === minYear ? innerW / 2 : ((year - minYear) / (maxYear - minYear)) * innerW);
-  const xFor = (d: LineChartPoint) => xForYear(d.year);
 
   const leftScale = buildScale(left, innerH);
   const rightScale = buildScale(right, innerH);
 
-  const leftSegments = buildSegments(left.data, xFor, leftScale.yFor);
-  const rightSegments = buildSegments(right.data, xFor, rightScale.yFor);
-
   const leftTicks = [leftScale.rawMin, (leftScale.rawMin + leftScale.rawMax) / 2, leftScale.rawMax];
   const rightTicks = [rightScale.rawMin, (rightScale.rawMin + rightScale.rawMax) / 2, rightScale.rawMax];
+
+  // Dynamisk vänster-/högerpadding: beräknad utifrån de faktiska
+  // axeletiketternas textbredd (t.ex. "21 600 kr" är mycket bredare än
+  // "22:a"), så breda kronbelopp inte klipps av mot diagrammets kant.
+  const padLeft = Math.max(
+    PADDING_LEFT,
+    Math.max(...leftTicks.map((t) => estimateTextWidth(formatValue(t, left.format), AXIS_VALUE_FONT_SIZE))) + 16
+  );
+  const padRight = Math.max(
+    PADDING_RIGHT,
+    Math.max(...rightTicks.map((t) => estimateTextWidth(formatValue(t, right.format), AXIS_VALUE_FONT_SIZE))) + 16
+  );
+  const innerW = WIDTH - padLeft - padRight;
+
+  const xForYear = (year: number) =>
+    padLeft + (maxYear === minYear ? innerW / 2 : ((year - minYear) / (maxYear - minYear)) * innerW);
+  const xFor = (d: LineChartPoint) => xForYear(d.year);
+
+  const leftSegments = buildSegments(left.data, xFor, leftScale.yFor);
+  const rightSegments = buildSegments(right.data, xFor, rightScale.yFor);
 
   const gradLeft = `lc-grad-${uid}-l`;
   const gradRight = `lc-grad-${uid}-r`;
 
+  // --- Interaktiv "scrubbing"-linje (mus/finger) -----------------------
+  // Räknar om en klient-x-koordinat (från pointer-eventet) till närmaste år
+  // i diagrammets skala, oavsett hur diagrammet faktiskt är skalat på
+  // skärmen (viewBox kan vara nedskalad från 720px till t.ex. mobilbredd).
+  function yearFromClientX(clientX: number): number | null {
+    const svg = svgRef.current;
+    if (!svg) return null;
+    const rect = svg.getBoundingClientRect();
+    if (rect.width === 0) return null;
+    const viewBoxX = ((clientX - rect.left) / rect.width) * WIDTH;
+    const t = innerW === 0 ? 0 : (viewBoxX - padLeft) / innerW;
+    const clampedT = Math.min(1, Math.max(0, t));
+    return Math.round(minYear + clampedT * (maxYear - minYear));
+  }
+
+  function handlePointerMove(e: ReactPointerEvent<SVGRectElement>) {
+    setHoverYear(yearFromClientX(e.clientX));
+  }
+  function handlePointerLeave() {
+    setHoverYear(null);
+  }
+
+  const hoverX = hoverYear != null ? xForYear(hoverYear) : null;
+  const hoverLeftPoint = hoverYear != null ? left.data.find((d) => d.year === hoverYear) : undefined;
+  const hoverRightPoint = hoverYear != null ? right.data.find((d) => d.year === hoverYear) : undefined;
+  const hoverLeftVal = hoverLeftPoint?.value ?? null;
+  const hoverRightVal = hoverRightPoint?.value ?? null;
+  const hoverLeftY = hoverLeftVal != null ? leftScale.yFor(hoverLeftVal) : null;
+  const hoverRightY = hoverRightVal != null ? rightScale.yFor(hoverRightVal) : null;
+
+  let hoverLabel: { x: number; y: number; text: string; anchor: "start" | "middle" | "end" } | null = null;
+  if (hoverYear != null && hoverX != null) {
+    const candidateYs = [hoverLeftY, hoverRightY].filter((y): y is number => y != null);
+    const topY = candidateYs.length ? Math.min(...candidateYs) : PADDING_TOP + 10;
+    const labelY = Math.max(PADDING_TOP + 10, topY - 14);
+    const parts: string[] = [];
+    if (hoverLeftVal != null) parts.push(`${left.label}: ${formatValue(hoverLeftVal, left.format)}`);
+    if (hoverRightVal != null) parts.push(`${right.label}: ${formatValue(hoverRightVal, right.format)}`);
+    const text = parts.length ? `${hoverYear} · ${parts.join("  ·  ")}` : `${hoverYear}: Ingen data`;
+    const anchor = hoverX < padLeft + 100 ? "start" : hoverX > WIDTH - padRight - 100 ? "end" : "middle";
+    hoverLabel = { x: hoverX, y: labelY, text, anchor };
+  }
+
   return (
     <div>
-      <svg viewBox={`0 0 ${WIDTH} ${height}`} className="w-full" role="img" aria-label="Linjediagram med två axlar">
+      <svg
+        ref={svgRef}
+        viewBox={`0 0 ${WIDTH} ${height}`}
+        className="w-full"
+        role="img"
+        aria-label="Linjediagram med två axlar"
+      >
         <defs>
           <linearGradient id={gradLeft} x1={0} y1={PADDING_TOP} x2={0} y2={bottomY} gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor={left.color} stopOpacity={0.32} />
@@ -277,16 +356,32 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
 
         {/* Mittlinje för referens - visar inte siffror, bara ett neutralt rutnät. */}
         {[0, 0.5, 1].map((t, i) => (
-          <line key={i} x1={PADDING_LEFT} x2={WIDTH - PADDING_RIGHT} y1={PADDING_TOP + t * innerH} y2={PADDING_TOP + t * innerH} stroke="#e7e5e4" strokeWidth={1} />
+          <line key={i} x1={padLeft} x2={WIDTH - padRight} y1={PADDING_TOP + t * innerH} y2={PADDING_TOP + t * innerH} stroke="#e7e5e4" strokeWidth={1} />
         ))}
 
         {leftTicks.map((t, i) => (
-          <text key={`lt-${i}`} x={PADDING_LEFT - 8} y={leftScale.yFor(t) + 3} textAnchor="end" fontSize={10} fill={left.color}>
+          <text
+            key={`lt-${i}`}
+            x={padLeft - 8}
+            y={leftScale.yFor(t) + 4}
+            textAnchor="end"
+            fontSize={AXIS_VALUE_FONT_SIZE}
+            fontWeight={AXIS_VALUE_FONT_WEIGHT}
+            fill={left.color}
+          >
             {formatValue(t, left.format)}
           </text>
         ))}
         {rightTicks.map((t, i) => (
-          <text key={`rt-${i}`} x={WIDTH - PADDING_RIGHT + 8} y={rightScale.yFor(t) + 3} textAnchor="start" fontSize={10} fill={right.color}>
+          <text
+            key={`rt-${i}`}
+            x={WIDTH - padRight + 8}
+            y={rightScale.yFor(t) + 4}
+            textAnchor="start"
+            fontSize={AXIS_VALUE_FONT_SIZE}
+            fontWeight={AXIS_VALUE_FONT_WEIGHT}
+            fill={right.color}
+          >
             {formatValue(t, right.format)}
           </text>
         ))}
@@ -336,9 +431,86 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
             </text>
           );
         })}
+
+        {/* Scrubbing-linje: dämpar (mörkar ner) allt till höger om markören,
+            så vänster sida (redan "passerad") känns ljusare/mer aktiv. */}
+        {hoverX != null && (
+          <g pointerEvents="none">
+            <rect
+              x={hoverX}
+              y={PADDING_TOP}
+              width={Math.max(0, WIDTH - padRight - hoverX)}
+              height={innerH}
+              fill="#1c1917"
+              fillOpacity={0.05}
+            />
+            <line x1={hoverX} x2={hoverX} y1={PADDING_TOP} y2={bottomY} stroke="#78716c" strokeWidth={1} />
+            {hoverLeftY != null && (
+              <circle cx={hoverX} cy={hoverLeftY} r={4.5} fill={left.color} stroke="white" strokeWidth={1.5} />
+            )}
+            {hoverRightY != null && (
+              <circle cx={hoverX} cy={hoverRightY} r={4.5} fill={right.color} stroke="white" strokeWidth={1.5} />
+            )}
+          </g>
+        )}
+
+        {/* Flytande etikett rakt ovanför den för tillfället högsta kurvpunkten -
+            uppdaterar löpande summorna för det år man för muspekaren/fingret över. */}
+        {hoverLabel && (
+          <g pointerEvents="none">
+            {(() => {
+              const bgWidth = estimateTextWidth(hoverLabel.text, AXIS_VALUE_FONT_SIZE) + 20;
+              const bgHeight = 20;
+              let bgX =
+                hoverLabel.anchor === "middle"
+                  ? hoverLabel.x - bgWidth / 2
+                  : hoverLabel.anchor === "start"
+                    ? hoverLabel.x - 6
+                    : hoverLabel.x - bgWidth + 6;
+              bgX = Math.min(WIDTH - bgWidth - 2, Math.max(2, bgX));
+              return (
+                <>
+                  <rect
+                    x={bgX}
+                    y={hoverLabel.y - 14}
+                    width={bgWidth}
+                    height={bgHeight}
+                    rx={5}
+                    fill="white"
+                    fillOpacity={0.96}
+                    stroke="#e7e5e4"
+                  />
+                  <text
+                    x={bgX + bgWidth / 2}
+                    y={hoverLabel.y}
+                    textAnchor="middle"
+                    fontSize={AXIS_VALUE_FONT_SIZE}
+                    fontWeight={AXIS_VALUE_FONT_WEIGHT}
+                    fill="#292524"
+                  >
+                    {hoverLabel.text}
+                  </text>
+                </>
+              );
+            })()}
+          </g>
+        )}
+
+        {/* Osynlig fångstyta för mus/pekare/finger, ovanpå allt annat. */}
+        <rect
+          x={padLeft}
+          y={PADDING_TOP}
+          width={innerW}
+          height={innerH}
+          fill="transparent"
+          style={{ touchAction: "none", cursor: "crosshair" }}
+          onPointerMove={handlePointerMove}
+          onPointerDown={handlePointerMove}
+          onPointerLeave={handlePointerLeave}
+        />
       </svg>
 
-      <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-stone-500">
+      <div className="mt-1 flex flex-wrap items-center gap-4 text-sm font-semibold text-stone-600">
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: left.color }} />
           {left.label}
@@ -348,7 +520,7 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
           {right.label}
         </span>
         {missedYears.length > 0 && (
-          <span className="inline-flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-1.5 text-xs font-normal text-stone-500">
             <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: MISSED_TICK_COLOR, opacity: 0.35 }} />
             Deltog inte
           </span>
