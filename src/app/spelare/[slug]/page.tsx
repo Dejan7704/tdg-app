@@ -89,8 +89,8 @@ export default async function PlayerPage({
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <Stat label="Upplagor spelade" value={history.length} sub={`${playedPct}% av alla upplagor`} />
-        <Stat label="Segrar" value={wins} sub={`${winsPct}% av alla upplagor`} />
+        <Stat label="Upplagor spelade" value={history.length} sub={`${playedPct}%`} />
+        <Stat label="Segrar" value={wins} sub={`${winsPct}%`} />
         <Stat label="Bästa placering" value={best ? `${best}:a` : "–"} />
       </div>
 
@@ -144,7 +144,7 @@ function Stat({ label, value, sub }: { label: string; value: string | number; su
     <div className="rounded-xl bg-tdg-gray-light p-4 text-center">
       <div className="text-2xl font-bold text-tdg-green">{value}</div>
       <div className="mt-1 text-xs text-stone-600">{label}</div>
-      {sub && <div className="mt-0.5 text-xs text-stone-400">{sub}</div>}
+      {sub && <div className="mt-0.5 text-xs text-stone-900">{sub}</div>}
     </div>
   );
 }
