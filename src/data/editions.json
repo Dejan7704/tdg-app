@@ -2,46 +2,81 @@
  {
   "year": 2004,
   "roman": "I",
-  "hasRoundData": false,
+  "hasRoundData": true,
   "sections": {
    "poängbogey": {
-    "courses": [],
+    "courses": [
+     "Barsebäck Master Course",
+     "Tomelilla Runda 1",
+     "Tomelilla Runda 2",
+     "Kävlinge"
+    ],
     "standings": [
      {
       "name": "Vessla",
       "placering": 1,
       "total": null,
-      "rounds": []
+      "rounds": [
+       null,
+       null,
+       null,
+       null
+      ]
      },
      {
       "name": "Hjärna",
       "placering": 2,
-      "total": null,
-      "rounds": []
+      "total": 139,
+      "rounds": [
+       36,
+       36,
+       39,
+       28
+      ]
      },
      {
       "name": "Besserwisser",
       "placering": 3,
-      "total": null,
-      "rounds": []
+      "total": 133,
+      "rounds": [
+       32,
+       36,
+       30,
+       35
+      ]
      },
      {
       "name": "Mad Dogg",
       "placering": 4,
-      "total": null,
-      "rounds": []
+      "total": 134,
+      "rounds": [
+       30,
+       30,
+       36,
+       38
+      ]
      },
      {
       "name": "Jorge",
       "placering": 5,
-      "total": null,
-      "rounds": []
+      "total": 130,
+      "rounds": [
+       30,
+       42,
+       27,
+       31
+      ]
      },
      {
       "name": "Kotte",
       "placering": 6,
-      "total": null,
-      "rounds": []
+      "total": 111,
+      "rounds": [
+       25,
+       30,
+       26,
+       30
+      ]
      }
     ]
    }
@@ -51,58 +86,103 @@
  {
   "year": 2005,
   "roman": "II",
-  "hasRoundData": false,
+  "hasRoundData": true,
   "sections": {
    "poängbogey": {
-    "courses": [],
+    "courses": [
+     "Kristianstad",
+     "Djupedal",
+     "Lilla Vik",
+     "Falsterbo"
+    ],
     "standings": [
      {
       "name": "Vessla",
       "placering": 1,
-      "total": null,
-      "rounds": []
+      "total": 126,
+      "rounds": [
+       37,
+       27,
+       35,
+       27
+      ]
      },
      {
       "name": "Chuleta",
       "placering": 2,
-      "total": null,
-      "rounds": []
+      "total": 130,
+      "rounds": [
+       27,
+       30,
+       36,
+       37
+      ]
      },
      {
       "name": "Besserwisser",
       "placering": 3,
-      "total": null,
-      "rounds": []
+      "total": 121,
+      "rounds": [
+       22,
+       30,
+       32,
+       37
+      ]
      },
      {
       "name": "Choke",
       "placering": 4,
-      "total": null,
-      "rounds": []
+      "total": 113,
+      "rounds": [
+       29,
+       23,
+       33,
+       28
+      ]
      },
      {
       "name": "Krabba",
       "placering": 5,
-      "total": null,
-      "rounds": []
+      "total": 115,
+      "rounds": [
+       29,
+       27,
+       30,
+       29
+      ]
      },
      {
       "name": "Mad Dogg",
       "placering": 6,
-      "total": null,
-      "rounds": []
+      "total": 119,
+      "rounds": [
+       32,
+       35,
+       28,
+       24
+      ]
      },
      {
       "name": "Hjärna",
       "placering": 7,
-      "total": null,
-      "rounds": []
+      "total": 111,
+      "rounds": [
+       29,
+       30,
+       27,
+       25
+      ]
      },
      {
       "name": "Kotte",
       "placering": 8,
-      "total": null,
-      "rounds": []
+      "total": 98,
+      "rounds": [
+       23,
+       31,
+       29,
+       15
+      ]
      }
     ]
    }
@@ -112,64 +192,114 @@
  {
   "year": 2006,
   "roman": "III",
-  "hasRoundData": false,
+  "hasRoundData": true,
   "sections": {
    "poängbogey": {
-    "courses": [],
+    "courses": [
+     "Bäckavattnet",
+     "Halmstad Norra",
+     "Halmstad Södra",
+     "Ringenäs"
+    ],
     "standings": [
      {
       "name": "Chuleta",
       "placering": 1,
-      "total": null,
-      "rounds": []
+      "total": 144,
+      "rounds": [
+       35,
+       31,
+       36,
+       42
+      ]
      },
      {
       "name": "Choke",
       "placering": 2,
-      "total": null,
-      "rounds": []
+      "total": 126,
+      "rounds": [
+       30,
+       28,
+       35,
+       33
+      ]
      },
      {
       "name": "Vessla",
       "placering": 3,
-      "total": null,
-      "rounds": []
+      "total": 130,
+      "rounds": [
+       37,
+       29,
+       32,
+       32
+      ]
      },
      {
       "name": "Besserwisser",
       "placering": 4,
-      "total": null,
-      "rounds": []
+      "total": 132,
+      "rounds": [
+       40,
+       31,
+       26,
+       35
+      ]
      },
      {
       "name": "Mad Dogg",
       "placering": 5,
-      "total": null,
-      "rounds": []
+      "total": 125,
+      "rounds": [
+       28,
+       37,
+       30,
+       30
+      ]
      },
      {
       "name": "Jorge",
       "placering": 6,
-      "total": null,
-      "rounds": []
+      "total": 127,
+      "rounds": [
+       37,
+       29,
+       31,
+       30
+      ]
      },
      {
       "name": "Kotte",
       "placering": 7,
-      "total": null,
-      "rounds": []
+      "total": 113,
+      "rounds": [
+       23,
+       26,
+       27,
+       37
+      ]
      },
      {
       "name": "Krabba",
       "placering": 8,
-      "total": null,
-      "rounds": []
+      "total": 108,
+      "rounds": [
+       27,
+       32,
+       21,
+       28
+      ]
      },
      {
       "name": "Hjärna",
       "placering": 9,
-      "total": null,
-      "rounds": []
+      "total": 103,
+      "rounds": [
+       22,
+       33,
+       27,
+       21
+      ]
      }
     ]
    }
