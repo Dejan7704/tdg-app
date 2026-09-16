@@ -12,7 +12,7 @@ import {
   CATEGORY_ORDER,
   type BusinessYear,
 } from "@/lib/business";
-import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR } from "@/lib/data";
+import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection } from "@/lib/data";
 import { DualAxisLineChart } from "@/components/LineChart";
 
 function formatSek(n: number): string {
@@ -43,10 +43,14 @@ function RoundCard({ business, round }: { business: BusinessYear; round: number 
   const roundData = business.rounds.find((r) => r.round === round);
   if (!roundData) return null;
 
+  const edition = getEdition(business.year);
+  const course = edition ? getMainSection(edition)?.courses[round - 1] : undefined;
+
   return (
     <div className="overflow-hidden rounded-xl bg-tdg-gray-light">
       <div className="bg-tdg-green-dark px-4 py-2 text-sm font-semibold text-white">
         Runda {round}
+        {course && <span className="ml-2 font-normal text-white/70">· {course}</span>}
       </div>
       <div className="grid divide-y divide-white sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:grid-cols-6">
         {CATEGORY_ORDER.map((cat) => {

@@ -79,7 +79,8 @@ export default async function EditionPage({
                     <th className="px-4 py-2 font-medium">Spelare</th>
                     {section.courses.map((c, i) => (
                       <th key={i} className="px-4 py-2 font-medium">
-                        R{i + 1}
+                        <div>R{i + 1}</div>
+                        {c && <div className="text-xs font-normal text-stone-400">{c}</div>}
                       </th>
                     ))}
                     <th className="px-4 py-2 font-medium">Totalt</th>
