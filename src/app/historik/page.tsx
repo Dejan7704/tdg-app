@@ -23,7 +23,7 @@ export default function HistorikPage() {
 
       <div className="grid grid-cols-2 gap-4 sm:max-w-md">
         <Stat label="Länder spelade i" value={uniqueCountries} />
-        <Stat label="Banor spelade" value={uniqueCourses} />
+        <Stat label="Unika banor spelade" value={uniqueCourses} />
       </div>
 
       <div className="flex flex-col gap-4">
