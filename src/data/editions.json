@@ -3156,10 +3156,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "Master Course",
-     "Donald Steele",
-     "Donald Steele",
-     "Master Course"
+     "Barsebäck-Ocean Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Ocean Course"
     ],
     "standings": [
      {
@@ -3243,10 +3243,10 @@
    },
    "nettoslag": {
     "courses": [
-     "Master Course",
-     "Donald Steele",
-     "Donald Steele",
-     "Master Course"
+     "Barsebäck-Ocean Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Ocean Course"
     ],
     "standings": [
      {
@@ -3330,10 +3330,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "Master Course",
-     "Donald Steele",
-     "Donald Steele",
-     "Master Course"
+     "Barsebäck-Ocean Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Pine Course",
+     "Barsebäck-Ocean Course"
     ],
     "standings": [
      {
@@ -3416,7 +3416,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Sverige"
  },
  {
   "year": 2021,
