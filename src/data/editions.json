@@ -3837,10 +3837,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club"
     ],
     "standings": [
      {
@@ -3924,10 +3924,10 @@
    },
    "nettoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club"
     ],
     "standings": [
      {
@@ -4110,10 +4110,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club",
+     "Marco Simone Golf & Country Club"
     ],
     "standings": [
      {
@@ -4196,7 +4196,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Italien"
  },
  {
   "year": 2023,
