@@ -18,7 +18,9 @@ export default function HistorikPage() {
         {sorted.map((e) => {
           const winner = getWinner(e);
           const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
-          const courses = getMainSection(e)?.courses.filter(Boolean) ?? [];
+          const section = getMainSection(e);
+          const courses = section?.courses.filter(Boolean) ?? [];
+          const participants = section?.standings ?? [];
 
           return (
             <div key={e.year} className="overflow-hidden rounded-xl border border-stone-200 bg-white">
@@ -36,6 +38,7 @@ export default function HistorikPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-stone-600">
                   <span>{e.country ?? <span className="italic text-stone-400">Land okänt</span>}</span>
+                  <span>{participants.length} spelare</span>
                   <span>
                     Vinnare:{" "}
                     {winner ? (
@@ -57,16 +60,44 @@ export default function HistorikPage() {
               </div>
 
               {courses.length > 0 ? (
-                <ul className="divide-y divide-stone-100">
-                  {courses.map((course, i) => (
-                    <li key={i} className="flex items-center gap-3 px-4 py-2 text-sm">
-                      <span className="w-20 shrink-0 font-medium text-stone-400">
-                        Runda {i + 1}
-                      </span>
-                      <span className="text-stone-700">{course}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex flex-col sm:flex-row">
+                  <ul className="divide-y divide-stone-100 sm:w-72 sm:shrink-0 sm:border-r sm:border-stone-100">
+                    {courses.map((course, i) => (
+                      <li key={i} className="flex items-center gap-3 px-4 py-2 text-sm">
+                        <span className="w-16 shrink-0 font-medium text-stone-400">
+                          Runda {i + 1}
+                        </span>
+                        <span className="text-stone-700">{course}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex-1 border-t border-stone-100 px-4 py-3 sm:border-t-0">
+                    <div className="text-xs font-medium uppercase tracking-wide text-stone-400">
+                      Deltagare
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap gap-x-1 gap-y-1 text-sm">
+                      {participants.map((p, i) => {
+                        const player = getPlayerByNickname(p.name);
+                        const isLast = i === participants.length - 1;
+                        return (
+                          <span key={p.name}>
+                            {player ? (
+                              <Link
+                                href={`/spelare/${player.id}`}
+                                className="text-tdg-green hover:underline"
+                              >
+                                {p.name}
+                              </Link>
+                            ) : (
+                              <span className="text-stone-700">{p.name}</span>
+                            )}
+                            {!isLast && <span className="text-stone-300">,</span>}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <p className="px-4 py-3 text-sm text-stone-400">
                   Endast slutplacering registrerad – rondresultat/banor saknas i källdatan.
