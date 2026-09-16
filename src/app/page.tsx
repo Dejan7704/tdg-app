@@ -14,10 +14,7 @@ export default function Home() {
           önskat av David, se layout.tsx. Bara så mycket att det är det
           rundade hörnet som täcks, inte rubriktexten. */}
       <section className="-mt-16 rounded-xl bg-tdg-green-dark px-6 py-8 text-white">
-        <p className="text-sm font-medium uppercase tracking-wide text-tdg-yellow">
-          TDG {latest.roman} · {latest.year}
-        </p>
-        <h1 className="mt-1 text-3xl font-bold">Välkommen till Tour De Gölf</h1>
+        <h1 className="text-3xl font-bold">Välkommen till Tour De Gölf</h1>
         <p className="mt-2 max-w-2xl text-white/85">
           Här hittar du allt som är värt att veta om TDG. Rond för rond sedan starten.
           Vem som vunnit vad, på golfbanan och i pokerrummet. Alla utlägg samt
@@ -25,7 +22,7 @@ export default function Home() {
         </p>
         {winner && (
           <p className="mt-4 text-white/85">
-            <span className="font-medium text-tdg-yellow">🏆 Senaste vinnare:</span>{" "}
+            <span className="font-medium text-white">🏆 Regerande mästare:</span>{" "}
             {winnerPlayer ? (
               <Link
                 href={`/spelare/${winnerPlayer.id}`}
