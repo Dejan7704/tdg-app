@@ -17,11 +17,11 @@ export default function Home() {
         <p className="text-sm font-medium uppercase tracking-wide text-tdg-yellow">
           TDG {latest.roman} · {latest.year}
         </p>
-        <h1 className="mt-1 text-3xl font-bold">Välkommen till Tour De Golf</h1>
+        <h1 className="mt-1 text-3xl font-bold">Välkommen till Tour De Gölf</h1>
         <p className="mt-2 max-w-2xl text-white/85">
-          Historik, statistik och betting för TDG sedan 2004 – {editions.length} upplagor
-          och räknas. Här samlar vi resultat rond för rond, vem som vunnit totalen,
-          alla vad och pokerspel, samt utlägg och avräkningar mellan oss.
+          Här hittar du allt som är värt att veta om TDG. Rond för rond sedan starten.
+          Vem som vunnit vad, på golfbanan och i pokerrummet. Alla utlägg samt
+          avräkningar oss emellan.
         </p>
         {winner && (
           <p className="mt-4 text-white/85">
