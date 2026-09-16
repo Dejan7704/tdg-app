@@ -1755,10 +1755,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "Stadium",
-     "Tour",
-     "Tour",
-     "Stadium "
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -1864,10 +1864,10 @@
    },
    "nettoslag": {
     "courses": [
-     "Stadium",
-     "Tour",
-     "Tour",
-     "Stadium "
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -1973,10 +1973,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "Stadium",
-     "Tour",
-     "Tour",
-     "Stadium "
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -2081,7 +2081,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Spanien"
  },
  {
   "year": 2016,
@@ -2090,10 +2090,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "Tour",
-     "Tour",
-     "Stadium ",
-     "Stadium "
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -2166,10 +2166,10 @@
    },
    "nettoslag": {
     "courses": [
-     "Tour",
-     "Tour",
-     "Stadium ",
-     "Stadium "
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -2242,10 +2242,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "Tour",
-     "Tour",
-     "Stadium ",
-     "Stadium "
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Tour Course",
+     "PGA Catalunya-Stadium Course",
+     "PGA Catalunya-Stadium Course"
     ],
     "standings": [
      {
@@ -2317,7 +2317,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Spanien"
  },
  {
   "year": 2017,
