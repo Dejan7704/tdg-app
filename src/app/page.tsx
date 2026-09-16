@@ -13,7 +13,7 @@ export default function Home() {
           innehållet) medvetet får täcka det gröna hörnet uppe till vänster -
           önskat av David, se layout.tsx. Bara så mycket att det är det
           rundade hörnet som täcks, inte rubriktexten. */}
-      <section className="-mt-16 rounded-xl bg-tdg-green-dark px-6 py-8 text-white">
+      <section className="-mt-16 rounded-xl bg-tdg-green-dark px-6 py-8 text-white sm:mt-0">
         <h1 className="text-3xl font-bold">Välkommen till Tour De Gölf</h1>
         <p className="mt-2 max-w-2xl text-white/85">
           Här hittar du allt som är värt att veta om TDG. Rond för rond sedan starten.
