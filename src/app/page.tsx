@@ -42,18 +42,18 @@ export default function Home() {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <NavCard href="/historik" title="Historik" desc="Översikt alla golfrundor" />
+        <NavCard href="/spelare" title="Spelare" desc="All data per spelare" />
         <NavCard
-          href="/historik"
-          title="Historik"
-          desc={`Alla ${editions.length} upplagor, rond för rond`}
+          href="/betting-business"
+          title="Bokslut"
+          desc="Prisvinster, betting, utlägg & avräkningar"
         />
-        <NavCard href="/spelare" title="Spelare" desc="Presentationer och personlig statistik" />
         <NavCard
-          href="/betting"
-          title="Betting & Poker"
-          desc="Vad kopplat till golfen och pokerkvällarna"
+          href="/utlagg"
+          title="Betting & Expenzes"
+          desc="Registrering vinster, betting & utlägg"
         />
-        <NavCard href="/ekonomi" title="Ekonomi" desc="Utlägg och vem som ska betala vem" />
       </section>
 
       <section className="rounded-xl bg-tdg-green-dark p-6">
