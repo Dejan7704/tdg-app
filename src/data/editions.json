@@ -770,9 +770,9 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "North",
-     "South",
-     "West"
+     "La Manga Club - North Course",
+     "La Manga Club - South Course",
+     "La Manga Club - West Course"
     ],
     "standings": [
      {
@@ -849,9 +849,9 @@
    },
    "nettoslag": {
     "courses": [
-     "North",
-     "South",
-     "West"
+     "La Manga Club - North Course",
+     "La Manga Club - South Course",
+     "La Manga Club - West Course"
     ],
     "standings": [
      {
@@ -927,7 +927,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Spanien"
  },
  {
   "year": 2012,
@@ -936,9 +936,9 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "North",
-     "West",
-     "South"
+     "La Manga Club - North Course",
+     "La Manga Club - West Course",
+     "La Manga Club - South Course"
     ],
     "standings": [
      {
@@ -1015,9 +1015,9 @@
    },
    "nettoslag": {
     "courses": [
-     "North",
-     "West",
-     "South"
+     "La Manga Club - North Course",
+     "La Manga Club - West Course",
+     "La Manga Club - South Course"
     ],
     "standings": [
      {
@@ -1094,9 +1094,9 @@
    },
    "bruttoslag": {
     "courses": [
-     "North",
-     "West",
-     "South"
+     "La Manga Club - North Course",
+     "La Manga Club - West Course",
+     "La Manga Club - South Course"
     ],
     "standings": [
      {
@@ -1172,7 +1172,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Spanien"
  },
  {
   "year": 2013,
