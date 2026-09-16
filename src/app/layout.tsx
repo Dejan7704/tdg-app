@@ -1,20 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import NavLinks from "@/components/NavLinks";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Tour De Golf (TDG)",
   description: "Historik, statistik och betting för Tour De Golf",
 };
-
-const NAV = [
-  { href: "/", label: "Hem" },
-  { href: "/historik", label: "Historik" },
-  { href: "/spelare", label: "Spelare" },
-  { href: "/betting-business", label: "Bokslut" },
-  { href: "/utlagg", label: "Betz & Expz" },
-];
 
 export default function RootLayout({
   children,
@@ -43,17 +36,7 @@ export default function RootLayout({
               />
             </Link>
             <div className="flex items-center justify-end gap-1 py-3 pl-28 sm:pl-44">
-              <nav className="flex flex-wrap justify-end gap-1 text-sm">
-                {NAV.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-md px-3 py-1.5 font-medium text-stone-600 transition hover:bg-tdg-gray-light hover:text-tdg-green"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
+              <NavLinks />
             </div>
           </div>
         </header>
