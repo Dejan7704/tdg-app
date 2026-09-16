@@ -3425,9 +3425,9 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "Alcanada",
-     "Son Vida R1",
-     "Son Vida R2",
+     "Club de Golf Alcanada",
+     "Son Vida",
+     "Son Vida",
      "Son Gual"
     ],
     "standings": [
@@ -3523,9 +3523,9 @@
    },
    "nettoslag": {
     "courses": [
-     "Alcanada",
+     "Club de Golf Alcanada",
      "Son Vida",
-     "Son Vida R2",
+     "Son Vida",
      "Son Gual"
     ],
     "standings": [
@@ -3731,9 +3731,9 @@
    },
    "bruttoslag": {
     "courses": [
-     "Alcanada",
+     "Club de Golf Alcanada",
      "Son Vida",
-     "Son Vida R2",
+     "Son Vida",
      "Son Gual"
     ],
     "standings": [
@@ -4205,10 +4205,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb"
     ],
     "standings": [
      {
@@ -4314,10 +4314,10 @@
    },
    "nettoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb"
     ],
     "standings": [
      {
@@ -4423,10 +4423,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb",
+     "Visby Golfklubb"
     ],
     "standings": [
      {
@@ -4531,7 +4531,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Sverige"
  },
  {
   "year": 2024,
@@ -4540,10 +4540,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Camiral - Stadium Course",
+     "Camiral - Tour Course",
+     "Camiral - Tour Course",
+     "Camiral - Stadium Course"
     ],
     "standings": [
      {
@@ -4627,10 +4627,10 @@
    },
    "nettoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Camiral - Stadium Course",
+     "Camiral - Tour Course",
+     "Camiral - Tour Course",
+     "Camiral - Stadium Course"
     ],
     "standings": [
      {
@@ -4714,10 +4714,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Camiral - Stadium Course",
+     "Camiral - Tour Course",
+     "Camiral - Tour Course",
+     "Camiral - Stadium Course"
     ],
     "standings": [
      {
@@ -4800,7 +4800,7 @@
     ]
    }
   },
-  "country": null
+  "country": "Spanien"
  },
  {
   "year": 2025,
@@ -4809,10 +4809,10 @@
   "sections": {
    "poängbogey": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Glasgow Gailes",
+     "Dundonald Links",
+     "Barassie Links",
+     "Dundonald Links"
     ],
     "standings": [
      {
@@ -4896,10 +4896,10 @@
    },
    "nettoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Glasgow Gailes",
+     "Dundonald Links",
+     "Barassie Links",
+     "Dundonald Links"
     ],
     "standings": [
      {
@@ -4983,10 +4983,10 @@
    },
    "bruttoslag": {
     "courses": [
-     "R1",
-     "R2",
-     "R3",
-     "R4"
+     "Glasgow Gailes",
+     "Dundonald Links",
+     "Barassie Links",
+     "Dundonald Links"
     ],
     "standings": [
      {
@@ -5069,6 +5069,6 @@
     ]
    }
   },
-  "country": null
+  "country": "Irland"
  }
 ]
