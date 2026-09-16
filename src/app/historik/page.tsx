@@ -4,6 +4,13 @@ import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/
 export default function HistorikPage() {
   const sorted = [...editions].sort((a, b) => b.year - a.year);
 
+  const uniqueCountries = new Set(editions.map((e) => e.country).filter(Boolean)).size;
+  const uniqueCourses = new Set(
+    editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? []))
+      .map((c) => c.trim())
+      .filter(Boolean)
+  ).size;
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -12,6 +19,11 @@ export default function HistorikPage() {
           Alla {editions.length} upplagor av Tour De Golf, 2004–2025 – rond för rond. Klicka
           på ett år för fullständigt rondresultat och tabell.
         </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 sm:max-w-md">
+        <Stat label="Länder spelade i" value={uniqueCountries} />
+        <Stat label="Banor spelade" value={uniqueCourses} />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -107,6 +119,15 @@ export default function HistorikPage() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl bg-tdg-gray-light p-4 text-center">
+      <div className="text-2xl font-bold text-tdg-green">{value}</div>
+      <div className="mt-1 text-xs text-stone-600">{label}</div>
     </div>
   );
 }
