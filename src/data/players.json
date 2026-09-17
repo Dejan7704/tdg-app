@@ -17,7 +17,8 @@
   {
     "id": "martin-werner",
     "fullName": "Martin Werner",
-    "nicknames": ["Krabba", "Skaldjur"]
+    "nicknames": ["Krabba", "Skaldjur"],
+    "photo": "/players/martin-werner.jpg"
   },
   {
     "id": "david-malmstrom",
