@@ -1,0 +1,163 @@
+{
+ "year": 2020,
+ "stakePerPlayer": 1300,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Kropp",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Krabba",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Kropp",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Arslet",
+     "amount": 700
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Kropp",
+     "amount": 2800
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Arslet",
+     "amount": 450
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Arslet",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Choke",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Kropp",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Kropp",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "forstaNio",
+     "nickname": "Choke",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Mad Dogg",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Kropp",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Hjärna",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Arslet",
+     "amount": 700
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Kropp",
+   "belopp": 0
+  },
+  {
+   "nickname": "Krabba",
+   "belopp": 1770
+  },
+  {
+   "nickname": "Arslet",
+   "belopp": 2860
+  },
+  {
+   "nickname": "Mad Dogg",
+   "belopp": 2080
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 3950
+  },
+  {
+   "nickname": "Choke",
+   "belopp": 936
+  },
+  {
+   "nickname": "Vessla",
+   "belopp": 2400
+  }
+ ],
+ "poker": [
+  {
+   "nickname": "Arslet",
+   "netto": 200
+  },
+  {
+   "nickname": "Hjärna",
+   "netto": 500
+  },
+  {
+   "nickname": "Vessla",
+   "netto": 500
+  }
+ ],
+ "settlementNotes": [
+  {
+   "nickname": "Krabba",
+   "note": "Kropp"
+  },
+  {
+   "nickname": "Mad Dogg",
+   "note": "Kropp"
+  },
+  {
+   "nickname": "Choke",
+   "note": "Arslet + Hjärna"
+  },
+  {
+   "nickname": "Vessla",
+   "note": "Hjärna"
+  }
+ ]
+}
