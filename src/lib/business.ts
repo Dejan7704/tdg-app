@@ -9,6 +9,7 @@ import business2017 from "@/data/business-2017.json";
 import business2018 from "@/data/business-2018.json";
 import business2019 from "@/data/business-2019.json";
 import business2020 from "@/data/business-2020.json";
+import business2021 from "@/data/business-2021.json";
 import business2022 from "@/data/business-2022.json";
 import business2023 from "@/data/business-2023.json";
 import business2025 from "@/data/business-2025.json";
@@ -97,6 +98,7 @@ const BUSINESS_YEARS: Record<number, BusinessYear> = {
   2018: business2018 as BusinessYear,
   2019: business2019 as BusinessYear,
   2020: business2020 as BusinessYear,
+  2021: business2021 as BusinessYear,
   2022: business2022 as BusinessYear,
   2023: business2023 as BusinessYear,
   2025: business2025 as BusinessYear,
