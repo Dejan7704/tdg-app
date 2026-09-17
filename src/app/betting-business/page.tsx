@@ -201,31 +201,24 @@ export default async function BettingBusinessPage({
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-          Utveckling över åren
+          Totalt pengaflöde per år - vinstpengar & utlägg
         </h2>
         <div className="rounded-xl border border-stone-200 bg-white p-4">
-          <p className="text-xs text-stone-400">
-            Totalt betting-vunnet och totalt utlägg per år, summerat över alla spelare –
-            visar vilka år vi spelat om och lagt ut mest, oavsett vem. Bruten linje betyder
-            att det året saknar data ännu.
-          </p>
-          <div className="mt-2">
-            <DualAxisLineChart
-              left={{
-                data: yearlyTotals.map((d) => ({ year: d.year, value: d.bettingTotal })),
-                color: "#065f46",
-                label: "Betting-vunnet totalt",
-                format: "sek",
-              }}
-              right={{
-                data: yearlyTotals.map((d) => ({ year: d.year, value: d.utlaggTotal })),
-                color: "#b45309",
-                label: "Utlägg totalt",
-                format: "sek",
-              }}
-              yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: EDITIONS_MAX_YEAR }}
-            />
-          </div>
+          <DualAxisLineChart
+            left={{
+              data: yearlyTotals.map((d) => ({ year: d.year, value: d.bettingTotal })),
+              color: "#065f46",
+              label: "Betting-vunnet totalt",
+              format: "sek",
+            }}
+            right={{
+              data: yearlyTotals.map((d) => ({ year: d.year, value: d.utlaggTotal })),
+              color: "#b45309",
+              label: "Utlägg totalt",
+              format: "sek",
+            }}
+            yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: EDITIONS_MAX_YEAR }}
+          />
         </div>
       </section>
 
