@@ -1,0 +1,206 @@
+{
+ "year": 2022,
+ "stakePerPlayer": 2000,
+ "rounds": [
+  {
+   "round": 1,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Madz",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Vessla",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Kotte",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Krabba",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Krabba",
+     "amount": 700
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Krabba",
+     "amount": 450
+    },
+    {
+     "category": "sweepstake",
+     "nickname": "Kotte",
+     "amount": 650
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Vessla",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Arslet",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Arslet",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Kotte",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Arslet",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Hjärna",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Chuleta",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Krabba",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Kotte",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Kotte",
+     "amount": 700
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "wins": [
+    {
+     "category": "closest",
+     "nickname": "Kotte",
+     "amount": 700
+    },
+    {
+     "category": "longest",
+     "nickname": "Chuleta",
+     "amount": 700
+    },
+    {
+     "category": "forstaNio",
+     "nickname": "Krabba",
+     "amount": 700
+    },
+    {
+     "category": "andraNio",
+     "nickname": "Hjärna",
+     "amount": 700
+    },
+    {
+     "category": "totalen",
+     "nickname": "Krabba",
+     "amount": 700
+    }
+   ]
+  }
+ ],
+ "utlagg": [
+  {
+   "nickname": "Krabba",
+   "belopp": 230
+  },
+  {
+   "nickname": "Arslet",
+   "belopp": 720
+  },
+  {
+   "nickname": "Kotte",
+   "belopp": 720
+  },
+  {
+   "nickname": "Hjärna",
+   "belopp": 1330
+  },
+  {
+   "nickname": "Madz",
+   "belopp": 1860
+  },
+  {
+   "nickname": "Chuleta",
+   "belopp": 106790
+  },
+  {
+   "nickname": "Vessla",
+   "belopp": 13520
+  }
+ ],
+ "poker": [
+  {
+   "nickname": "Arslet",
+   "netto": 300
+  },
+  {
+   "nickname": "Kotte",
+   "netto": 300
+  },
+  {
+   "nickname": "Vessla",
+   "netto": 850
+  }
+ ],
+ "settlementNotes": [
+  {
+   "nickname": "Krabba",
+   "note": "Chuleta"
+  },
+  {
+   "nickname": "Arslet",
+   "note": "Chuleta"
+  },
+  {
+   "nickname": "Kotte",
+   "note": "Chuleta"
+  },
+  {
+   "nickname": "Hjärna",
+   "note": "Chuleta"
+  },
+  {
+   "nickname": "Madz",
+   "note": "Chuleta"
+  },
+  {
+   "nickname": "Vessla",
+   "note": "Chuleta"
+  }
+ ]
+}
