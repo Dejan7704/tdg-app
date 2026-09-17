@@ -222,6 +222,9 @@ export default async function BettingBusinessPage({
         </div>
       </section>
 
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+        Välj år -{">"} detaljer nedanför
+      </h2>
       <div className="flex flex-wrap gap-2 text-sm">
         {allYears.map((y) => {
           const hasData = yearsWithData.includes(y);
