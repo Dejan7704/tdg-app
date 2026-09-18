@@ -185,8 +185,21 @@ function unknownPlayer(name: string): Player {
   return { id: name, fullName: name, nicknames: [name] };
 }
 
+// Snittplacering över samtliga upplagor spelaren faktiskt deltog i (lägre är
+// bättre - 1:a plats räknas som 1). Används som sista tiebreak i
+// getRankedPlayers. null om spelaren aldrig deltagit (finns inte i praktiken,
+// men skyddar mot division med 0).
+export function getPlayerAveragePlacering(playerId: string): number | null {
+  const history = getPlayerHistory(playerId);
+  if (history.length === 0) return null;
+  const sum = history.reduce((acc, h) => acc + h.standing.placering, 0);
+  return sum / history.length;
+}
+
 // Spelare rankade: flest segrar överst, vid lika segrar rankas flest spelade
-// upplagor högre, och vid fortsatt lika sorteras alfabetiskt.
+// upplagor högre, och vid fortsatt lika avgör bästa (lägsta) genomsnittliga
+// placering över spelarens historik. Om även det är exakt lika sorteras
+// alfabetiskt som absolut sista utväg.
 export function getRankedPlayers(): { player: Player; segrar: number; upplagor: number }[] {
   const segrar = new Map(getSegerrekord().map((s) => [s.player.id, s.segrar]));
   return players
@@ -194,10 +207,14 @@ export function getRankedPlayers(): { player: Player; segrar: number; upplagor: 
       player,
       segrar: segrar.get(player.id) ?? 0,
       upplagor: getPlayerHistory(player.id).length,
+      avgPlacering: getPlayerAveragePlacering(player.id),
     }))
     .sort((a, b) => {
       if (b.segrar !== a.segrar) return b.segrar - a.segrar;
       if (b.upplagor !== a.upplagor) return b.upplagor - a.upplagor;
+      if (a.avgPlacering != null && b.avgPlacering != null && a.avgPlacering !== b.avgPlacering) {
+        return a.avgPlacering - b.avgPlacering;
+      }
       return a.player.fullName.localeCompare(b.player.fullName, "sv");
     });
 }

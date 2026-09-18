@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getPlayerHistory, getPlayerWinYears, getRankedPlayers, playerInitials } from "@/lib/data";
+import { getPlayerWinYears, getRankedPlayers, playerInitials } from "@/lib/data";
 
 export default function SpelarePage() {
   const ranked = getRankedPlayers();
@@ -18,9 +18,6 @@ export default function SpelarePage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ranked.map(({ player, segrar, upplagor }, i) => {
-          const history = getPlayerHistory(player.id);
-          const first = history[0]?.year;
-          const last = history[history.length - 1]?.year;
           const winYears = getPlayerWinYears(player.id);
           const nicks = player.nicknames;
           return (
@@ -29,7 +26,7 @@ export default function SpelarePage() {
               href={`/spelare/${player.id}`}
               className="relative rounded-xl bg-tdg-gray-light p-5 transition hover:shadow-sm"
             >
-              <span className="absolute right-4 top-4 text-xs font-medium text-stone-400">
+              <span className="absolute right-4 top-4 text-lg font-bold text-stone-900">
                 #{i + 1}
               </span>
               <div className="flex items-center gap-4">
@@ -53,9 +50,7 @@ export default function SpelarePage() {
                   )}
                 </div>
               </div>
-              <p className="mt-3 text-sm text-stone-600">
-                {upplagor} upplagor{first && last ? ` · ${first}–${last}` : ""}
-              </p>
+              <p className="mt-3 text-sm text-stone-600">{upplagor} upplagor</p>
               {segrar > 0 && (
                 <p className="mt-1 text-sm font-medium text-stone-900">
                   🏆 {segrar} segrar
