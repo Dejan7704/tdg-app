@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import NavLinks from "@/components/NavLinks";
@@ -7,6 +7,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Tour De Golf (TDG)",
   description: "Historik, statistik och betting för Tour De Golf",
+};
+
+// Talar om för mobilwebbläsare (Chrome/Edge på Android m.fl.) att sidan bara
+// har ett ljust tema, så att deras egen "force dark"-ommålning av sidan (som
+// annars kör oavsett vår egen CSS) stängs av. Detta är utöver color-scheme
+// i globals.css - den täcker prefers-color-scheme-media-queryn, den här
+// metataggen (<meta name="color-scheme" content="light">) täcker
+// webbläsarens egen tvångsmörkläggning.
+export const viewport: Viewport = {
+  colorScheme: "light",
 };
 
 export default function RootLayout({
