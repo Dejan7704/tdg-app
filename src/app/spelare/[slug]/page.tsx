@@ -9,6 +9,7 @@ import {
   getPlayerPlaceringSeries,
   getPlayerNettoAverageSeries,
   getPlayerMissedYears,
+  getPlayerAveragePlacering,
   playerInitials,
   EDITIONS_MIN_YEAR,
   EDITIONS_MAX_YEAR,
@@ -40,6 +41,7 @@ export default async function PlayerPage({
   const history = getPlayerHistory(player.id);
   const wins = history.filter((h) => h.standing.placering === 1).length;
   const best = history.length ? Math.min(...history.map((h) => h.standing.placering)) : null;
+  const avgPlacering = getPlayerAveragePlacering(player.id);
   const totalEditions = editions.length;
   const playedPct = totalEditions ? Math.round((history.length / totalEditions) * 100) : 0;
   const winsPct = totalEditions ? Math.round((wins / totalEditions) * 100) : 0;
@@ -88,10 +90,11 @@ export default async function PlayerPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat label="Upplagor spelade" value={history.length} sub={`${playedPct}%`} />
         <Stat label="Segrar" value={wins} sub={`${winsPct}%`} />
         <Stat label="Bästa placering" value={best ? `${best}:a` : "–"} />
+        <Stat label="Snittplacering" value={avgPlacering != null ? avgPlacering.toFixed(1) : "–"} />
       </div>
 
       <div className="flex flex-col gap-4">
