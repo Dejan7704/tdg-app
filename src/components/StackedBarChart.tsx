@@ -12,10 +12,18 @@ import {
   MISSED_TICK_COLOR,
   AXIS_VALUE_FONT_SIZE,
   AXIS_VALUE_FONT_WEIGHT,
+  AXIS_YEAR_FONT_SIZE,
   formatValue,
   smoothPath,
   type Point,
 } from "@/components/LineChart";
+
+/** Grov uppskattning av textbredd i pixlar (samma metod som i LineChart.tsx) -
+ * används för att räkna ut hur mycket extra högermarginal den ackumulerade
+ * kronsumman/antalet på höger axel behöver. */
+function estimateTextWidth(text: string, fontSize: number): number {
+  return text.length * fontSize * 0.58;
+}
 
 // Neutral, mörk färg för den ackumulerade kurvan - avsiktligt inte grön/orange
 // (som de betting-/utläggsfärgade diagrammen ovanför) så den inte konkurrerar
@@ -77,7 +85,6 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
       maxYear: Math.max(...data.map((d) => d.year)),
     };
 
-  const innerW = WIDTH - PADDING_LEFT - PADDING_RIGHT;
   const innerH = height - PADDING_TOP - PADDING_BOTTOM;
   const bottomY = PADDING_TOP + innerH;
 
@@ -100,9 +107,24 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
   for (let v = cumulativeTickStep; v < cumulativeMax; v += cumulativeTickStep) cumulativeTicks.push(v);
   if (cumulativeTicks[cumulativeTicks.length - 1] !== cumulativeMax) cumulativeTicks.push(cumulativeMax);
 
+  // Provisorisk innerW (med bas-paddingen) bara för att räkna fram stapelbredden -
+  // stapelbredden i sin tur avgör hur mycket den sista stapeln (vid maxYear)
+  // sticker ut förbi själva plotytan, vilket högermarginalen måste kompensera
+  // för (annars hamnar de högra axelsiffrorna delvis inne i stapeln, se bugg
+  // 2026-09-18).
+  const provisionalInnerW = WIDTH - PADDING_LEFT - PADDING_RIGHT;
   const yearCount = Math.max(1, domain.maxYear - domain.minYear + 1);
-  const stepWidth = yearCount > 1 ? innerW / (yearCount - 1) : innerW;
-  const barWidth = Math.min(MAX_BAR_WIDTH, Math.max(4, stepWidth - SEGMENT_GAP * 2));
+  const provisionalStepWidth = yearCount > 1 ? provisionalInnerW / (yearCount - 1) : provisionalInnerW;
+  const barWidth = Math.min(MAX_BAR_WIDTH, Math.max(4, provisionalStepWidth - SEGMENT_GAP * 2));
+
+  // Dynamisk högermarginal: bas-paddingen, plus stapelns halva bredd (den
+  // sista stapelns överhäng förbi maxYear-positionen), plus utrymme för den
+  // bredaste ackumulerade axeletiketten (t.ex. "37").
+  const padRight = Math.max(
+    PADDING_RIGHT,
+    barWidth / 2 + 8 + Math.max(...cumulativeTicks.map((t) => estimateTextWidth(formatValue(t, "integer"), AXIS_VALUE_FONT_SIZE))) + 8
+  );
+  const innerW = WIDTH - PADDING_LEFT - padRight;
 
   const xForYear = (year: number) =>
     PADDING_LEFT +
@@ -175,7 +197,7 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
           const y = bottomY - t * pxPerUnit;
           return (
             <g key={i}>
-              <line x1={PADDING_LEFT} x2={WIDTH - PADDING_RIGHT} y1={y} y2={y} stroke="#e7e5e4" strokeWidth={1} />
+              <line x1={PADDING_LEFT} x2={WIDTH - padRight} y1={y} y2={y} stroke="#e7e5e4" strokeWidth={1} />
               <text
                 x={PADDING_LEFT - 8}
                 y={y + 4}
@@ -192,7 +214,7 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
         {cumulativeTicks.map((t, i) => (
           <text
             key={`ct-${i}`}
-            x={WIDTH - PADDING_RIGHT + 8}
+            x={WIDTH - padRight + barWidth / 2 + 8}
             y={yForCumulative(t) + 4}
             textAnchor="start"
             fontSize={AXIS_VALUE_FONT_SIZE}
@@ -259,8 +281,8 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
               x={xForYear(y)}
               y={height - PADDING_BOTTOM + 16}
               textAnchor="middle"
-              fontSize={AXIS_VALUE_FONT_SIZE}
-              fontWeight={AXIS_VALUE_FONT_WEIGHT}
+              fontSize={AXIS_YEAR_FONT_SIZE}
+              fontWeight={missed ? 700 : 500}
               fill={missed ? MISSED_TICK_COLOR : "#78716c"}
             >
               {y}

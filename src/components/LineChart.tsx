@@ -231,9 +231,15 @@ function buildScale(series: AxisSeries, innerH: number) {
 
 // Fontstorlek/vikt för axelvärdena (kronbelopp, placering, snittslag) - gjorda
 // fetstilade och lite större 2026-09-15 på Davids begäran, så de syns
-// tydligare mot den tunna rutnätslinjen.
-export const AXIS_VALUE_FONT_SIZE = 11;
+// tydligare mot den tunna rutnätslinjen. Höjda ytterligare 2026-09-18 (från
+// 11 till 13) efter feedback om att siffrorna var svåra att läsa på mobil.
+export const AXIS_VALUE_FONT_SIZE = 13;
 export const AXIS_VALUE_FONT_WEIGHT = 700;
+
+// Fontstorlek för årtalen på x-axeln - separat konstant (inte lika stor som
+// AXIS_VALUE_FONT_SIZE, årtalen är fyra siffror och behöver inte vara lika
+// framträdande som mät-/resultatvärdena) men höjd i samma veva, 2026-09-18.
+export const AXIS_YEAR_FONT_SIZE = 12;
 
 // Delad med LineChartFormat/formatValue så andra diagram (StackedBarChart) kan
 // formatera sina egna axelvärden (t.ex. en ackumulerad kronsumma) konsekvent.
@@ -444,9 +450,9 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
               x={xForYear(y)}
               y={height - PADDING_BOTTOM + 16}
               textAnchor="middle"
-              fontSize={10}
-              fontWeight={missed ? 700 : 400}
-              fill={missed ? MISSED_TICK_COLOR : "#a8a29e"}
+              fontSize={AXIS_YEAR_FONT_SIZE}
+              fontWeight={missed ? 700 : 500}
+              fill={missed ? MISSED_TICK_COLOR : "#78716c"}
             >
               {y}
             </text>
