@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Appen är designad med hårdkodade ljusa-tema-färger (text-stone-900 osv)
+     som inte automatiskt byter till mörkt tema. Utan detta blir texten
+     nästan osynlig när mobilen/webbläsaren körs i dark mode - se därför
+     till att sidan alltid renderas i sitt avsedda ljusa tema, oavsett
+     systeminställning. */
+  color-scheme: light;
 }
 
 /* TDG-paletten - inspirerad av masters.com: djupgrön för mörka
@@ -26,13 +32,6 @@
   --color-tdg-green-dark: var(--color-tdg-green-dark);
   --color-tdg-gray-light: var(--color-tdg-gray-light);
   --color-tdg-yellow: var(--color-tdg-yellow);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
