@@ -231,15 +231,20 @@ function buildScale(series: AxisSeries, innerH: number) {
 
 // Fontstorlek/vikt för axelvärdena (kronbelopp, placering, snittslag) - gjorda
 // fetstilade och lite större 2026-09-15 på Davids begäran, så de syns
-// tydligare mot den tunna rutnätslinjen. Höjda ytterligare 2026-09-18 (från
-// 11 till 13) efter feedback om att siffrorna var svåra att läsa på mobil.
-export const AXIS_VALUE_FONT_SIZE = 13;
+// tydligare mot den tunna rutnätslinjen. Höjda 2026-09-18 (11 -> 13) efter
+// feedback om att siffrorna var svåra att läsa på mobil - men den höjningen
+// visade sig knappt märkas i praktiken, eftersom diagrammets viewBox (720px)
+// skalas ner rejält på en mobilskärm (ofta till under hälften), så en ökning
+// på 2 SVG-enheter blev bara ~1 riktig bildpunkt större. Höjd rejält igen
+// samma dag (13 -> 20) för att faktiskt ge en märkbar skillnad på mobil.
+export const AXIS_VALUE_FONT_SIZE = 20;
 export const AXIS_VALUE_FONT_WEIGHT = 700;
 
 // Fontstorlek för årtalen på x-axeln - separat konstant (inte lika stor som
 // AXIS_VALUE_FONT_SIZE, årtalen är fyra siffror och behöver inte vara lika
-// framträdande som mät-/resultatvärdena) men höjd i samma veva, 2026-09-18.
-export const AXIS_YEAR_FONT_SIZE = 12;
+// framträdande som mät-/resultatvärdena) men höjd i samma veva, 2026-09-18
+// (samma skalningsresonemang som ovan: 12 -> 17).
+export const AXIS_YEAR_FONT_SIZE = 17;
 
 // Delad med LineChartFormat/formatValue så andra diagram (StackedBarChart) kan
 // formatera sina egna axelvärden (t.ex. en ackumulerad kronsumma) konsekvent.
