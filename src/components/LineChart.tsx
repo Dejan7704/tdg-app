@@ -205,6 +205,16 @@ type DualAxisLineChartProps = {
 export const MISSED_BAND_WIDTH = 14;
 export const MISSED_TICK_COLOR = "#78716c"; // stone-500, mörkare än den vanliga axel-grå (#a8a29e)
 
+// Kortform för årtalsetiketter på x-axeln ("2019" -> "19"). Ett missat år
+// läggs alltid till som en extra tick (se mergeYearTicks nedan) och kan då
+// hamna precis intill en vanlig tick (t.ex. 2019 och 2020) - med det större
+// teckensnittet (2026-09-18) överlappade de två fyrsiffriga etiketterna
+// varandra då. Tvåsiffrig form halverar textbredden och löser det, på
+// Davids förslag.
+export function formatYearTick(year: number): string {
+  return String(year).slice(-2);
+}
+
 /** Slår ihop de vanliga år-ticksen med eventuella missade år, så ett missat år alltid syns som siffra på x-axeln (annars kan tick-utglesningen råka hoppa över just det året). */
 export function mergeYearTicks(minYear: number, maxYear: number, missedYears: number[] = []): number[] {
   const relevant = missedYears.filter((y) => y >= minYear && y <= maxYear);
@@ -459,7 +469,7 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
               fontWeight={missed ? 700 : 500}
               fill={missed ? MISSED_TICK_COLOR : "#78716c"}
             >
-              {y}
+              {formatYearTick(y)}
             </text>
           );
         })}

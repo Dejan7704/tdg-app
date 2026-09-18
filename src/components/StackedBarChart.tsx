@@ -13,6 +13,7 @@ import {
   AXIS_VALUE_FONT_SIZE,
   AXIS_VALUE_FONT_WEIGHT,
   AXIS_YEAR_FONT_SIZE,
+  formatYearTick,
   formatValue,
   smoothPath,
   type Point,
@@ -285,7 +286,7 @@ export function StackedBarChart({ data, categories, yearDomain, height = 260 }: 
               fontWeight={missed ? 700 : 500}
               fill={missed ? MISSED_TICK_COLOR : "#78716c"}
             >
-              {y}
+              {formatYearTick(y)}
             </text>
           );
         })}
