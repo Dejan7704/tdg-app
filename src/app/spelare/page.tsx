@@ -10,9 +10,8 @@ export default function SpelarePage() {
       <div>
         <h1 className="text-2xl font-bold text-stone-900">Spelare</h1>
         <p className="mt-1 max-w-2xl text-stone-500">
-          De 9 spelarna i Tour De Golf, med alla smeknamn de haft genom åren
-          sammanslagna till en profil. Sorterade efter flest segrar, därefter flest
-          spelade upplagor.
+          De 9 spelarna med alla smeknamn de haft genom åren. Rankade efter flest
+          segrar, bästa genomsnittliga placering och flest spelade upplagor.
         </p>
       </div>
 
