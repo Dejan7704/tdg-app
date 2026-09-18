@@ -159,6 +159,14 @@ export function getPlayerNettoAverageSeries(playerId: string): { year: number; v
   return out;
 }
 
+// Vilka år spelaren vunnit tävlingens huvudresultat, i kronologisk ordning -
+// samma källa som getPlayerHistory.
+export function getPlayerWinYears(playerId: string): number[] {
+  return getPlayerHistory(playerId)
+    .filter((h) => h.standing.placering === 1)
+    .map((h) => h.year);
+}
+
 export function getSegerrekord(): { player: Player; segrar: number }[] {
   const wins = new Map<string, number>();
   for (const e of editions) {

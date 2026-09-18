@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getPlayerHistory, getRankedPlayers, playerInitials } from "@/lib/data";
+import { getPlayerHistory, getPlayerWinYears, getRankedPlayers, playerInitials } from "@/lib/data";
 
 export default function SpelarePage() {
   const ranked = getRankedPlayers();
@@ -21,6 +21,7 @@ export default function SpelarePage() {
           const history = getPlayerHistory(player.id);
           const first = history[0]?.year;
           const last = history[history.length - 1]?.year;
+          const winYears = getPlayerWinYears(player.id);
           const nicks = player.nicknames;
           return (
             <Link
@@ -56,7 +57,10 @@ export default function SpelarePage() {
                 {upplagor} upplagor{first && last ? ` · ${first}–${last}` : ""}
               </p>
               {segrar > 0 && (
-                <p className="mt-1 text-sm font-medium text-stone-900">🏆 {segrar} segrar</p>
+                <p className="mt-1 text-sm font-medium text-stone-900">
+                  🏆 {segrar} segrar
+                  <span className="font-normal text-stone-500"> ({winYears.join(", ")})</span>
+                </p>
               )}
             </Link>
           );
