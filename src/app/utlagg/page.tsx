@@ -12,6 +12,10 @@ import { CATEGORY_LABELS, CATEGORY_ORDER, type BettingCategory } from "@/lib/bus
 const GOLF_INSATS_DEFAULT = 2000;
 const GOLF_VINST_DEFAULT = 700;
 
+// Vilket år Betz & Expz-sidan börjar på (David bekräftat 2026-09-19) - sidan
+// byggdes "från och med 2026", och ingen säsong har stängts än.
+const SEASON_START_YEAR = 2026;
+
 const UTLAGG_KATEGORIER = ["Mat", "Dryck", "Hyrbil", "Övrigt"] as const;
 type UtlaggKategori = (typeof UTLAGG_KATEGORIER)[number];
 
@@ -37,7 +41,7 @@ type Entry = {
 
 // Ett rondresultat - "facit" för en runda (1-4). Fylls i via Resultat-rutan
 // och är källan till both de automatiska golfbetting-vinsterna OCH
-// Sweepstakens automatiska utbetalning (se useMemo-blocket i komponenten).
+// Sweepstakens automatiska utbetalning (se computeAutoEntries nedan).
 type RoundResult = {
   runda: number;
   /** Nettoscore per spelare - nyckel är player.id. Rent informativt i det här steget (visas i tabellen), påverkar inga beräkningar ännu. */
@@ -55,6 +59,18 @@ type SweepstakeBet = {
   belopp: number;
 };
 
+// En avslutad säsongs alla rådata - det som arkiveras när man trycker
+// "Bokslut <år>" (se avsnittet om säsongsbyte längre ner). Samma råformer
+// som det löpande state:t (entries/sweepstakeBets/roundResults), så samma
+// beräkningsfunktioner (computeAutoEntries m.fl.) kan återanvändas för att
+// visa upp ett arkiverat år precis som det såg ut när det stängdes.
+type SeasonSnapshot = {
+  year: number;
+  entries: Entry[];
+  sweepstakeBets: SweepstakeBet[];
+  roundResults: Record<number, RoundResult>;
+};
+
 function formatSek(n: number): string {
   const rounded = Math.round(n);
   return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + " kr";
@@ -62,6 +78,122 @@ function formatSek(n: number): string {
 
 function playerName(id: string): string {
   return players.find((p) => p.id === id)?.fullName ?? id;
+}
+
+// Automatiskt framräknade poster - golfbetting-vinster (en per kategori som
+// fått en vinnare i Resultat-rutan) och sweepstake-utbetalningar (löst mot
+// samma facit). Ren funktion av roundResults+sweepstakeBets (ingen egen
+// state) så den kan användas både för den pågående säsongen (i en useMemo
+// nedan) och för att rendera ett arkiverat års ögonblicksbild oförändrad.
+//
+// Sweepstaken rullar vidare (David 2026-09-19): gissar ingen rätt på en
+// avgjord runda betalas potten inte ut - den läggs istället ovanpå nästa
+// rundas pott för SAMMA kategori. Därför måste rundorna gås igenom i
+// ordning 1->4 per kategori (inte i den ordning de råkar registrerats) med
+// en löpande `carry`-summa. En runda utan registrerat facit än (ingen
+// vinnare satt för kategorin) varken betalar ut eller rullar vidare - dess
+// insatser väntar orörda tills rundan avgörs.
+function computeAutoEntries(
+  roundResults: Record<number, RoundResult>,
+  sweepstakeBets: SweepstakeBet[]
+): Entry[] {
+  const out: Entry[] = [];
+  let syntheticId = -1;
+
+  for (const kategori of RESULT_CATEGORIES) {
+    let carry = 0;
+    for (let runda = 1; runda <= 4; runda++) {
+      const result = roundResults[runda];
+      const winnerId = result?.winners[kategori];
+      if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
+
+      // Golfbetting-vinst - schablonbeloppet (700 kr), samma som tidigare
+      // manuella standardvärde.
+      out.push({
+        id: syntheticId--,
+        timestamp: 0,
+        playerName: playerName(winnerId),
+        huvudkategori: "Golfbetting",
+        detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}`,
+        kategori: CATEGORY_LABELS[kategori],
+        belopp: GOLF_VINST_DEFAULT,
+        auto: true,
+      });
+
+      // Sweepstake: potten = den här rundans insatser + allt som ev.
+      // rullat med från tidigare rundor som ingen gissade rätt på.
+      const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
+      const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
+      if (pot === 0) continue; // varken nya insatser eller något att rulla vidare
+
+      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      if (winners.length === 0) {
+        // Ingen gissade rätt - hela potten (inkl. ev. tidigare rullning)
+        // rullar vidare till nästa runda i samma kategori. Sista rundan
+        // (4) har ingen "nästa" att rulla till - potten blir stående
+        // outbetald, flaggas inte särskilt i UI:t idag.
+        carry = pot;
+        continue;
+      }
+
+      const rolledIn = carry;
+      carry = 0;
+      const payoutEach = pot / winners.length;
+      for (const w of winners) {
+        out.push({
+          id: syntheticId--,
+          timestamp: 0,
+          playerName: playerName(w.bettorId),
+          huvudkategori: "Sweepstake",
+          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]} (gissade ${playerName(
+            winnerId
+          )}${winners.length > 1 ? `, delad mellan ${winners.length}` : ""}${
+            rolledIn > 0 ? `, varav ${formatSek(rolledIn).replace("+", "")} rullat från tidigare runda` : ""
+          })`,
+          kategori: CATEGORY_LABELS[kategori],
+          belopp: payoutEach,
+          auto: true,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+// Sweepstake-insatserna visas också i tabellen (manuellt registrerade, till
+// skillnad från vinsterna ovan som räknas fram) - egen funktion av samma
+// anledning som computeAutoEntries.
+function computeSweepstakeInsatsEntries(sweepstakeBets: SweepstakeBet[]): Entry[] {
+  return sweepstakeBets.map((b) => ({
+    id: 1_000_000 + b.id, // eget nummerspann så det aldrig krockar med manuella/auto-id:n
+    timestamp: 0,
+    playerName: playerName(b.bettorId),
+    huvudkategori: "Sweepstake" as const,
+    detalj: `Insats – Runda ${b.runda}, ${CATEGORY_LABELS[b.kategori]} (gissar ${playerName(
+      b.gissningId
+    )})`,
+    kategori: CATEGORY_LABELS[b.kategori],
+    belopp: -b.belopp,
+  }));
+}
+
+// Slår ihop manuella poster + de två automatiskt framräknade grupperna ovan
+// till en enda, sorterad lista - samma logik oavsett om det gäller den
+// pågående säsongen eller ett arkiverat års ögonblicksbild.
+function buildAllEntries(
+  entries: Entry[],
+  sweepstakeBets: SweepstakeBet[],
+  roundResults: Record<number, RoundResult>
+): Entry[] {
+  const autoEntries = computeAutoEntries(roundResults, sweepstakeBets);
+  const sweepstakeInsatsEntries = computeSweepstakeInsatsEntries(sweepstakeBets);
+  return [...entries, ...sweepstakeInsatsEntries, ...autoEntries].sort((a, b) => {
+    // Manuella poster (har ett riktigt timestamp) sorteras nyast-först;
+    // automatiska poster (timestamp 0) samlas sist i listan, i den
+    // ordning de räknades fram (rond/kategori).
+    if (a.timestamp !== b.timestamp) return b.timestamp - a.timestamp;
+    return 0;
+  });
 }
 
 function SelectField({
@@ -111,6 +243,64 @@ function AmountField({
         className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 focus:border-tdg-green focus:outline-none"
       />
     </label>
+  );
+}
+
+// Den delade poster-tabellen - används både för den pågående säsongens
+// löpande lista och för att visa upp ett arkiverat års ögonblicksbild
+// (read-only i praktiken i båda fallen, arkivvyn har bara inga formulär
+// ovanför sig att lägga till fler poster ifrån).
+function EntriesTable({ entries }: { entries: Entry[] }) {
+  if (entries.length === 0) {
+    return (
+      <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">
+        Inga poster registrerade.
+      </p>
+    );
+  }
+  return (
+    <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
+      <table className="w-full text-sm">
+        <thead className="bg-stone-50 text-left text-stone-500">
+          <tr>
+            <th className="px-4 py-2 font-medium">Spelare</th>
+            <th className="px-4 py-2 font-medium">Huvudkategori</th>
+            <th className="px-4 py-2 font-medium">Kategori</th>
+            <th className="px-4 py-2 text-right font-medium">Belopp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((e) => (
+            <tr key={e.id} className="border-t border-stone-100">
+              <td className="px-4 py-2 font-medium">{e.playerName}</td>
+              <td className="px-4 py-2 text-stone-600">
+                <span className="inline-flex items-center gap-1.5">
+                  {e.huvudkategori}
+                  {e.auto && (
+                    <span
+                      title="Beräknad automatiskt från Resultat-rutan"
+                      className="rounded-full bg-tdg-gray-light px-1.5 py-0.5 text-[10px] font-semibold uppercase text-stone-500"
+                    >
+                      Auto
+                    </span>
+                  )}
+                </span>
+                <div className="text-xs text-stone-400">{e.detalj}</div>
+              </td>
+              <td className="px-4 py-2 text-stone-600">{e.kategori ?? "–"}</td>
+              <td
+                className={
+                  "px-4 py-2 text-right font-semibold " +
+                  (e.belopp >= 0 ? "text-tdg-green" : "text-red-600")
+                }
+              >
+                {formatSek(e.belopp)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -221,111 +411,57 @@ export default function UtlaggPage() {
     }));
   }
 
-  // Automatiskt framräknade poster - golfbetting-vinster (en per kategori som
-  // fått en vinnare i Resultat-rutan) och sweepstake-utbetalningar (löst mot
-  // samma facit). Räknas om varje gång roundResults/sweepstakeBets ändras,
-  // sparas aldrig som egna "riktiga" poster - så de aldrig kan bli inaktuella
-  // eller dubbelräknade om ett rondresultat rättas i efterhand.
-  //
-  // Sweepstaken rullar vidare (David 2026-09-19): gissar ingen rätt på en
-  // avgjord runda betalas potten inte ut - den läggs istället ovanpå nästa
-  // rundas pott för SAMMA kategori. Därför måste rundorna gås igenom i
-  // ordning 1->4 per kategori (inte i den ordning de råkar registrerats) med
-  // en löpande `carry`-summa. En runda utan registrerat facit än (ingen
-  // vinnare satt för kategorin) varken betalar ut eller rullar vidare - dess
-  // insatser väntar orörda tills rundan avgörs.
-  const autoEntries = useMemo<Entry[]>(() => {
-    const out: Entry[] = [];
-    let syntheticId = -1;
+  // --- Säsong: pågående år + arkiv över avslutade år (David bad om detta
+  // 2026-09-19, eftersom sidan ska återanvändas år efter år) ---
+  // Sidan rensas och blir "öppen" för nästa år så fort man trycker
+  // "Bokslut <år>" och bekräftar - årets rådata (entries/sweepstakeBets/
+  // roundResults) sparas orörda i `archive` så de kan bläddras fram igen,
+  // precis som de såg ut vid stängningen. Rent React-state fortfarande (ingen
+  // databas ännu) - archive-listan försvinner vid en sidomladdning precis
+  // som allt annat på sidan gör idag.
+  const [activeYear, setActiveYear] = useState(SEASON_START_YEAR);
+  const [archive, setArchive] = useState<SeasonSnapshot[]>([]);
+  const [confirmingClose, setConfirmingClose] = useState(false);
+  const [viewingArchiveYear, setViewingArchiveYear] = useState<number | null>(null);
 
-    for (const kategori of RESULT_CATEGORIES) {
-      let carry = 0;
-      for (let runda = 1; runda <= 4; runda++) {
-        const result = roundResults[runda];
-        const winnerId = result?.winners[kategori];
-        if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
+  function closeSeason() {
+    setArchive((prev) => [{ year: activeYear, entries, sweepstakeBets, roundResults }, ...prev]);
+    setEntries([]);
+    setNextId(1);
+    setSweepstakeBets([]);
+    setNextBetId(1);
+    setRoundResults({});
+    setResultRunda(1);
+    setResultNetto({});
+    setResultWinners({});
+    setActiveYear((y) => y + 1);
+    setConfirmingClose(false);
+  }
 
-        // Golfbetting-vinst - schablonbeloppet (700 kr), samma som tidigare
-        // manuella standardvärde.
-        out.push({
-          id: syntheticId--,
-          timestamp: 0,
-          playerName: playerName(winnerId),
-          huvudkategori: "Golfbetting",
-          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}`,
-          kategori: CATEGORY_LABELS[kategori],
-          belopp: GOLF_VINST_DEFAULT,
-          auto: true,
-        });
-
-        // Sweepstake: potten = den här rundans insatser + allt som ev.
-        // rullat med från tidigare rundor som ingen gissade rätt på.
-        const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
-        const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
-        if (pot === 0) continue; // varken nya insatser eller något att rulla vidare
-
-        const winners = betsR.filter((b) => b.gissningId === winnerId);
-        if (winners.length === 0) {
-          // Ingen gissade rätt - hela potten (inkl. ev. tidigare rullning)
-          // rullar vidare till nästa runda i samma kategori. Sista rundan
-          // (4) har ingen "nästa" att rulla till - potten blir stående
-          // outbetald, flaggas inte särskilt i UI:t idag.
-          carry = pot;
-          continue;
-        }
-
-        const rolledIn = carry;
-        carry = 0;
-        const payoutEach = pot / winners.length;
-        for (const w of winners) {
-          out.push({
-            id: syntheticId--,
-            timestamp: 0,
-            playerName: playerName(w.bettorId),
-            huvudkategori: "Sweepstake",
-            detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]} (gissade ${playerName(
-              winnerId
-            )}${winners.length > 1 ? `, delad mellan ${winners.length}` : ""}${
-              rolledIn > 0 ? `, varav ${formatSek(rolledIn).replace("+", "")} rullat från tidigare runda` : ""
-            })`,
-            kategori: CATEGORY_LABELS[kategori],
-            belopp: payoutEach,
-            auto: true,
-          });
-        }
-      }
-    }
-    return out;
-  }, [roundResults, sweepstakeBets]);
-
-  // Sweepstake-insatserna visas också i tabellen (manuellt registrerade,
-  // till skillnad från vinsterna ovan som räknas fram).
-  const sweepstakeInsatsEntries = useMemo<Entry[]>(
-    () =>
-      sweepstakeBets.map((b) => ({
-        id: 1_000_000 + b.id, // eget nummerspann så det aldrig krockar med manuella/auto-id:n
-        timestamp: 0,
-        playerName: playerName(b.bettorId),
-        huvudkategori: "Sweepstake" as const,
-        detalj: `Insats – Runda ${b.runda}, ${CATEGORY_LABELS[b.kategori]} (gissar ${playerName(
-          b.gissningId
-        )})`,
-        kategori: CATEGORY_LABELS[b.kategori],
-        belopp: -b.belopp,
-      })),
+  const autoEntries = useMemo(
+    () => computeAutoEntries(roundResults, sweepstakeBets),
+    [roundResults, sweepstakeBets]
+  );
+  const sweepstakeInsatsEntries = useMemo(
+    () => computeSweepstakeInsatsEntries(sweepstakeBets),
     [sweepstakeBets]
   );
-
   const allEntries = useMemo(
     () =>
       [...entries, ...sweepstakeInsatsEntries, ...autoEntries].sort((a, b) => {
-        // Manuella poster (har ett riktigt timestamp) sorteras nyast-först;
-        // automatiska poster (timestamp 0) samlas sist i listan, i den
-        // ordning de räknades fram (rond/kategori).
         if (a.timestamp !== b.timestamp) return b.timestamp - a.timestamp;
         return 0;
       }),
     [entries, sweepstakeInsatsEntries, autoEntries]
+  );
+
+  const viewingSnapshot = archive.find((s) => s.year === viewingArchiveYear) ?? null;
+  const archivedEntries = useMemo(
+    () =>
+      viewingSnapshot
+        ? buildAllEntries(viewingSnapshot.entries, viewingSnapshot.sweepstakeBets, viewingSnapshot.roundResults)
+        : [],
+    [viewingSnapshot]
   );
 
   return (
@@ -333,11 +469,56 @@ export default function UtlaggPage() {
       <div>
         <h1 className="text-2xl font-bold text-stone-900">Betz & Expz</h1>
         <p className="mt-1 max-w-2xl text-stone-500">
-          Registrera utlägg och betting löpande under årets resa (från och med 2026). Insatser
-          registreras som negativa poster, vinster och utlägg som positiva. Golfbetting-vinster
-          och Sweepstake-utbetalningar räknas fram automatiskt så fort ett rondresultat
-          registrerats nedan.
+          Registrera utlägg och betting löpande under årets resa. Insatser registreras som
+          negativa poster, vinster och utlägg som positiva. Golfbetting-vinster och
+          Sweepstake-utbetalningar räknas fram automatiskt så fort ett rondresultat registrerats
+          nedan.
         </p>
+      </div>
+
+      {/* Säsongsindikator - visar vilket års tävling formulären nedanför
+          gäller just nu, och knappen som avslutar/arkiverar den. */}
+      <div className="flex flex-col gap-3 rounded-xl bg-tdg-green-dark p-4 text-white sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wide text-white/70">
+            Pågående säsong
+          </span>
+          <p className="mt-0.5 text-lg font-bold">
+            TDG {activeYear} <span className="font-normal text-white/80">– Öppen</span>
+          </p>
+        </div>
+        {!confirmingClose ? (
+          <button
+            type="button"
+            onClick={() => setConfirmingClose(true)}
+            className="self-start rounded-lg bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25 sm:self-auto"
+          >
+            Bokslut {activeYear}
+          </button>
+        ) : (
+          <div className="flex flex-col gap-2 rounded-lg bg-white/10 p-3 sm:max-w-sm">
+            <p className="text-sm text-white/90">
+              Säker på att avsluta TDG {activeYear}? Alla registrerade poster arkiveras och sidan
+              rensas för TDG {activeYear + 1}.
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={closeSeason}
+                className="rounded-lg bg-tdg-yellow px-3 py-1.5 text-sm font-semibold text-tdg-green-dark transition hover:opacity-90"
+              >
+                Ja, avsluta TDG {activeYear}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmingClose(false)}
+                className="rounded-lg border border-white/40 px-3 py-1.5 text-sm text-white transition hover:bg-white/10"
+              >
+                Avbryt
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -608,50 +789,45 @@ export default function UtlaggPage() {
             Inga poster registrerade ännu. Använd formulären ovan för att komma igång.
           </p>
         ) : (
-          <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
-            <table className="w-full text-sm">
-              <thead className="bg-stone-50 text-left text-stone-500">
-                <tr>
-                  <th className="px-4 py-2 font-medium">Spelare</th>
-                  <th className="px-4 py-2 font-medium">Huvudkategori</th>
-                  <th className="px-4 py-2 font-medium">Kategori</th>
-                  <th className="px-4 py-2 text-right font-medium">Belopp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allEntries.map((e) => (
-                  <tr key={e.id} className="border-t border-stone-100">
-                    <td className="px-4 py-2 font-medium">{e.playerName}</td>
-                    <td className="px-4 py-2 text-stone-600">
-                      <span className="inline-flex items-center gap-1.5">
-                        {e.huvudkategori}
-                        {e.auto && (
-                          <span
-                            title="Beräknad automatiskt från Resultat-rutan"
-                            className="rounded-full bg-tdg-gray-light px-1.5 py-0.5 text-[10px] font-semibold uppercase text-stone-500"
-                          >
-                            Auto
-                          </span>
-                        )}
-                      </span>
-                      <div className="text-xs text-stone-400">{e.detalj}</div>
-                    </td>
-                    <td className="px-4 py-2 text-stone-600">{e.kategori ?? "–"}</td>
-                    <td
-                      className={
-                        "px-4 py-2 text-right font-semibold " +
-                        (e.belopp >= 0 ? "text-tdg-green" : "text-red-600")
-                      }
-                    >
-                      {formatSek(e.belopp)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <EntriesTable entries={allEntries} />
         )}
       </section>
+
+      {/* Arkiverade säsonger - byggs upp allteftersom man trycker
+          "Bokslut <år>" ovan. Read-only vy av ett tidigare års alla poster,
+          exakt som de såg ut vid stängningen. */}
+      {archive.length > 0 && (
+        <section className="flex flex-col gap-2">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            Arkiverade säsonger
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {archive.map((s) => (
+              <button
+                key={s.year}
+                type="button"
+                onClick={() => setViewingArchiveYear((y) => (y === s.year ? null : s.year))}
+                className={
+                  "rounded-lg px-3 py-1.5 text-sm font-medium transition " +
+                  (viewingArchiveYear === s.year
+                    ? "bg-tdg-green-dark text-white"
+                    : "bg-tdg-gray-light text-stone-600 hover:text-tdg-green")
+                }
+              >
+                TDG {s.year}
+              </button>
+            ))}
+          </div>
+          {viewingSnapshot && (
+            <div className="mt-1">
+              <p className="mb-2 text-xs text-stone-500">
+                {archivedEntries.length} poster registrerade för TDG {viewingSnapshot.year}.
+              </p>
+              <EntriesTable entries={archivedEntries} />
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }
