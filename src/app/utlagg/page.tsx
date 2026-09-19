@@ -226,14 +226,24 @@ export default function UtlaggPage() {
   // samma facit). Räknas om varje gång roundResults/sweepstakeBets ändras,
   // sparas aldrig som egna "riktiga" poster - så de aldrig kan bli inaktuella
   // eller dubbelräknade om ett rondresultat rättas i efterhand.
+  //
+  // Sweepstaken rullar vidare (David 2026-09-19): gissar ingen rätt på en
+  // avgjord runda betalas potten inte ut - den läggs istället ovanpå nästa
+  // rundas pott för SAMMA kategori. Därför måste rundorna gås igenom i
+  // ordning 1->4 per kategori (inte i den ordning de råkar registrerats) med
+  // en löpande `carry`-summa. En runda utan registrerat facit än (ingen
+  // vinnare satt för kategorin) varken betalar ut eller rullar vidare - dess
+  // insatser väntar orörda tills rundan avgörs.
   const autoEntries = useMemo<Entry[]>(() => {
     const out: Entry[] = [];
     let syntheticId = -1;
 
-    for (const result of Object.values(roundResults)) {
-      for (const kategori of RESULT_CATEGORIES) {
-        const winnerId = result.winners[kategori];
-        if (!winnerId) continue;
+    for (const kategori of RESULT_CATEGORIES) {
+      let carry = 0;
+      for (let runda = 1; runda <= 4; runda++) {
+        const result = roundResults[runda];
+        const winnerId = result?.winners[kategori];
+        if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
 
         // Golfbetting-vinst - schablonbeloppet (700 kr), samma som tidigare
         // manuella standardvärde.
@@ -242,24 +252,30 @@ export default function UtlaggPage() {
           timestamp: 0,
           playerName: playerName(winnerId),
           huvudkategori: "Golfbetting",
-          detalj: `Vinst – Runda ${result.runda}, ${CATEGORY_LABELS[kategori]}`,
+          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}`,
           kategori: CATEGORY_LABELS[kategori],
           belopp: GOLF_VINST_DEFAULT,
           auto: true,
         });
 
-        // Sweepstake-utbetalning: potten = summan av ALLA insatser som
-        // lagts på just den här rundan+kategorin (oavsett vem man gissade
-        // på), delad jämnt mellan dem som gissade rätt. Gissade ingen rätt
-        // rullar potten inte vidare i det här steget - den blir bara
-        // outbetald (flaggas i UI:t).
-        const bets = sweepstakeBets.filter(
-          (b) => b.runda === result.runda && b.kategori === kategori
-        );
-        if (bets.length === 0) continue;
-        const pot = bets.reduce((sum, b) => sum + b.belopp, 0);
-        const winners = bets.filter((b) => b.gissningId === winnerId);
-        if (winners.length === 0) continue;
+        // Sweepstake: potten = den här rundans insatser + allt som ev.
+        // rullat med från tidigare rundor som ingen gissade rätt på.
+        const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
+        const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
+        if (pot === 0) continue; // varken nya insatser eller något att rulla vidare
+
+        const winners = betsR.filter((b) => b.gissningId === winnerId);
+        if (winners.length === 0) {
+          // Ingen gissade rätt - hela potten (inkl. ev. tidigare rullning)
+          // rullar vidare till nästa runda i samma kategori. Sista rundan
+          // (4) har ingen "nästa" att rulla till - potten blir stående
+          // outbetald, flaggas inte särskilt i UI:t idag.
+          carry = pot;
+          continue;
+        }
+
+        const rolledIn = carry;
+        carry = 0;
         const payoutEach = pot / winners.length;
         for (const w of winners) {
           out.push({
@@ -267,9 +283,11 @@ export default function UtlaggPage() {
             timestamp: 0,
             playerName: playerName(w.bettorId),
             huvudkategori: "Sweepstake",
-            detalj: `Vinst – Runda ${result.runda}, ${CATEGORY_LABELS[kategori]} (gissade ${playerName(
+            detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]} (gissade ${playerName(
               winnerId
-            )}${winners.length > 1 ? `, delad mellan ${winners.length}` : ""})`,
+            )}${winners.length > 1 ? `, delad mellan ${winners.length}` : ""}${
+              rolledIn > 0 ? `, varav ${formatSek(rolledIn).replace("+", "")} rullat från tidigare runda` : ""
+            })`,
             kategori: CATEGORY_LABELS[kategori],
             belopp: payoutEach,
             auto: true,
