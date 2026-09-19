@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { editions, getWinner, getSegerrekord, getPlayerByNickname } from "@/lib/data";
+import { getProjectedWinner2026, PROJECTED_YEAR } from "@/lib/prognosis";
+import { InfoTooltip } from "@/components/InfoTooltip";
 
 export default function Home() {
   const latest = editions[editions.length - 1];
   const winner = editions[editions.length - 1] ? getWinner(latest) : undefined;
   const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
   const segerrekord = getSegerrekord().slice(0, 3);
+  const projected = getProjectedWinner2026();
 
   return (
     <div className="flex flex-col gap-8">
@@ -36,6 +39,21 @@ export default function Home() {
             ({winner.name}, {latest.year})
           </p>
         )}
+        {/* "Projected winner" - lekfull prognos inför nästa upplaga, tillagd
+            2026-09-19 på Davids begäran. Bara favoriten visas direkt i
+            rutan (inte hela topplistan) - metodiken och favoritens
+            nyckelsiffror förklaras i en (i)-tooltip istället för att lassa på
+            texten i själva raden. Logik i src/lib/prognosis.ts. */}
+        <p className="mt-1 text-white/85">
+          <span className="font-medium text-white">🔮 Projected winner {PROJECTED_YEAR}:</span>{" "}
+          <Link
+            href={`/spelare/${projected.entry.player.id}`}
+            className="font-semibold text-tdg-yellow hover:underline"
+          >
+            {projected.entry.player.fullName}
+          </Link>
+          <InfoTooltip text={projected.explanation} label="Så räknas prognosen ut" />
+        </p>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
