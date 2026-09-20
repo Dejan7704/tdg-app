@@ -209,7 +209,7 @@ export function getProjectedWinner2026(): { entry: ProjectedWinnerEntry; explana
   const entry = ranking[0];
   const s = entry.stats;
   const explanation =
-    `Beräknat utifrån senaste formen (40%), karriärstatistik (25%), historik vid Sverige-upplagor (20%) och aktuell golfbetting-form (15%). ` +
+    `Beräknat utifrån senaste TDG total resultaten (40%), Antal TDG vinster (25%), historik vid TDG Sverige-upplagor (20%) och TDG golfbetting vinster (15%). ` +
     `${entry.player.fullName}: snitt ${s.recentAvgPlacering.toFixed(1)} de senaste ${s.recentEditionsUsed} spelade upplagorna, ${s.totalSegrar} segrar totalt (snitt ${s.careerAvgPlacering.toFixed(1)} över ${s.totalUpplagor} upplagor), ` +
     `och snitt ${s.swedenAvgPlacering.toFixed(1)} vid de ${s.swedenAppearances} upplagor som spelats i Sverige. Obs: en lekfull uppskattning, inget facit!`;
   return { entry, explanation };
