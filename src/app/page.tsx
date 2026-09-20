@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { editions, getWinner, getSegerrekord, getPlayerByNickname } from "@/lib/data";
 import { getProjectedWinner2026, PROJECTED_YEAR } from "@/lib/prognosis";
 import { InfoTooltip } from "@/components/InfoTooltip";
@@ -86,6 +87,19 @@ export default function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      {/* "In partnership with"-sektion, tillagd 2026-09-20 på Davids begäran,
+          innan Betz & Expz kopplas mot riktig databas. */}
+      <section className="flex flex-col items-center gap-3 py-2">
+        <p className="text-sm text-stone-500">In partnership with</p>
+        <Image
+          src="/brand/partner-nest-capital.png"
+          alt="Nest Capital Fund III KY"
+          width={321}
+          height={74}
+          className="h-auto w-auto max-w-[220px]"
+        />
       </section>
     </div>
   );
