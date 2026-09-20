@@ -4,9 +4,26 @@ import Link from "next/link";
 import NavLinks from "@/components/NavLinks";
 import "./globals.css";
 
+// metadataBase krävs för att Next ska kunna göra om relativa bild-URL:er
+// (t.ex. /og-image.png) till fullständiga URL:er i og:/twitter:-taggarna -
+// annars länkar delningskort (WhatsApp, iMessage, Slack m.fl.) till en
+// bild som inte går att nå utifrån.
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tdg-app-wheat.vercel.app"),
   title: "Tour De Golf (TDG)",
   description: "Historik, statistik och betting för Tour De Golf",
+  openGraph: {
+    title: "Tour De Golf (TDG)",
+    description: "Historik, statistik och betting för Tour De Golf",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Tour De Golf" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tour De Golf (TDG)",
+    description: "Historik, statistik och betting för Tour De Golf",
+    images: ["/og-image.png"],
+  },
 };
 
 // Talar om för mobilwebbläsare (Chrome/Edge på Android m.fl.) att sidan bara
