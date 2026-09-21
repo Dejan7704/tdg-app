@@ -339,6 +339,20 @@ export default function UtlaggPage() {
   const [sweepstakeBets, setSweepstakeBets] = useState<SweepstakeBet[]>([]);
   const [roundResults, setRoundResults] = useState<Record<number, RoundResult>>({});
 
+  // Kort bekräftelse-toast som visas efter en lyckad registrering (David bad
+  // om detta 2026-09-21 - annars syns inte att en post faktiskt sparats utan
+  // att man rullar ner till "Registrerade poster" längst ner). Försvinner
+  // automatiskt efter någon sekund.
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+  function showToast(message: string) {
+    setToast(message);
+  }
+
   const activeEdition = editions.find((e) => e.status === "open") ?? null;
   const activeYear = activeEdition?.year ?? SEASON_START_YEAR;
 
@@ -424,8 +438,8 @@ export default function UtlaggPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function addEntry(entry: Omit<Entry, "id" | "timestamp">) {
-    if (!activeEdition) return;
+  async function addEntry(entry: Omit<Entry, "id" | "timestamp">): Promise<boolean> {
+    if (!activeEdition) return false;
     const { data, error } = await supabase
       .from("entries")
       .insert({
@@ -441,54 +455,81 @@ export default function UtlaggPage() {
     if (error) {
       console.error(error);
       alert("Kunde inte spara posten - försök igen.");
-      return;
+      return false;
     }
     setEntries((prev) => [mapEntryRow(data as EntryRow), ...prev]);
+    return true;
   }
 
   // --- Golfbetting (bara insats - vinster räknas fram automatiskt, se Resultat-rutan) ---
   const [golfSpelare, setGolfSpelare] = useState(players[0]?.id ?? "");
   const [golfBelopp, setGolfBelopp] = useState(GOLF_INSATS_DEFAULT);
+  const [golfSubmitting, setGolfSubmitting] = useState(false);
 
-  function registerGolfInsats() {
-    const player = players.find((p) => p.id === golfSpelare);
-    if (!player) return;
-    addEntry({
+  async function registerGolfInsats() {
+    const player = activePlayers.find((p) => p.id === golfSpelare);
+    if (!player || golfSubmitting) return;
+    setGolfSubmitting(true);
+    const ok = await addEntry({
       playerName: player.fullName,
       huvudkategori: "Golfbetting",
       detalj: "Insats",
       belopp: -Math.abs(golfBelopp),
     });
+    setGolfSubmitting(false);
+    if (ok) {
+      setGolfSpelare(activePlayers[0]?.id ?? player.id);
+      setGolfBelopp(GOLF_INSATS_DEFAULT);
+      showToast(`Insats registrerad för ${player.fullName}`);
+    }
   }
 
   // --- Pokerbetting ---
   const [pokerSpelare, setPokerSpelare] = useState(players[0]?.id ?? "");
   const [pokerTyp, setPokerTyp] = useState<"insats" | "vinst">("vinst");
   const [pokerBelopp, setPokerBelopp] = useState(0);
+  const [pokerSubmitting, setPokerSubmitting] = useState(false);
 
-  function registerPoker() {
-    const player = players.find((p) => p.id === pokerSpelare);
-    if (!player) return;
+  async function registerPoker() {
+    const player = activePlayers.find((p) => p.id === pokerSpelare);
+    if (!player || pokerSubmitting) return;
+    setPokerSubmitting(true);
     const belopp = pokerTyp === "insats" ? -Math.abs(pokerBelopp) : Math.abs(pokerBelopp);
     const detalj = pokerTyp === "insats" ? "Insats" : "Vinst";
-    addEntry({ playerName: player.fullName, huvudkategori: "Pokerbetting", detalj, belopp });
+    const ok = await addEntry({ playerName: player.fullName, huvudkategori: "Pokerbetting", detalj, belopp });
+    setPokerSubmitting(false);
+    if (ok) {
+      setPokerSpelare(activePlayers[0]?.id ?? player.id);
+      setPokerTyp("vinst");
+      setPokerBelopp(0);
+      showToast(`${detalj} registrerad för ${player.fullName}`);
+    }
   }
 
   // --- Utlägg ---
   const [utlaggSpelare, setUtlaggSpelare] = useState(players[0]?.id ?? "");
   const [utlaggKategori, setUtlaggKategori] = useState<UtlaggKategori>("Mat");
   const [utlaggBelopp, setUtlaggBelopp] = useState(0);
+  const [utlaggSubmitting, setUtlaggSubmitting] = useState(false);
 
-  function registerUtlagg() {
-    const player = players.find((p) => p.id === utlaggSpelare);
-    if (!player) return;
-    addEntry({
+  async function registerUtlagg() {
+    const player = activePlayers.find((p) => p.id === utlaggSpelare);
+    if (!player || utlaggSubmitting) return;
+    setUtlaggSubmitting(true);
+    const ok = await addEntry({
       playerName: player.fullName,
       huvudkategori: "Utlägg",
       detalj: utlaggKategori,
       kategori: utlaggKategori,
       belopp: Math.abs(utlaggBelopp),
     });
+    setUtlaggSubmitting(false);
+    if (ok) {
+      setUtlaggSpelare(activePlayers[0]?.id ?? player.id);
+      setUtlaggKategori("Mat");
+      setUtlaggBelopp(0);
+      showToast(`Utlägg registrerat för ${player.fullName}`);
+    }
   }
 
   // --- Sweepstake (fri insats, ingen Vinst-knapp - utbetalningen räknas fram
@@ -500,6 +541,7 @@ export default function UtlaggPage() {
   );
   const [sweepGissning, setSweepGissning] = useState(players[0]?.id ?? "");
   const [sweepBelopp, setSweepBelopp] = useState(0);
+  const [sweepSubmitting, setSweepSubmitting] = useState(false);
 
   // Om någon av de förvalda spelarna i rullistorna ovan plockas bort ur
   // årets deltagarlista (se Deltagare-rutan), hoppa till första kvarvarande
@@ -517,7 +559,8 @@ export default function UtlaggPage() {
   }, [activePlayers]);
 
   async function registerSweepstake() {
-    if (!activeEdition) return;
+    if (!activeEdition || sweepSubmitting) return;
+    setSweepSubmitting(true);
     const { data, error } = await supabase
       .from("sweepstake_bets")
       .insert({
@@ -530,13 +573,20 @@ export default function UtlaggPage() {
       })
       .select()
       .single();
+    setSweepSubmitting(false);
     if (error) {
       console.error(error);
       alert("Kunde inte spara satsningen - försök igen.");
       return;
     }
     setSweepstakeBets((prev) => [...prev, mapSweepstakeBetRow(data as SweepstakeBetRow)]);
+    const bettorName = playerName(sweepBettor);
+    setSweepBettor(activePlayers[0]?.id ?? sweepBettor);
+    setSweepRunda(1);
+    setSweepKategori(RESULT_CATEGORIES[0]);
+    setSweepGissning(activePlayers[0]?.id ?? sweepGissning);
     setSweepBelopp(0);
+    showToast(`Sweepstake-satsning registrerad för ${bettorName}`);
   }
 
   // --- Resultat per golfrunda ("facit") ---
@@ -545,6 +595,7 @@ export default function UtlaggPage() {
   const [resultWinners, setResultWinners] = useState<
     Partial<Record<Exclude<BettingCategory, "sweepstake">, string>>
   >({});
+  const [resultSubmitting, setResultSubmitting] = useState(false);
 
   // Byter man rondval i Resultat-rutan laddas ett redan registrerat facit för
   // den rundan in i formuläret igen (så man kan komplettera/rätta det),
@@ -557,7 +608,8 @@ export default function UtlaggPage() {
   }
 
   async function registerRoundResult() {
-    if (!activeEdition) return;
+    if (!activeEdition || resultSubmitting) return;
+    setResultSubmitting(true);
     const { data, error } = await supabase
       .from("round_results")
       .upsert(
@@ -572,6 +624,7 @@ export default function UtlaggPage() {
       )
       .select()
       .single();
+    setResultSubmitting(false);
     if (error) {
       console.error(error);
       alert("Kunde inte spara resultatet - försök igen.");
@@ -582,6 +635,7 @@ export default function UtlaggPage() {
       ...prev,
       [row.runda]: { runda: row.runda, netto: row.netto, winners: row.winners },
     }));
+    showToast(`Resultat för Runda ${row.runda} sparat`);
   }
 
   // --- Säsong: pågående år + arkiv över avslutade år (David bad om detta
@@ -832,9 +886,10 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerGolfInsats}
-            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark"
+            disabled={golfSubmitting}
+            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
-            Registrera insats
+            {golfSubmitting ? "Registrerar…" : "Registrera insats"}
           </button>
         </div>
 
@@ -880,9 +935,10 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerPoker}
-            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark"
+            disabled={pokerSubmitting}
+            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
-            Registrera
+            {pokerSubmitting ? "Registrerar…" : "Registrera"}
           </button>
         </div>
 
@@ -911,9 +967,10 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerUtlagg}
-            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark"
+            disabled={utlaggSubmitting}
+            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
-            Registrera
+            {utlaggSubmitting ? "Registrerar…" : "Registrera"}
           </button>
         </div>
 
@@ -972,9 +1029,10 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerSweepstake}
-            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark"
+            disabled={sweepSubmitting}
+            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
-            Registrera satsning
+            {sweepSubmitting ? "Registrerar…" : "Registrera satsning"}
           </button>
         </div>
       </div>
@@ -1064,9 +1122,14 @@ export default function UtlaggPage() {
         <button
           type="button"
           onClick={registerRoundResult}
-          className="mt-4 rounded-lg bg-tdg-green-dark px-4 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green"
+          disabled={resultSubmitting}
+          className="mt-4 rounded-lg bg-tdg-green-dark px-4 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green disabled:opacity-60"
         >
-          {roundResults[resultRunda] ? "Uppdatera resultat" : "Registrera resultat"}
+          {resultSubmitting
+            ? "Sparar…"
+            : roundResults[resultRunda]
+              ? "Uppdatera resultat"
+              : "Registrera resultat"}
         </button>
       </section>
 
@@ -1123,6 +1186,19 @@ export default function UtlaggPage() {
             </div>
           )}
         </section>
+      )}
+
+      {/* Bekräftelse-toast - visas kort efter en lyckad registrering, se
+          showToast() ovan. Fast positionerad så den syns oavsett hur långt
+          ner på sidan man scrollat. */}
+      {toast && (
+        <div
+          role="status"
+          className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-tdg-green-dark px-4 py-2.5 text-sm font-semibold text-tdg-yellow shadow-lg"
+        >
+          <span className="mr-1.5 inline-block">✓</span>
+          {toast}
+        </div>
       )}
     </div>
   );
