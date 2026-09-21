@@ -342,6 +342,44 @@ export default function UtlaggPage() {
   const activeEdition = editions.find((e) => e.status === "open") ?? null;
   const activeYear = activeEdition?.year ?? SEASON_START_YEAR;
 
+  // De spelare som faktiskt är med i den aktiva upplagan (David bad om detta
+  // 2026-09-21) - styr rullistorna i formulären nedan så att den/de som inte
+  // är med ett givet år inte behöver bläddras förbi. Redan registrerade
+  // poster/facit påverkas inte om man ändrar valet i efterhand - playerName()
+  // ovan slår fortfarande upp mot samtliga 9 spelare, så historik visas rätt.
+  const nonParticipants = activeEdition?.non_participants ?? [];
+  const activePlayers = useMemo(
+    () => players.filter((p) => !nonParticipants.includes(p.id)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activeEdition?.id, JSON.stringify(nonParticipants)]
+  );
+
+  async function toggleParticipant(playerId: string) {
+    if (!activeEdition) return;
+    const current = activeEdition.non_participants ?? [];
+    const isCurrentlyOut = current.includes(playerId);
+    const updated = isCurrentlyOut
+      ? current.filter((id) => id !== playerId)
+      : [...current, playerId];
+    if (updated.length >= players.length) {
+      alert("Minst en spelare måste vara med i tävlingen.");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("editions")
+      .update({ non_participants: updated })
+      .eq("id", activeEdition.id)
+      .select()
+      .single();
+    if (error) {
+      console.error(error);
+      alert("Kunde inte spara deltagarvalet - försök igen.");
+      return;
+    }
+    const updatedEdition = data as EditionRow;
+    setEditions((prev) => prev.map((e) => (e.id === updatedEdition.id ? updatedEdition : e)));
+  }
+
   async function loadEditionData(editionId: number) {
     const [entriesRes, betsRes, resultsRes] = await Promise.all([
       supabase.from("entries").select("*").eq("edition_id", editionId),
@@ -462,6 +500,21 @@ export default function UtlaggPage() {
   );
   const [sweepGissning, setSweepGissning] = useState(players[0]?.id ?? "");
   const [sweepBelopp, setSweepBelopp] = useState(0);
+
+  // Om någon av de förvalda spelarna i rullistorna ovan plockas bort ur
+  // årets deltagarlista (se Deltagare-rutan), hoppa till första kvarvarande
+  // aktiva spelaren istället för att lämna ett val som inte längre syns.
+  useEffect(() => {
+    if (activePlayers.length === 0) return;
+    const activeIds = new Set(activePlayers.map((p) => p.id));
+    const fallback = activePlayers[0].id;
+    if (!activeIds.has(golfSpelare)) setGolfSpelare(fallback);
+    if (!activeIds.has(pokerSpelare)) setPokerSpelare(fallback);
+    if (!activeIds.has(utlaggSpelare)) setUtlaggSpelare(fallback);
+    if (!activeIds.has(sweepBettor)) setSweepBettor(fallback);
+    if (!activeIds.has(sweepGissning)) setSweepGissning(fallback);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePlayers]);
 
   async function registerSweepstake() {
     if (!activeEdition) return;
@@ -715,6 +768,36 @@ export default function UtlaggPage() {
         )}
       </div>
 
+      {/* Deltagare - vilka av de 9 spelarna som är med i årets upplaga (David
+          bad om detta 2026-09-21). Bocka ur den/de som inte är med, så
+          försvinner de från rullistorna i formulären nedan - man slipper då
+          bläddra förbi dem varje gång. Redan registrerade poster/facit
+          påverkas inte om man ändrar valet i efterhand. */}
+      <section className="rounded-xl bg-tdg-gray-light p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
+          Deltagare TDG {activeYear}
+        </h2>
+        <p className="mt-1 text-xs text-stone-500">
+          Bocka ur den/de som inte är med i år - de försvinner då från rullistorna nedan.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+          {players.map((p) => {
+            const participating = !nonParticipants.includes(p.id);
+            return (
+              <label key={p.id} className="flex items-center gap-2 text-sm text-stone-700">
+                <input
+                  type="checkbox"
+                  checked={participating}
+                  onChange={() => toggleParticipant(p.id)}
+                  className="h-4 w-4 rounded border-stone-300 text-tdg-green focus:ring-tdg-green"
+                />
+                {p.fullName}
+              </label>
+            );
+          })}
+        </div>
+      </section>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Golfbetting - bara insats */}
         <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
@@ -726,7 +809,7 @@ export default function UtlaggPage() {
             från Resultat-rutan längst ner.
           </p>
           <SelectField label="Spelare" value={golfSpelare} onChange={setGolfSpelare}>
-            {players.map((p) => (
+            {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
               </option>
@@ -748,7 +831,7 @@ export default function UtlaggPage() {
             Pokerbetting
           </h2>
           <SelectField label="Spelare" value={pokerSpelare} onChange={setPokerSpelare}>
-            {players.map((p) => (
+            {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
               </option>
@@ -794,7 +877,7 @@ export default function UtlaggPage() {
         <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">Utlägg</h2>
           <SelectField label="Spelare" value={utlaggSpelare} onChange={setUtlaggSpelare}>
-            {players.map((p) => (
+            {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
               </option>
@@ -832,7 +915,7 @@ export default function UtlaggPage() {
             hela potten automatiskt när rondresultatet registrerats.
           </p>
           <SelectField label="Vem satsar" value={sweepBettor} onChange={setSweepBettor}>
-            {players.map((p) => (
+            {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
               </option>
@@ -861,7 +944,7 @@ export default function UtlaggPage() {
             ))}
           </SelectField>
           <SelectField label="Gissning - vem vinner" value={sweepGissning} onChange={setSweepGissning}>
-            {players.map((p) => (
+            {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
               </option>
@@ -919,7 +1002,7 @@ export default function UtlaggPage() {
               Nettoscore
             </h3>
             <div className="mt-2 flex flex-col gap-2">
-              {players.map((p) => (
+              {activePlayers.map((p) => (
                 <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
                   <span className="text-stone-700">{p.fullName}</span>
                   <input
@@ -954,7 +1037,7 @@ export default function UtlaggPage() {
                   }
                 >
                   <option value="">Inte avgjort</option>
-                  {players.map((p) => (
+                  {activePlayers.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.fullName}
                     </option>

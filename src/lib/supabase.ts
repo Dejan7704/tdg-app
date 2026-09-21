@@ -23,6 +23,8 @@ export type EditionRow = {
   status: "open" | "closed";
   created_at: string;
   closed_at: string | null;
+  /** Spelar-id:n som INTE är med den här upplagan (tom lista = alla 9 med). */
+  non_participants: string[];
 };
 
 export type EntryRow = {
