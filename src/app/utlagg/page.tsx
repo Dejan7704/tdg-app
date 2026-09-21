@@ -778,21 +778,34 @@ export default function UtlaggPage() {
           Deltagare TDG {activeYear}
         </h2>
         <p className="mt-1 text-xs text-stone-500">
-          Bocka ur den/de som inte är med i år - de försvinner då från rullistorna nedan.
+          Klicka på den/de som inte är med i år - de försvinner då från rullistorna nedan.
         </p>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {players.map((p) => {
             const participating = !nonParticipants.includes(p.id);
             return (
-              <label key={p.id} className="flex items-center gap-2 text-sm text-stone-700">
-                <input
-                  type="checkbox"
-                  checked={participating}
-                  onChange={() => toggleParticipant(p.id)}
-                  className="h-4 w-4 rounded border-stone-300 text-tdg-green focus:ring-tdg-green"
-                />
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => toggleParticipant(p.id)}
+                className={
+                  "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold transition " +
+                  (participating
+                    ? "bg-tdg-green-dark text-tdg-yellow"
+                    : "bg-white text-stone-400 hover:text-stone-600")
+                }
+              >
+                {participating && (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 flex-shrink-0">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.704 5.29a1 1 0 010 1.415l-7.5 7.5a1 1 0 01-1.415 0l-3.5-3.5a1 1 0 111.415-1.415L8.5 12.086l6.79-6.79a1 1 0 011.415 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
                 {p.fullName}
-              </label>
+              </button>
             );
           })}
         </div>
