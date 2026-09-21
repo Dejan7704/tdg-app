@@ -1,8 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { players } from "@/lib/data";
 import { CATEGORY_LABELS, CATEGORY_ORDER, type BettingCategory } from "@/lib/business";
+import {
+  supabase,
+  type EditionRow,
+  type EntryRow,
+  type RoundResultRow,
+  type SweepstakeBetRow,
+} from "@/lib/supabase";
 
 // Standardbelopp för golfbetting, hämtade från samma logik/summor som i 2025
 // års utfall (se business-2025.json): insatsen är en fast årlig summa per
@@ -13,7 +20,9 @@ const GOLF_INSATS_DEFAULT = 2000;
 const GOLF_VINST_DEFAULT = 700;
 
 // Vilket år Betz & Expz-sidan börjar på (David bekräftat 2026-09-19) - sidan
-// byggdes "från och med 2026", och ingen säsong har stängts än.
+// byggdes "från och med 2026". Används bara om databasen mot förmodan saknar
+// en öppen säsong helt (t.ex. ett helt tomt projekt) - i normalfallet finns
+// alltid en öppen edition-rad (skapad av migrationen eller senaste Bokslut).
 const SEASON_START_YEAR = 2026;
 
 const UTLAGG_KATEGORIER = ["Mat", "Dryck", "Hyrbil", "Övrigt"] as const;
@@ -27,6 +36,10 @@ const RESULT_CATEGORIES = CATEGORY_ORDER.filter((c) => c !== "sweepstake") as Ex
   "sweepstake"
 >[];
 
+// --- UI-typer (oförändrade sedan innan databaskopplingen) - motsvarande
+// databasrader mappas om till dessa vid inläsning, se map*()-funktionerna
+// nedan, så att all beräkningslogik (computeAutoEntries m.fl.) kan vara
+// exakt oförändrad. ---
 type Entry = {
   id: number;
   timestamp: number;
@@ -39,14 +52,9 @@ type Entry = {
   auto?: boolean;
 };
 
-// Ett rondresultat - "facit" för en runda (1-4). Fylls i via Resultat-rutan
-// och är källan till both de automatiska golfbetting-vinsterna OCH
-// Sweepstakens automatiska utbetalning (se computeAutoEntries nedan).
 type RoundResult = {
   runda: number;
-  /** Nettoscore per spelare - nyckel är player.id. Rent informativt i det här steget (visas i tabellen), påverkar inga beräkningar ännu. */
   netto: Record<string, number | undefined>;
-  /** Vinnaren (player.id) per kategori för just den här rundan - tomt/undefined tills det är avgjort. */
   winners: Partial<Record<Exclude<BettingCategory, "sweepstake">, string>>;
 };
 
@@ -59,17 +67,36 @@ type SweepstakeBet = {
   belopp: number;
 };
 
-// En avslutad säsongs alla rådata - det som arkiveras när man trycker
-// "Bokslut <år>" (se avsnittet om säsongsbyte längre ner). Samma råformer
-// som det löpande state:t (entries/sweepstakeBets/roundResults), så samma
-// beräkningsfunktioner (computeAutoEntries m.fl.) kan återanvändas för att
-// visa upp ett arkiverat år precis som det såg ut när det stängdes.
-type SeasonSnapshot = {
-  year: number;
-  entries: Entry[];
-  sweepstakeBets: SweepstakeBet[];
-  roundResults: Record<number, RoundResult>;
-};
+function mapEntryRow(row: EntryRow): Entry {
+  return {
+    id: row.id,
+    timestamp: new Date(row.created_at).getTime(),
+    playerName: row.player_name,
+    huvudkategori: row.huvudkategori,
+    detalj: row.detalj,
+    kategori: row.kategori ?? undefined,
+    belopp: row.belopp,
+  };
+}
+
+function mapSweepstakeBetRow(row: SweepstakeBetRow): SweepstakeBet {
+  return {
+    id: row.id,
+    bettorId: row.bettor_id,
+    runda: row.runda,
+    kategori: row.kategori as Exclude<BettingCategory, "sweepstake">,
+    gissningId: row.gissning_id,
+    belopp: row.belopp,
+  };
+}
+
+function mapRoundResultRows(rows: RoundResultRow[]): Record<number, RoundResult> {
+  const out: Record<number, RoundResult> = {};
+  for (const row of rows) {
+    out[row.runda] = { runda: row.runda, netto: row.netto, winners: row.winners };
+  }
+  return out;
+}
 
 function formatSek(n: number): string {
   const rounded = Math.round(n);
@@ -83,8 +110,8 @@ function playerName(id: string): string {
 // Automatiskt framräknade poster - golfbetting-vinster (en per kategori som
 // fått en vinnare i Resultat-rutan) och sweepstake-utbetalningar (löst mot
 // samma facit). Ren funktion av roundResults+sweepstakeBets (ingen egen
-// state) så den kan användas både för den pågående säsongen (i en useMemo
-// nedan) och för att rendera ett arkiverat års ögonblicksbild oförändrad.
+// state) så den kan användas både för den pågående säsongen och för att
+// rendera ett arkiverat års ögonblicksbild oförändrad.
 //
 // Sweepstaken rullar vidare (David 2026-09-19): gissar ingen rätt på en
 // avgjord runda betalas potten inte ut - den läggs istället ovanpå nästa
@@ -120,18 +147,12 @@ function computeAutoEntries(
         auto: true,
       });
 
-      // Sweepstake: potten = den här rundans insatser + allt som ev.
-      // rullat med från tidigare rundor som ingen gissade rätt på.
       const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
       const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
-      if (pot === 0) continue; // varken nya insatser eller något att rulla vidare
+      if (pot === 0) continue;
 
       const winners = betsR.filter((b) => b.gissningId === winnerId);
       if (winners.length === 0) {
-        // Ingen gissade rätt - hela potten (inkl. ev. tidigare rullning)
-        // rullar vidare till nästa runda i samma kategori. Sista rundan
-        // (4) har ingen "nästa" att rulla till - potten blir stående
-        // outbetald, flaggas inte särskilt i UI:t idag.
         carry = pot;
         continue;
       }
@@ -305,12 +326,86 @@ function EntriesTable({ entries }: { entries: Entry[] }) {
 }
 
 export default function UtlaggPage() {
+  // --- Databaskoppling (Supabase) - laddas in vid sidladdning ---
+  // `editions` = samtliga år (öppna + stängda), `activeEdition` = den med
+  // status "open" (ska alltid finnas exakt en). Poster/satsningar/resultat
+  // för den aktiva säsongen laddas in separat och hålls i eget state, precis
+  // som tidigare - skillnaden är att alla ändringar nu även skrivs till
+  // databasen (Supabase), inte bara till React-state.
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [editions, setEditions] = useState<EditionRow[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [nextId, setNextId] = useState(1);
+  const [sweepstakeBets, setSweepstakeBets] = useState<SweepstakeBet[]>([]);
+  const [roundResults, setRoundResults] = useState<Record<number, RoundResult>>({});
 
-  function addEntry(entry: Omit<Entry, "id" | "timestamp">) {
-    setEntries((prev) => [{ ...entry, id: nextId, timestamp: Date.now() }, ...prev]);
-    setNextId((n) => n + 1);
+  const activeEdition = editions.find((e) => e.status === "open") ?? null;
+  const activeYear = activeEdition?.year ?? SEASON_START_YEAR;
+
+  async function loadEditionData(editionId: number) {
+    const [entriesRes, betsRes, resultsRes] = await Promise.all([
+      supabase.from("entries").select("*").eq("edition_id", editionId),
+      supabase.from("sweepstake_bets").select("*").eq("edition_id", editionId),
+      supabase.from("round_results").select("*").eq("edition_id", editionId),
+    ]);
+    if (entriesRes.error) throw entriesRes.error;
+    if (betsRes.error) throw betsRes.error;
+    if (resultsRes.error) throw resultsRes.error;
+
+    setEntries((entriesRes.data as EntryRow[]).map(mapEntryRow));
+    setSweepstakeBets((betsRes.data as SweepstakeBetRow[]).map(mapSweepstakeBetRow));
+    setRoundResults(mapRoundResultRows(resultsRes.data as RoundResultRow[]));
+  }
+
+  useEffect(() => {
+    async function init() {
+      try {
+        setLoading(true);
+        setLoadError(null);
+        const { data: editionRows, error } = await supabase
+          .from("editions")
+          .select("*")
+          .order("year", { ascending: true });
+        if (error) throw error;
+        setEditions(editionRows as EditionRow[]);
+
+        const open = (editionRows as EditionRow[]).find((e) => e.status === "open");
+        if (open) {
+          await loadEditionData(open.id);
+        }
+      } catch (err) {
+        console.error(err);
+        setLoadError(
+          "Kunde inte läsa in data från databasen. Kontrollera internetuppkopplingen och ladda om sidan."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function addEntry(entry: Omit<Entry, "id" | "timestamp">) {
+    if (!activeEdition) return;
+    const { data, error } = await supabase
+      .from("entries")
+      .insert({
+        edition_id: activeEdition.id,
+        player_name: entry.playerName,
+        huvudkategori: entry.huvudkategori,
+        detalj: entry.detalj,
+        kategori: entry.kategori ?? null,
+        belopp: entry.belopp,
+      })
+      .select()
+      .single();
+    if (error) {
+      console.error(error);
+      alert("Kunde inte spara posten - försök igen.");
+      return;
+    }
+    setEntries((prev) => [mapEntryRow(data as EntryRow), ...prev]);
   }
 
   // --- Golfbetting (bara insats - vinster räknas fram automatiskt, se Resultat-rutan) ---
@@ -360,8 +455,6 @@ export default function UtlaggPage() {
 
   // --- Sweepstake (fri insats, ingen Vinst-knapp - utbetalningen räknas fram
   // automatiskt nedan när Resultat-rutans facit finns för samma runda+kategori) ---
-  const [sweepstakeBets, setSweepstakeBets] = useState<SweepstakeBet[]>([]);
-  const [nextBetId, setNextBetId] = useState(1);
   const [sweepBettor, setSweepBettor] = useState(players[0]?.id ?? "");
   const [sweepRunda, setSweepRunda] = useState(1);
   const [sweepKategori, setSweepKategori] = useState<Exclude<BettingCategory, "sweepstake">>(
@@ -370,24 +463,30 @@ export default function UtlaggPage() {
   const [sweepGissning, setSweepGissning] = useState(players[0]?.id ?? "");
   const [sweepBelopp, setSweepBelopp] = useState(0);
 
-  function registerSweepstake() {
-    setSweepstakeBets((prev) => [
-      ...prev,
-      {
-        id: nextBetId,
-        bettorId: sweepBettor,
+  async function registerSweepstake() {
+    if (!activeEdition) return;
+    const { data, error } = await supabase
+      .from("sweepstake_bets")
+      .insert({
+        edition_id: activeEdition.id,
+        bettor_id: sweepBettor,
         runda: sweepRunda,
         kategori: sweepKategori,
-        gissningId: sweepGissning,
+        gissning_id: sweepGissning,
         belopp: Math.abs(sweepBelopp),
-      },
-    ]);
-    setNextBetId((n) => n + 1);
+      })
+      .select()
+      .single();
+    if (error) {
+      console.error(error);
+      alert("Kunde inte spara satsningen - försök igen.");
+      return;
+    }
+    setSweepstakeBets((prev) => [...prev, mapSweepstakeBetRow(data as SweepstakeBetRow)]);
     setSweepBelopp(0);
   }
 
   // --- Resultat per golfrunda ("facit") ---
-  const [roundResults, setRoundResults] = useState<Record<number, RoundResult>>({});
   const [resultRunda, setResultRunda] = useState(1);
   const [resultNetto, setResultNetto] = useState<Record<string, number | undefined>>({});
   const [resultWinners, setResultWinners] = useState<
@@ -404,58 +503,127 @@ export default function UtlaggPage() {
     setResultWinners(existing?.winners ?? {});
   }
 
-  function registerRoundResult() {
+  async function registerRoundResult() {
+    if (!activeEdition) return;
+    const { data, error } = await supabase
+      .from("round_results")
+      .upsert(
+        {
+          edition_id: activeEdition.id,
+          runda: resultRunda,
+          netto: resultNetto,
+          winners: resultWinners,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "edition_id,runda" }
+      )
+      .select()
+      .single();
+    if (error) {
+      console.error(error);
+      alert("Kunde inte spara resultatet - försök igen.");
+      return;
+    }
+    const row = data as RoundResultRow;
     setRoundResults((prev) => ({
       ...prev,
-      [resultRunda]: { runda: resultRunda, netto: resultNetto, winners: resultWinners },
+      [row.runda]: { runda: row.runda, netto: row.netto, winners: row.winners },
     }));
   }
 
   // --- Säsong: pågående år + arkiv över avslutade år (David bad om detta
-  // 2026-09-19, eftersom sidan ska återanvändas år efter år) ---
-  // Sidan rensas och blir "öppen" för nästa år så fort man trycker
-  // "Bokslut <år>" och bekräftar - årets rådata (entries/sweepstakeBets/
-  // roundResults) sparas orörda i `archive` så de kan bläddras fram igen,
-  // precis som de såg ut vid stängningen. Rent React-state fortfarande (ingen
-  // databas ännu) - archive-listan försvinner vid en sidomladdning precis
-  // som allt annat på sidan gör idag.
-  const [activeYear, setActiveYear] = useState(SEASON_START_YEAR);
-  const [archive, setArchive] = useState<SeasonSnapshot[]>([]);
+  // 2026-09-19, eftersom sidan ska återanvändas år efter år). Sedan
+  // databaskopplingen (2026-09-21) motsvaras "Bokslut <år>" av att den
+  // aktiva edition-raden markeras "closed" och en ny edition-rad skapas för
+  // nästa år - se "Föreslagen datamodell" i projektdokumentet. ---
   const [confirmingClose, setConfirmingClose] = useState(false);
+  const [closingInProgress, setClosingInProgress] = useState(false);
   const [viewingArchiveYear, setViewingArchiveYear] = useState<number | null>(null);
+  const [archiveData, setArchiveData] = useState<
+    Record<number, { entries: Entry[]; sweepstakeBets: SweepstakeBet[]; roundResults: Record<number, RoundResult> }>
+  >({});
+  const [archiveLoading, setArchiveLoading] = useState(false);
 
-  function closeSeason() {
-    setArchive((prev) => [{ year: activeYear, entries, sweepstakeBets, roundResults }, ...prev]);
-    setEntries([]);
-    setNextId(1);
-    setSweepstakeBets([]);
-    setNextBetId(1);
-    setRoundResults({});
-    setResultRunda(1);
-    setResultNetto({});
-    setResultWinners({});
-    setActiveYear((y) => y + 1);
-    setConfirmingClose(false);
+  const closedEditions = editions.filter((e) => e.status === "closed").sort((a, b) => b.year - a.year);
+
+  async function closeSeason() {
+    if (!activeEdition) return;
+    setClosingInProgress(true);
+    try {
+      const { error: closeError } = await supabase
+        .from("editions")
+        .update({ status: "closed", closed_at: new Date().toISOString() })
+        .eq("id", activeEdition.id);
+      if (closeError) throw closeError;
+
+      const { data: newEdition, error: insertError } = await supabase
+        .from("editions")
+        .insert({ year: activeEdition.year + 1, status: "open" })
+        .select()
+        .single();
+      if (insertError) throw insertError;
+
+      setEditions((prev) => [
+        ...prev.map((e) => (e.id === activeEdition.id ? { ...e, status: "closed" as const } : e)),
+        newEdition as EditionRow,
+      ]);
+      setEntries([]);
+      setSweepstakeBets([]);
+      setRoundResults({});
+      setResultRunda(1);
+      setResultNetto({});
+      setResultWinners({});
+      setConfirmingClose(false);
+    } catch (err) {
+      console.error(err);
+      alert("Kunde inte avsluta säsongen - försök igen.");
+    } finally {
+      setClosingInProgress(false);
+    }
   }
 
-  const autoEntries = useMemo(
-    () => computeAutoEntries(roundResults, sweepstakeBets),
-    [roundResults, sweepstakeBets]
-  );
-  const sweepstakeInsatsEntries = useMemo(
-    () => computeSweepstakeInsatsEntries(sweepstakeBets),
-    [sweepstakeBets]
-  );
+  async function viewArchiveYear(edition: EditionRow) {
+    if (viewingArchiveYear === edition.year) {
+      setViewingArchiveYear(null);
+      return;
+    }
+    setViewingArchiveYear(edition.year);
+    if (archiveData[edition.id]) return; // redan inläst
+    setArchiveLoading(true);
+    try {
+      const [entriesRes, betsRes, resultsRes] = await Promise.all([
+        supabase.from("entries").select("*").eq("edition_id", edition.id),
+        supabase.from("sweepstake_bets").select("*").eq("edition_id", edition.id),
+        supabase.from("round_results").select("*").eq("edition_id", edition.id),
+      ]);
+      if (entriesRes.error) throw entriesRes.error;
+      if (betsRes.error) throw betsRes.error;
+      if (resultsRes.error) throw resultsRes.error;
+
+      setArchiveData((prev) => ({
+        ...prev,
+        [edition.id]: {
+          entries: (entriesRes.data as EntryRow[]).map(mapEntryRow),
+          sweepstakeBets: (betsRes.data as SweepstakeBetRow[]).map(mapSweepstakeBetRow),
+          roundResults: mapRoundResultRows(resultsRes.data as RoundResultRow[]),
+        },
+      }));
+    } catch (err) {
+      console.error(err);
+      alert("Kunde inte läsa in det arkiverade året - försök igen.");
+      setViewingArchiveYear(null);
+    } finally {
+      setArchiveLoading(false);
+    }
+  }
+
   const allEntries = useMemo(
-    () =>
-      [...entries, ...sweepstakeInsatsEntries, ...autoEntries].sort((a, b) => {
-        if (a.timestamp !== b.timestamp) return b.timestamp - a.timestamp;
-        return 0;
-      }),
-    [entries, sweepstakeInsatsEntries, autoEntries]
+    () => buildAllEntries(entries, sweepstakeBets, roundResults),
+    [entries, sweepstakeBets, roundResults]
   );
 
-  const viewingSnapshot = archive.find((s) => s.year === viewingArchiveYear) ?? null;
+  const viewingEdition = closedEditions.find((e) => e.year === viewingArchiveYear) ?? null;
+  const viewingSnapshot = viewingEdition ? archiveData[viewingEdition.id] ?? null : null;
   const archivedEntries = useMemo(
     () =>
       viewingSnapshot
@@ -463,6 +631,30 @@ export default function UtlaggPage() {
         : [],
     [viewingSnapshot]
   );
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-900">Betz & Expz</h1>
+        </div>
+        <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">Laddar…</p>
+      </div>
+    );
+  }
+
+  if (loadError || !activeEdition) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-900">Betz & Expz</h1>
+        </div>
+        <p className="rounded-xl bg-red-50 p-6 text-sm text-red-700">
+          {loadError ?? "Ingen öppen säsong hittades i databasen."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -472,7 +664,7 @@ export default function UtlaggPage() {
           Registrera utlägg och betting löpande under årets resa. Insatser registreras som
           negativa poster, vinster och utlägg som positiva. Golfbetting-vinster och
           Sweepstake-utbetalningar räknas fram automatiskt så fort ett rondresultat registrerats
-          nedan.
+          nedan. Allt sparas löpande i databasen och syns direkt för alla.
         </p>
       </div>
 
@@ -505,13 +697,15 @@ export default function UtlaggPage() {
               <button
                 type="button"
                 onClick={closeSeason}
-                className="rounded-lg bg-tdg-yellow px-3 py-1.5 text-sm font-semibold text-tdg-green-dark transition hover:opacity-90"
+                disabled={closingInProgress}
+                className="rounded-lg bg-tdg-yellow px-3 py-1.5 text-sm font-semibold text-tdg-green-dark transition hover:opacity-90 disabled:opacity-60"
               >
-                Ja, avsluta TDG {activeYear}
+                {closingInProgress ? "Avslutar…" : `Ja, avsluta TDG ${activeYear}`}
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmingClose(false)}
+                disabled={closingInProgress}
                 className="rounded-lg border border-white/40 px-3 py-1.5 text-sm text-white transition hover:bg-white/10"
               >
                 Avbryt
@@ -793,37 +987,43 @@ export default function UtlaggPage() {
         )}
       </section>
 
-      {/* Arkiverade säsonger - byggs upp allteftersom man trycker
-          "Bokslut <år>" ovan. Read-only vy av ett tidigare års alla poster,
-          exakt som de såg ut vid stängningen. */}
-      {archive.length > 0 && (
+      {/* Arkiverade säsonger - en rad per stängd edition i databasen. Läses
+          in on demand (lazy) första gången man klickar på ett år, så
+          sidladdningen bara behöver hämta den pågående säsongens data. */}
+      {closedEditions.length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
             Arkiverade säsonger
           </h2>
           <div className="flex flex-wrap gap-2">
-            {archive.map((s) => (
+            {closedEditions.map((e) => (
               <button
-                key={s.year}
+                key={e.id}
                 type="button"
-                onClick={() => setViewingArchiveYear((y) => (y === s.year ? null : s.year))}
+                onClick={() => viewArchiveYear(e)}
                 className={
                   "rounded-lg px-3 py-1.5 text-sm font-medium transition " +
-                  (viewingArchiveYear === s.year
+                  (viewingArchiveYear === e.year
                     ? "bg-tdg-green-dark text-white"
                     : "bg-tdg-gray-light text-stone-600 hover:text-tdg-green")
                 }
               >
-                TDG {s.year}
+                TDG {e.year}
               </button>
             ))}
           </div>
-          {viewingSnapshot && (
+          {viewingArchiveYear !== null && (
             <div className="mt-1">
-              <p className="mb-2 text-xs text-stone-500">
-                {archivedEntries.length} poster registrerade för TDG {viewingSnapshot.year}.
-              </p>
-              <EntriesTable entries={archivedEntries} />
+              {archiveLoading && !viewingSnapshot ? (
+                <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">Laddar…</p>
+              ) : (
+                <>
+                  <p className="mb-2 text-xs text-stone-500">
+                    {archivedEntries.length} poster registrerade för TDG {viewingArchiveYear}.
+                  </p>
+                  <EntriesTable entries={archivedEntries} />
+                </>
+              )}
             </div>
           )}
         </section>
