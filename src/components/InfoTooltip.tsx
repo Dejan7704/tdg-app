@@ -34,7 +34,7 @@ export function InfoTooltip({
   const buttonClass =
     variant === "dark"
       ? "border-white/50 text-white/80 hover:border-white hover:text-white"
-      : "border-stone-300 text-stone-500 hover:border-tdg-green hover:text-tdg-green";
+      : "border-tdg-green text-tdg-green hover:border-tdg-green-dark hover:text-tdg-green-dark";
 
   return (
     <span className="group relative inline-flex items-center align-middle">
