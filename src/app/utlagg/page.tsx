@@ -234,7 +234,12 @@ function SelectField({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 focus:border-tdg-green focus:outline-none"
+        className={
+          "rounded-lg border px-3 py-2 focus:border-tdg-green focus:outline-none " +
+          (value === ""
+            ? "border-stone-200 bg-stone-100 text-stone-400"
+            : "border-stone-200 bg-white text-stone-900")
+        }
       >
         {children}
       </select>
@@ -462,7 +467,7 @@ export default function UtlaggPage() {
   }
 
   // --- Golfbetting (bara insats - vinster räknas fram automatiskt, se Resultat-rutan) ---
-  const [golfSpelare, setGolfSpelare] = useState(players[0]?.id ?? "");
+  const [golfSpelare, setGolfSpelare] = useState("");
   const [golfBelopp, setGolfBelopp] = useState(GOLF_INSATS_DEFAULT);
   const [golfSubmitting, setGolfSubmitting] = useState(false);
 
@@ -478,14 +483,14 @@ export default function UtlaggPage() {
     });
     setGolfSubmitting(false);
     if (ok) {
-      setGolfSpelare(activePlayers[0]?.id ?? player.id);
+      setGolfSpelare("");
       setGolfBelopp(GOLF_INSATS_DEFAULT);
       showToast(`Insats registrerad för ${player.fullName}`);
     }
   }
 
   // --- Pokerbetting ---
-  const [pokerSpelare, setPokerSpelare] = useState(players[0]?.id ?? "");
+  const [pokerSpelare, setPokerSpelare] = useState("");
   const [pokerTyp, setPokerTyp] = useState<"insats" | "vinst">("vinst");
   const [pokerBelopp, setPokerBelopp] = useState(0);
   const [pokerSubmitting, setPokerSubmitting] = useState(false);
@@ -499,7 +504,7 @@ export default function UtlaggPage() {
     const ok = await addEntry({ playerName: player.fullName, huvudkategori: "Pokerbetting", detalj, belopp });
     setPokerSubmitting(false);
     if (ok) {
-      setPokerSpelare(activePlayers[0]?.id ?? player.id);
+      setPokerSpelare("");
       setPokerTyp("vinst");
       setPokerBelopp(0);
       showToast(`${detalj} registrerad för ${player.fullName}`);
@@ -507,7 +512,7 @@ export default function UtlaggPage() {
   }
 
   // --- Utlägg ---
-  const [utlaggSpelare, setUtlaggSpelare] = useState(players[0]?.id ?? "");
+  const [utlaggSpelare, setUtlaggSpelare] = useState("");
   const [utlaggKategori, setUtlaggKategori] = useState<UtlaggKategori>("Mat");
   const [utlaggBelopp, setUtlaggBelopp] = useState(0);
   const [utlaggSubmitting, setUtlaggSubmitting] = useState(false);
@@ -525,7 +530,7 @@ export default function UtlaggPage() {
     });
     setUtlaggSubmitting(false);
     if (ok) {
-      setUtlaggSpelare(activePlayers[0]?.id ?? player.id);
+      setUtlaggSpelare("");
       setUtlaggKategori("Mat");
       setUtlaggBelopp(0);
       showToast(`Utlägg registrerat för ${player.fullName}`);
@@ -534,27 +539,28 @@ export default function UtlaggPage() {
 
   // --- Sweepstake (fri insats, ingen Vinst-knapp - utbetalningen räknas fram
   // automatiskt nedan när Resultat-rutans facit finns för samma runda+kategori) ---
-  const [sweepBettor, setSweepBettor] = useState(players[0]?.id ?? "");
+  const [sweepBettor, setSweepBettor] = useState("");
   const [sweepRunda, setSweepRunda] = useState(1);
   const [sweepKategori, setSweepKategori] = useState<Exclude<BettingCategory, "sweepstake">>(
     RESULT_CATEGORIES[0]
   );
-  const [sweepGissning, setSweepGissning] = useState(players[0]?.id ?? "");
+  const [sweepGissning, setSweepGissning] = useState("");
   const [sweepBelopp, setSweepBelopp] = useState(0);
   const [sweepSubmitting, setSweepSubmitting] = useState(false);
 
-  // Om någon av de förvalda spelarna i rullistorna ovan plockas bort ur
-  // årets deltagarlista (se Deltagare-rutan), hoppa till första kvarvarande
-  // aktiva spelaren istället för att lämna ett val som inte längre syns.
+  // Om någon av de valda spelarna i rullistorna ovan plockas bort ur årets
+  // deltagarlista (se Deltagare-rutan), rensa valet istället för att lämna
+  // kvar ett val som inte längre syns. Ett tomt val ("") rörs INTE här -
+  // rullistorna startar medvetet tomma (David bad om detta 2026-09-21) så
+  // att man alltid gör ett aktivt val, det ska inte fyllas i automatiskt.
   useEffect(() => {
     if (activePlayers.length === 0) return;
     const activeIds = new Set(activePlayers.map((p) => p.id));
-    const fallback = activePlayers[0].id;
-    if (!activeIds.has(golfSpelare)) setGolfSpelare(fallback);
-    if (!activeIds.has(pokerSpelare)) setPokerSpelare(fallback);
-    if (!activeIds.has(utlaggSpelare)) setUtlaggSpelare(fallback);
-    if (!activeIds.has(sweepBettor)) setSweepBettor(fallback);
-    if (!activeIds.has(sweepGissning)) setSweepGissning(fallback);
+    if (golfSpelare && !activeIds.has(golfSpelare)) setGolfSpelare("");
+    if (pokerSpelare && !activeIds.has(pokerSpelare)) setPokerSpelare("");
+    if (utlaggSpelare && !activeIds.has(utlaggSpelare)) setUtlaggSpelare("");
+    if (sweepBettor && !activeIds.has(sweepBettor)) setSweepBettor("");
+    if (sweepGissning && !activeIds.has(sweepGissning)) setSweepGissning("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePlayers]);
 
@@ -581,10 +587,10 @@ export default function UtlaggPage() {
     }
     setSweepstakeBets((prev) => [...prev, mapSweepstakeBetRow(data as SweepstakeBetRow)]);
     const bettorName = playerName(sweepBettor);
-    setSweepBettor(activePlayers[0]?.id ?? sweepBettor);
+    setSweepBettor("");
     setSweepRunda(1);
     setSweepKategori(RESULT_CATEGORIES[0]);
-    setSweepGissning(activePlayers[0]?.id ?? sweepGissning);
+    setSweepGissning("");
     setSweepBelopp(0);
     showToast(`Sweepstake-satsning registrerad för ${bettorName}`);
   }
@@ -876,6 +882,7 @@ export default function UtlaggPage() {
             från Resultat-rutan längst ner.
           </p>
           <SelectField label="Spelare" value={golfSpelare} onChange={setGolfSpelare}>
+            <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
@@ -886,7 +893,7 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerGolfInsats}
-            disabled={golfSubmitting}
+            disabled={golfSubmitting || !golfSpelare}
             className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
             {golfSubmitting ? "Registrerar…" : "Registrera insats"}
@@ -899,6 +906,7 @@ export default function UtlaggPage() {
             Pokerbetting
           </h2>
           <SelectField label="Spelare" value={pokerSpelare} onChange={setPokerSpelare}>
+            <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
@@ -935,7 +943,7 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerPoker}
-            disabled={pokerSubmitting}
+            disabled={pokerSubmitting || !pokerSpelare}
             className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
             {pokerSubmitting ? "Registrerar…" : "Registrera"}
@@ -946,6 +954,7 @@ export default function UtlaggPage() {
         <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">Utlägg</h2>
           <SelectField label="Spelare" value={utlaggSpelare} onChange={setUtlaggSpelare}>
+            <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
@@ -967,7 +976,7 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerUtlagg}
-            disabled={utlaggSubmitting}
+            disabled={utlaggSubmitting || !utlaggSpelare}
             className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
             {utlaggSubmitting ? "Registrerar…" : "Registrera"}
@@ -985,6 +994,7 @@ export default function UtlaggPage() {
             hela potten automatiskt när rondresultatet registrerats.
           </p>
           <SelectField label="Vem satsar" value={sweepBettor} onChange={setSweepBettor}>
+            <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
@@ -1014,6 +1024,7 @@ export default function UtlaggPage() {
             ))}
           </SelectField>
           <SelectField label="Gissning - vem vinner" value={sweepGissning} onChange={setSweepGissning}>
+            <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.fullName}
@@ -1029,7 +1040,7 @@ export default function UtlaggPage() {
           <button
             type="button"
             onClick={registerSweepstake}
-            disabled={sweepSubmitting}
+            disabled={sweepSubmitting || !sweepBettor || !sweepGissning}
             className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
           >
             {sweepSubmitting ? "Registrerar…" : "Registrera satsning"}
