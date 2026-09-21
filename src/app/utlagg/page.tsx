@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { players } from "@/lib/data";
 import { CATEGORY_LABELS, CATEGORY_ORDER, type BettingCategory } from "@/lib/business";
+import { InfoTooltip } from "@/components/InfoTooltip";
 import {
   supabase,
   type EditionRow,
@@ -247,6 +248,10 @@ function SelectField({
   );
 }
 
+// Belopp visas med tusentalsavgränsare medan man skriver (David bad om
+// detta 2026-09-21) - därför ett textfält (inte type="number", som inte kan
+// visa mellanslag i talet) som formaterar värdet med sv-SE-lokalen och
+// tolkar bort allt utom siffror igen när man skriver.
 function AmountField({
   label,
   value,
@@ -262,10 +267,14 @@ function AmountField({
     <label className="flex flex-col gap-1 text-sm">
       <span className="font-medium text-stone-600">{label}</span>
       <input
-        type="number"
-        value={value === 0 && placeholder ? "" : value}
+        type="text"
+        inputMode="numeric"
+        value={value === 0 ? "" : value.toLocaleString("sv-SE")}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value === "" ? 0 : Number(e.target.value))}
+        onChange={(e) => {
+          const digitsOnly = e.target.value.replace(/\D/g, "");
+          onChange(digitsOnly === "" ? 0 : Number(digitsOnly));
+        }}
         className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 focus:border-tdg-green focus:outline-none"
       />
     </label>
@@ -467,12 +476,40 @@ export default function UtlaggPage() {
   }
 
   // --- Golfbetting (bara insats - vinster räknas fram automatiskt, se Resultat-rutan) ---
+  // Bara EN insats per spelare och säsong tillåts (David bad om detta
+  // 2026-09-21) - så fort en spelare har en registrerad Golfbetting-insats
+  // (huvudkategori+detalj) för den aktiva säsongen försvinner den ur
+  // rullistan här, samma sätt som Deltagare-valet filtrerar bort spelare.
+  const golfRegisteredIds = useMemo(
+    () =>
+      new Set(
+        entries
+          .filter((e) => e.huvudkategori === "Golfbetting" && e.detalj === "Insats")
+          .map((e) => players.find((p) => p.fullName === e.playerName)?.id)
+          .filter((id): id is string => Boolean(id))
+      ),
+    [entries]
+  );
+  const golfEligiblePlayers = useMemo(
+    () => activePlayers.filter((p) => !golfRegisteredIds.has(p.id)),
+    [activePlayers, golfRegisteredIds]
+  );
+
   const [golfSpelare, setGolfSpelare] = useState("");
   const [golfBelopp, setGolfBelopp] = useState(GOLF_INSATS_DEFAULT);
   const [golfSubmitting, setGolfSubmitting] = useState(false);
 
+  // Rensa valet om spelaren i fråga inte längre är valbar (t.ex. någon annan
+  // hann registrera samma spelares insats, eller deltagarlistan ändrades).
+  useEffect(() => {
+    if (golfSpelare && !golfEligiblePlayers.some((p) => p.id === golfSpelare)) {
+      setGolfSpelare("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [golfEligiblePlayers]);
+
   async function registerGolfInsats() {
-    const player = activePlayers.find((p) => p.id === golfSpelare);
+    const player = golfEligiblePlayers.find((p) => p.id === golfSpelare);
     if (!player || golfSubmitting) return;
     setGolfSubmitting(true);
     const ok = await addEntry({
@@ -879,25 +916,33 @@ export default function UtlaggPage() {
           </h2>
           <p className="text-xs text-stone-500">
             Bara årets insats registreras här - vinster per kategori räknas fram automatiskt
-            från Resultat-rutan längst ner.
+            från Resultat-rutan längst ner. En insats per spelare och säsong.
           </p>
-          <SelectField label="Spelare" value={golfSpelare} onChange={setGolfSpelare}>
-            <option value="">Välj spelare…</option>
-            {activePlayers.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fullName}
-              </option>
-            ))}
-          </SelectField>
-          <AmountField label="Insats (kr)" value={golfBelopp} onChange={setGolfBelopp} />
-          <button
-            type="button"
-            onClick={registerGolfInsats}
-            disabled={golfSubmitting || !golfSpelare}
-            className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
-          >
-            {golfSubmitting ? "Registrerar…" : "Registrera insats"}
-          </button>
+          {golfEligiblePlayers.length > 0 ? (
+            <>
+              <SelectField label="Spelare" value={golfSpelare} onChange={setGolfSpelare}>
+                <option value="">Välj spelare…</option>
+                {golfEligiblePlayers.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.fullName}
+                  </option>
+                ))}
+              </SelectField>
+              <AmountField label="Insats (kr)" value={golfBelopp} onChange={setGolfBelopp} />
+              <button
+                type="button"
+                onClick={registerGolfInsats}
+                disabled={golfSubmitting || !golfSpelare}
+                className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
+              >
+                {golfSubmitting ? "Registrerar…" : "Registrera insats"}
+              </button>
+            </>
+          ) : (
+            <p className="rounded-lg bg-white px-3 py-2 text-sm text-stone-500">
+              Alla spelare har redan registrerat sin insats för TDG {activeYear}.
+            </p>
+          )}
         </div>
 
         {/* Pokerbetting */}
@@ -939,7 +984,12 @@ export default function UtlaggPage() {
               Vinst
             </button>
           </div>
-          <AmountField label="Belopp (kr)" value={pokerBelopp} onChange={setPokerBelopp} />
+          <AmountField
+            label="Belopp (kr)"
+            value={pokerBelopp}
+            onChange={setPokerBelopp}
+            placeholder="Valfri summa"
+          />
           <button
             type="button"
             onClick={registerPoker}
@@ -972,7 +1022,12 @@ export default function UtlaggPage() {
               </option>
             ))}
           </SelectField>
-          <AmountField label="Belopp (kr)" value={utlaggBelopp} onChange={setUtlaggBelopp} />
+          <AmountField
+            label="Belopp (kr)"
+            value={utlaggBelopp}
+            onChange={setUtlaggBelopp}
+            placeholder="Valfri summa"
+          />
           <button
             type="button"
             onClick={registerUtlagg}
@@ -985,14 +1040,14 @@ export default function UtlaggPage() {
 
         {/* Sweepstake - fri insats, ingen Vinst-knapp */}
         <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
+          <h2 className="flex items-center text-sm font-semibold uppercase tracking-wide text-tdg-green">
             Sweepstake
+            <InfoTooltip
+              variant="light"
+              label="Om Sweepstake"
+              text="Valfritt sidospel, oberoende av golfbettingens insats. Gissa vem som vinner en kategori en given runda - vinnaren (eller de som gissat rätt, delat lika) tar hem hela potten automatiskt när rondresultatet registrerats."
+            />
           </h2>
-          <p className="text-xs text-stone-500">
-            Valfritt sidospel, oberoende av golfbettingens insats. Gissa vem som vinner en
-            kategori en given runda - vinnaren (eller de som gissat rätt, delat lika) tar hem
-            hela potten automatiskt när rondresultatet registrerats.
-          </p>
           <SelectField label="Vem satsar" value={sweepBettor} onChange={setSweepBettor}>
             <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (

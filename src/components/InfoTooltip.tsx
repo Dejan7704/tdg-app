@@ -17,8 +17,24 @@ import { useState } from "react";
 // Byggd generisk (tar bara `text` + ev. `label`) så den går att återanvända
 // om fler ställen i appen får behov av en kort förklarande tooltip, inte bara
 // "Projected winner"-raden på Hem-sidan den skapades för (2026-09-19).
-export function InfoTooltip({ text, label = "Mer information" }: { text: string; label?: string }) {
+//
+// `variant` styr ikonens färg: "dark" (standard) är gjord för att synas på en
+// mörk/färgad bakgrund (som Hem-sidans gröna ruta), "light" är till för en
+// ljus bakgrund (som Betz & Expz-rutorna, tillagt 2026-09-21).
+export function InfoTooltip({
+  text,
+  label = "Mer information",
+  variant = "dark",
+}: {
+  text: string;
+  label?: string;
+  variant?: "dark" | "light";
+}) {
   const [pinnedOpen, setPinnedOpen] = useState(false);
+  const buttonClass =
+    variant === "dark"
+      ? "border-white/50 text-white/80 hover:border-white hover:text-white"
+      : "border-stone-300 text-stone-500 hover:border-tdg-green hover:text-tdg-green";
 
   return (
     <span className="group relative inline-flex items-center align-middle">
@@ -28,7 +44,7 @@ export function InfoTooltip({ text, label = "Mer information" }: { text: string;
         onBlur={() => setPinnedOpen(false)}
         aria-label={label}
         aria-expanded={pinnedOpen}
-        className="ml-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/50 text-[10px] font-bold leading-none text-white/80 transition hover:border-white hover:text-white"
+        className={`ml-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold leading-none transition ${buttonClass}`}
       >
         i
       </button>
