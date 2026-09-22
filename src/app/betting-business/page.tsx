@@ -12,12 +12,170 @@ import {
   CATEGORY_ORDER,
   type BusinessYear,
 } from "@/lib/business";
-import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection } from "@/lib/data";
+import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection, getPlayer } from "@/lib/data";
 import { DualAxisLineChart } from "@/components/LineChart";
+import { getLiveBokslut, type LiveBokslut } from "@/lib/liveBokslut";
+import { RESULT_CATEGORIES } from "@/lib/betzExpz";
 
 function formatSek(n: number): string {
   const rounded = Math.round(n);
   return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + " kr";
+}
+
+// --- Live-vy för den pågående säsongen (tillagd 2026-09-22) - samma sorts
+// inforutor (rond för rond, totalt, avräkning) som de arkiverade åren nedan,
+// men byggda från getLiveBokslut() (Supabase, playerId-nycklad) istället för
+// en statisk business-*.json-fil (nickname-nycklad). Egna komponenter
+// eftersom PlayerBadge/RoundCard/TotalsTable/SettlementTable ovan är
+// hårt knutna till BusinessYear/nickname-modellen. ---
+
+function LivePlayerLink({ playerId, playerName }: { playerId: string; playerName: string }) {
+  return (
+    <Link href={`/spelare/${playerId}`} className="font-medium text-tdg-green hover:underline">
+      {playerName}
+    </Link>
+  );
+}
+
+function LiveRoundCard({ round, year }: { round: LiveBokslut["rounds"][number]; year: number }) {
+  const edition = getEdition(year);
+  const course = edition ? getMainSection(edition)?.courses[round.round - 1] : undefined;
+
+  return (
+    <div className="overflow-hidden rounded-xl bg-tdg-gray-light">
+      <div className="bg-tdg-green-dark px-4 py-2 text-sm font-semibold text-white">
+        Runda {round.round}
+        {course && <span className="ml-2 font-normal text-white/70">· {course}</span>}
+      </div>
+      <div className="grid divide-y divide-white sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:grid-cols-5">
+        {RESULT_CATEGORIES.map((cat) => {
+          const wins = round.wins.filter((w) => w.category === cat);
+          return (
+            <div key={cat} className="px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wide text-stone-500">
+                {CATEGORY_LABELS[cat]}
+              </div>
+              {wins.length === 0 ? (
+                <div className="mt-1 text-sm text-stone-400">–</div>
+              ) : (
+                <div className="mt-1 flex flex-col gap-1.5">
+                  {wins.map((w, i) => (
+                    <div key={i} className="flex flex-col text-sm leading-tight">
+                      <LivePlayerLink playerId={w.playerId} playerName={w.playerName} />
+                      <span className="text-xs text-stone-600">{formatSek(w.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function LiveTotalsTable({ live }: { live: LiveBokslut }) {
+  const names = Object.keys(live.totals).sort(
+    (a, b) =>
+      Object.values(live.totals[b]).reduce((x, y) => x + (y ?? 0), 0) -
+      Object.values(live.totals[a]).reduce((x, y) => x + (y ?? 0), 0)
+  );
+
+  if (names.length === 0) {
+    return (
+      <div className="rounded-xl border border-stone-200 bg-white px-4 py-6 text-center text-sm text-stone-400">
+        Inga rondresultat registrerade än.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
+      <table className="w-full text-sm">
+        <thead className="bg-stone-50 text-left text-stone-500">
+          <tr>
+            <th className="px-4 py-2 font-medium">Spelare</th>
+            {RESULT_CATEGORIES.map((cat) => (
+              <th key={cat} className="px-4 py-2 font-medium">
+                {CATEGORY_LABELS[cat]}
+              </th>
+            ))}
+            <th className="px-4 py-2 font-medium">Totalt vunnet</th>
+          </tr>
+        </thead>
+        <tbody>
+          {names.map((playerId) => {
+            const row = live.totals[playerId];
+            const sum = Object.values(row).reduce((a, b) => a + (b ?? 0), 0);
+            return (
+              <tr key={playerId} className="border-t border-stone-100">
+                <td className="px-4 py-2">
+                  <LivePlayerLink playerId={playerId} playerName={getPlayer(playerId)?.fullName ?? playerId} />
+                </td>
+                {RESULT_CATEGORIES.map((cat) => (
+                  <td key={cat} className="px-4 py-2 text-stone-600">
+                    {row[cat] ? formatSek(row[cat]!) : "–"}
+                  </td>
+                ))}
+                <td className="px-4 py-2 font-semibold">{formatSek(sum)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function LiveSettlementTable({ live }: { live: LiveBokslut }) {
+  const rows = [...live.settlement].sort((a, b) => b.justering - a.justering);
+
+  if (rows.length === 0) {
+    return (
+      <div className="rounded-xl border border-stone-200 bg-white px-4 py-6 text-center text-sm text-stone-400">
+        Data saknas
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
+      <table className="w-full text-sm">
+        <thead className="bg-stone-50 text-left text-stone-500">
+          <tr>
+            <th className="px-4 py-2 font-medium">Spelare</th>
+            <th className="px-4 py-2 font-medium">Utlägg</th>
+            <th className="px-4 py-2 font-medium">Poker</th>
+            <th className="px-4 py-2 font-medium">Golfbetting</th>
+            <th className="px-4 py-2 font-medium">Sweepstake</th>
+            <th className="px-4 py-2 font-medium">Justering</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.playerId} className="border-t border-stone-100">
+              <td className="px-4 py-2">
+                <LivePlayerLink playerId={r.playerId} playerName={r.playerName} />
+              </td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.utlagg)}</td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbetting)}</td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.sweepstake)}</td>
+              <td
+                className={
+                  "px-4 py-2 font-semibold " +
+                  (r.justering >= 0 ? "text-tdg-green" : "text-red-600")
+                }
+              >
+                {formatSek(r.justering)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 function PlayerBadge({ nickname }: { nickname: string }) {
@@ -184,8 +342,16 @@ export default async function BettingBusinessPage({
   const resolvedSearchParams = await searchParams;
   const allYears = getAllBusinessYears();
   const yearsWithData = getBusinessYears();
+  // Pågående säsong, hämtad live från Supabase (David bad om detta
+  // 2026-09-22) - visas som standardår när ingen ?year= anges, och som en
+  // egen, tydligt märkt gren av sidan istället för de arkiverade
+  // business-*.json-åren nedan. `null` om databasen (mot förmodan) inte har
+  // någon öppen edition-rad - då faller sidan tillbaka på tidigare beteende.
+  const live = await getLiveBokslut();
   const requestedYear = Number(resolvedSearchParams?.year);
-  const year = allYears.includes(requestedYear) ? requestedYear : yearsWithData[0];
+  const defaultYear = live?.year ?? yearsWithData[0];
+  const year = allYears.includes(requestedYear) ? requestedYear : defaultYear;
+  const isLiveYear = live !== null && live.year === year;
   const business = getBusinessYear(year);
   const yearlyTotals = getYearlyTotals();
 
@@ -229,26 +395,98 @@ export default async function BettingBusinessPage({
         {allYears.map((y) => {
           const hasData = yearsWithData.includes(y);
           const isSelected = y === year;
+          const isLive = live !== null && live.year === y;
           return (
             <Link
               key={y}
               href={`/betting-business?year=${y}`}
               className={
-                "min-w-16 rounded-xl px-3 py-2 text-center font-semibold transition " +
+                "relative min-w-16 rounded-xl px-3 py-2 text-center font-semibold transition " +
                 (isSelected
-                  ? "bg-tdg-green-dark text-white"
-                  : hasData
-                    ? "bg-tdg-gray-light text-tdg-green hover:shadow-sm"
-                    : "bg-tdg-gray-light text-stone-400 hover:shadow-sm")
+                  ? isLive
+                    ? "bg-tdg-yellow text-tdg-green-dark"
+                    : "bg-tdg-green-dark text-white"
+                  : isLive
+                    ? "bg-tdg-green-dark/10 text-tdg-green-dark ring-1 ring-inset ring-tdg-green-dark hover:shadow-sm"
+                    : hasData
+                      ? "bg-tdg-gray-light text-tdg-green hover:shadow-sm"
+                      : "bg-tdg-gray-light text-stone-400 hover:shadow-sm")
               }
             >
               {y}
+              {isLive && (
+                <span className="mt-0.5 block text-[9px] font-bold uppercase tracking-wide">
+                  Pågår
+                </span>
+              )}
             </Link>
           );
         })}
       </div>
 
-      {!business ? (
+      {isLiveYear && live ? (
+        <>
+          <div className="flex flex-col gap-1 rounded-xl bg-tdg-green-dark p-4 text-white sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wide text-tdg-yellow">
+                Pågående säsong
+              </span>
+              <p className="mt-0.5 text-lg font-bold">
+                TDG {live.year} <span className="font-normal text-white/80">– ej avslutad</span>
+              </p>
+            </div>
+            <p className="text-sm text-white/80">
+              {live.entryCount} {live.entryCount === 1 ? "post" : "poster"} registrerade hittills
+              i Betz &amp; Expz.
+            </p>
+          </div>
+          <p className="-mt-4 text-xs text-stone-400">
+            Siffrorna nedan byggs löpande från det som registrerats i Betz &amp; Expz och kan
+            ändras fram till dess säsongen avslutas där ("Bokslut {live.year}") – till skillnad
+            från övriga, avslutade år nedan.
+          </p>
+
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              Betting rond för rond
+            </h2>
+            {live.rounds.length === 0 ? (
+              <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">
+                Inga rondresultat registrerade än.
+              </p>
+            ) : (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {live.rounds.map((r) => (
+                  <LiveRoundCard key={r.round} round={r} year={live.year} />
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              Betting totalt {live.year}
+            </h2>
+            <LiveTotalsTable live={live} />
+            <p className="text-xs text-stone-400">
+              Insats registreras individuellt per spelare i Betz &amp; Expz (ingen gemensam
+              insats för hela gruppen längre).
+            </p>
+          </section>
+
+          <section className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              Utlägg, poker & avräkning {live.year}
+            </h2>
+            <LiveSettlementTable live={live} />
+            <p className="text-xs text-stone-400">
+              Justering = utlägg minus gruppens snittutlägg, plus poker-, golfbetting- och
+              sweepstake-netto. Positivt betyder att spelaren ska få pengar, negativt att
+              spelaren ska betala – preliminärt tills säsongen avslutas.
+            </p>
+          </section>
+        </>
+      ) : !business ? (
         <p className="text-stone-500">Ingen data för {year} ännu.</p>
       ) : (
         <>
