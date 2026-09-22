@@ -31,6 +31,17 @@ function formatSek(n: number): string {
 // ikryssad notering (som de avslutade årens `note`-fält). Uppdateras
 // automatiskt varje gång justeringen ändras, dvs varje gång en ny post
 // registreras på Betz & Expz.
+//
+// FÖRUTSÄTTER att alla spelares justering summerar till ~0 kr - annars finns
+// det ingen entydig "vem betalar vem"-lösning. Det stämmer alltid för
+// Utlägg (gruppens snittutlägg är per definition nollsummerat) och Poker
+// (spelare emellan), men INTE för Golfbetting/Sweepstake mitt i en säsong:
+// alla betalar sin insats direkt (in i en gemensam "pott"), men vinsterna
+// betalas bara ut i takt med att rondresultat registreras - så länge potten
+// inte är helt utbetald ligger ett underskott kvar som inte är någon
+// specifik spelares fordran (se `settlementDisplay()` nedan, som upptäcker
+// detta och visar varje spelares egen ställning istället för att gissa på
+// felaktiga betalningspar).
 function settleBalances(
   rows: { playerId: string; playerName: string; justering: number }[]
 ): { fromId: string; fromName: string; toId: string; toName: string; amount: number }[] {
@@ -67,24 +78,49 @@ function settleBalances(
   return transactions;
 }
 
-function settlementTextByPlayer(
+type SettlementDisplay = {
+  /** "transactions": exakta betalningspar kan visas (gruppens justering summerar till ~0). "preliminary": kan den inte, se `outstanding`. */
+  mode: "transactions" | "preliminary";
+  textByPlayer: Record<string, string>;
+  /** Bara satt i "preliminary"-läge: hur mycket av golfbetting-/sweepstake-potten som ännu inte betalats ut (negativt = ligger kvar i potten). */
+  outstanding: number;
+};
+
+function settlementDisplay(
   rows: { playerId: string; playerName: string; justering: number }[]
-): Record<string, string> {
-  const transactions = settleBalances(rows);
-  const out: Record<string, string> = {};
-  for (const r of rows) {
-    const pays = transactions.filter((t) => t.fromId === r.playerId);
-    const gets = transactions.filter((t) => t.toId === r.playerId);
-    const parts: string[] = [];
-    if (pays.length > 0) {
-      parts.push(`Betalar ${pays.map((t) => `${t.amount.toLocaleString("sv-SE")} kr till ${t.toName}`).join(", ")}`);
+): SettlementDisplay {
+  const total = rows.reduce((sum, r) => sum + r.justering, 0);
+
+  // Liten tolerans för avrundning (kr), inte för att faktiskt dölja obalans.
+  if (Math.abs(total) <= rows.length) {
+    const transactions = settleBalances(rows);
+    const textByPlayer: Record<string, string> = {};
+    for (const r of rows) {
+      const pays = transactions.filter((t) => t.fromId === r.playerId);
+      const gets = transactions.filter((t) => t.toId === r.playerId);
+      const parts: string[] = [];
+      if (pays.length > 0) {
+        parts.push(`Betalar ${pays.map((t) => `${t.amount.toLocaleString("sv-SE")} kr till ${t.toName}`).join(", ")}`);
+      }
+      if (gets.length > 0) {
+        parts.push(`Får ${gets.map((t) => `${t.amount.toLocaleString("sv-SE")} kr av ${t.fromName}`).join(", ")}`);
+      }
+      textByPlayer[r.playerId] = parts.length > 0 ? parts.join(" · ") : "Kvitt";
     }
-    if (gets.length > 0) {
-      parts.push(`Får ${gets.map((t) => `${t.amount.toLocaleString("sv-SE")} kr av ${t.fromName}`).join(", ")}`);
-    }
-    out[r.playerId] = parts.length > 0 ? parts.join(" · ") : "Kvitt";
+    return { mode: "transactions", textByPlayer, outstanding: 0 };
   }
-  return out;
+
+  // Går inte att para ihop exakt än - golfbetting-/sweepstake-potten är inte
+  // helt utbetald (inga/inte alla rondresultat registrerade). Visa var och
+  // ens egen ställning istället för att gissa fram felaktiga betalningspar.
+  const textByPlayer: Record<string, string> = {};
+  for (const r of rows) {
+    const amount = Math.abs(Math.round(r.justering));
+    if (r.justering > 0.5) textByPlayer[r.playerId] = `Ska få ${amount.toLocaleString("sv-SE")} kr`;
+    else if (r.justering < -0.5) textByPlayer[r.playerId] = `Ska betala ${amount.toLocaleString("sv-SE")} kr`;
+    else textByPlayer[r.playerId] = "Kvitt";
+  }
+  return { mode: "preliminary", textByPlayer, outstanding: total };
 }
 
 // --- Live-vy för den pågående säsongen (tillagd 2026-09-22) - samma sorts
@@ -204,39 +240,40 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
     );
   }
 
+  const settlement = settlementDisplay(rows);
+
   return (
-    <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
-      <table className="w-full text-sm">
-        <thead className="bg-stone-50 text-left text-stone-500">
-          <tr>
-            <th className="px-4 py-2 font-medium">Spelare</th>
-            <th className="px-4 py-2 font-medium">Utlägg</th>
-            <th className="px-4 py-2 font-medium">Poker</th>
-            <th className="px-4 py-2 font-medium">Golfbetting</th>
-            <th className="px-4 py-2 font-medium">Sweepstake</th>
-            <th className="px-4 py-2 font-medium">Betting totalt</th>
-            <th className="px-4 py-2 font-medium">
-              Justering
-              <InfoTooltip
-                variant="light"
-                label="Om Justering"
-                text="Utlägg minus gruppens snittutlägg, plus Betting totalt. Positivt = ska få pengar, negativt = ska betala."
-              />
-            </th>
-            <th className="px-4 py-2 font-medium">
-              Avräkning
-              <InfoTooltip
-                variant="light"
-                label="Om Avräkning"
-                text="Förslag på vem som betalar vem för att nollställa Justering - räknas om automatiskt vid varje ny registrering."
-              />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {(() => {
-            const settlementText = settlementTextByPlayer(rows);
-            return rows.map((r) => (
+    <div className="flex flex-col gap-2">
+      <div className="overflow-x-auto overflow-hidden rounded-xl border border-stone-200 bg-white">
+        <table className="w-full text-sm">
+          <thead className="bg-stone-50 text-left text-stone-500">
+            <tr>
+              <th className="px-4 py-2 font-medium">Spelare</th>
+              <th className="px-4 py-2 font-medium">Utlägg</th>
+              <th className="px-4 py-2 font-medium">Poker</th>
+              <th className="px-4 py-2 font-medium">Golfbetting</th>
+              <th className="px-4 py-2 font-medium">Sweepstake</th>
+              <th className="px-4 py-2 font-medium">Betting totalt</th>
+              <th className="px-4 py-2 font-medium">
+                Justering
+                <InfoTooltip
+                  variant="light"
+                  label="Om Justering"
+                  text="Utlägg minus gruppens snittutlägg, plus Betting totalt. Positivt = ska få pengar, negativt = ska betala."
+                />
+              </th>
+              <th className="px-4 py-2 font-medium">
+                Avräkning
+                <InfoTooltip
+                  variant="light"
+                  label="Om Avräkning"
+                  text="Vem som ska betala vem för att nollställa Justering. Visas som var och ens egen ställning tills golfbetting-/sweepstake-potten är helt utbetald (då går beloppen inte att para ihop exakt än)."
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
               <tr key={r.playerId} className="border-t border-stone-100">
                 <td className="px-4 py-2">
                   <LivePlayerLink playerId={r.playerId} playerName={r.playerName} />
@@ -256,12 +293,20 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
                 >
                   {formatSek(r.justering)}
                 </td>
-                <td className="px-4 py-2 text-stone-500">{settlementText[r.playerId]}</td>
+                <td className="px-4 py-2 text-stone-500">{settlement.textByPlayer[r.playerId]}</td>
               </tr>
-            ));
-          })()}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {settlement.mode === "preliminary" && (
+        <p className="text-xs text-stone-400">
+          Går inte att para ihop till exakta betalningar än – {Math.abs(Math.round(settlement.outstanding)).toLocaleString("sv-SE")}{" "}
+          kr av golfbetting-/sweepstake-potten är insatt men inte utbetald (fler rondresultat
+          saknas). Avräkningen visar därför var och ens egen ställning, och blir exakta
+          betalningspar så fort potten går jämnt ut.
+        </p>
+      )}
     </div>
   );
 }
