@@ -1,8 +1,65 @@
 import Link from "next/link";
 import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/data";
 import { getCountryFlag } from "@/lib/countryFlags";
+import { getLiveEditionStandings, type LiveEditionStandings } from "@/lib/liveBokslut";
 
-export default function HistorikPage() {
+// Sidan måste renderas dynamiskt (per request) - annars skulle den pågående
+// säsongens live-kort bara hämtas en gång vid deploy (Vercel-bygget) istället
+// för att faktiskt uppdateras allteftersom nya rondresultat registreras i
+// Betz & Expz. Bokslut-sidan (betting-business) blir dynamisk "på köpet" via
+// sin searchParams-användning - Historik har ingen sådan, så det måste sättas
+// explicit.
+export const dynamic = "force-dynamic";
+
+// Rondtabellen för den pågående säsongens kort - samma stil/kolumner som
+// den statiska detaljvyn (historik/[year]/page.tsx), men byggd av
+// LiveStandingRow (playerId-nycklad) istället för Standing (nickname-
+// nycklad). Egen liten komponent så den kan återanvändas oförändrad från
+// både listkortet här och den pågående säsongens detaljsida.
+function LiveStandingsTable({ live }: { live: LiveEditionStandings }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
+      <table className="w-full text-sm">
+        <thead className="bg-stone-50 text-left text-stone-500">
+          <tr>
+            <th className="px-4 py-2 font-medium">Plac.</th>
+            <th className="px-4 py-2 font-medium">Spelare</th>
+            {[1, 2, 3, 4].map((r) => (
+              <th key={r} className="px-4 py-2 font-medium">
+                R{r}
+              </th>
+            ))}
+            <th className="px-4 py-2 font-medium">Totalt</th>
+          </tr>
+        </thead>
+        <tbody>
+          {live.standings.map((s) => (
+            <tr key={s.playerId} className="border-t border-stone-100">
+              <td className="px-4 py-2 font-semibold text-stone-400">{s.placering ?? "–"}</td>
+              <td className="px-4 py-2">
+                <Link
+                  href={`/spelare/${s.playerId}`}
+                  className="font-medium text-tdg-green hover:underline"
+                >
+                  {s.playerName}
+                </Link>
+              </td>
+              {s.rounds.map((r, i) => (
+                <td key={i} className="px-4 py-2 text-stone-600">
+                  {r ?? "–"}
+                </td>
+              ))}
+              <td className="px-4 py-2 font-semibold">{s.total ?? "–"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default async function HistorikPage() {
+  const live = await getLiveEditionStandings();
   const sorted = [...editions].sort((a, b) => b.year - a.year);
 
   // Sorterad lista över de unika länderna (inte bara antalet) - David bad
@@ -49,6 +106,35 @@ export default function HistorikPage() {
       </div>
 
       <div className="flex flex-col gap-4">
+        {live && (
+          <div className="overflow-hidden rounded-xl border border-tdg-green-dark bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-tdg-green-dark px-4 py-3 text-white">
+              <div className="flex items-baseline gap-3">
+                <span className="rounded-full bg-tdg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-tdg-green-dark">
+                  Pågår
+                </span>
+                <Link
+                  href={`/historik/${live.year}`}
+                  className="text-lg font-bold text-white hover:underline"
+                >
+                  {live.year}
+                </Link>
+              </div>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
+                <span>{live.roundsRegistered} av 4 rundor spelade</span>
+                <span>Uppdateras live från Betz &amp; Expz</span>
+              </div>
+            </div>
+            {live.roundsRegistered === 0 ? (
+              <p className="px-4 py-3 text-sm text-stone-400">
+                Inga rondresultat registrerade än – dyker upp här allteftersom de fylls i på
+                Betz &amp; Expz.
+              </p>
+            ) : (
+              <LiveStandingsTable live={live} />
+            )}
+          </div>
+        )}
         {sorted.map((e) => {
           const winner = getWinner(e);
           const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
