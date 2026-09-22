@@ -565,8 +565,12 @@ export default async function BettingBusinessPage({
         <>
           <div className="flex flex-col gap-1 rounded-xl bg-tdg-green-dark p-4 text-white sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wide text-tdg-yellow">
+              <span className="flex items-center text-xs font-semibold uppercase tracking-wide text-tdg-yellow">
                 Pågående säsong
+                <InfoTooltip
+                  label="Om pågående säsong"
+                  text={`Siffrorna byggs löpande från registring i Betz & Expz. Först när säsongen avslutas via "Bokslut ${live.year}" så får vi en komplett avräkning.`}
+                />
               </span>
               <p className="mt-0.5 text-lg font-bold">
                 TDG {live.year} <span className="font-normal text-white/80">– ej avslutad</span>
@@ -577,11 +581,6 @@ export default async function BettingBusinessPage({
               i Betz &amp; Expz.
             </p>
           </div>
-          <p className="-mt-4 text-xs text-stone-400">
-            Siffrorna nedan byggs löpande från det som registrerats i Betz &amp; Expz och kan
-            ändras fram till dess säsongen avslutas där ("Bokslut {live.year}") – till skillnad
-            från övriga, avslutade år nedan.
-          </p>
 
           <section className="flex flex-col gap-3">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
@@ -605,10 +604,6 @@ export default async function BettingBusinessPage({
               Betting totalt {live.year}
             </h2>
             <LiveTotalsTable live={live} />
-            <p className="text-xs text-stone-400">
-              Insats registreras individuellt per spelare i Betz &amp; Expz (ingen gemensam
-              insats för hela gruppen längre).
-            </p>
           </section>
 
           <section className="flex flex-col gap-2">
