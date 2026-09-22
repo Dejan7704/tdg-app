@@ -22,7 +22,13 @@ export function generateStaticParams() {
 // resonemang i historik/page.tsx.
 export const dynamic = "force-dynamic";
 
-const SECTION_ORDER: SectionKey[] = ["poängbogey", "nettoslag", "bruttoslag"];
+// Nettoslag visas alltid först och märks "Tävlingens huvudresultat" - David
+// bad om detta 2026-09-22 för samtliga historiska år (inte bara 2026 och
+// framåt), som en ren visningsändring: ordningen och badgen nedan är
+// oberoende av `mainKey`/`getMainSectionKey()`, som fortsätter styra den
+// faktiska placeringen (getWinner() m.fl.) och amber-varningen om att
+// Poängbogey saknas - de rör sig inte om vilken tabell som visas överst.
+const SECTION_ORDER: SectionKey[] = ["nettoslag", "bruttoslag", "poängbogey"];
 
 export default async function EditionPage({
   params,
@@ -166,7 +172,7 @@ export default async function EditionPage({
           <div key={key} className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
               {SECTION_LABELS[key]}
-              {key === mainKey && (
+              {key === "nettoslag" && (
                 <span className="ml-2 rounded-full bg-tdg-green-dark px-2 py-0.5 text-xs font-medium normal-case text-white">
                   Tävlingens huvudresultat
                 </span>
