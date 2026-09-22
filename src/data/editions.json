@@ -1,4931 +1,4832 @@
 [
- {
-  "year": 2004,
-  "roman": "I",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Barsebäck Master Course",
-     "Tomelilla Runda 1",
-     "Tomelilla Runda 2",
-     "Kävlinge"
-    ],
-    "standings": [
-     {
-      "name": "Vessla",
-      "placering": 1,
-      "total": null,
-      "rounds": [
-       null,
-       null,
-       null,
-       null
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 139,
-      "rounds": [
-       36,
-       36,
-       39,
-       28
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 133,
-      "rounds": [
-       32,
-       36,
-       30,
-       35
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 134,
-      "rounds": [
-       30,
-       30,
-       36,
-       38
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 5,
-      "total": 130,
-      "rounds": [
-       30,
-       42,
-       27,
-       31
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 6,
-      "total": 111,
-      "rounds": [
-       25,
-       30,
-       26,
-       30
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2004,
+    "roman": "I",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Barsebäck Master Course",
+          "Tomelilla Runda 1",
+          "Tomelilla Runda 2",
+          "Kävlinge"
+        ],
+        "standings": [
+          {
+            "name": "Vessla",
+            "placering": 1,
+            "total": null,
+            "rounds": [
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 139,
+            "rounds": [
+              36,
+              36,
+              39,
+              28
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 133,
+            "rounds": [
+              32,
+              36,
+              30,
+              35
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 134,
+            "rounds": [
+              30,
+              30,
+              36,
+              38
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 5,
+            "total": 130,
+            "rounds": [
+              30,
+              42,
+              27,
+              31
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 6,
+            "total": 111,
+            "rounds": [
+              25,
+              30,
+              26,
+              30
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2005,
-  "roman": "II",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Kristianstad",
-     "Djupedal",
-     "Lilla Vik",
-     "Falsterbo"
-    ],
-    "standings": [
-     {
-      "name": "Vessla",
-      "placering": 1,
-      "total": 126,
-      "rounds": [
-       37,
-       27,
-       35,
-       27
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 130,
-      "rounds": [
-       27,
-       30,
-       36,
-       37
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 121,
-      "rounds": [
-       22,
-       30,
-       32,
-       37
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 4,
-      "total": 113,
-      "rounds": [
-       29,
-       23,
-       33,
-       28
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 115,
-      "rounds": [
-       29,
-       27,
-       30,
-       29
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 119,
-      "rounds": [
-       32,
-       35,
-       28,
-       24
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 111,
-      "rounds": [
-       29,
-       30,
-       27,
-       25
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 8,
-      "total": 98,
-      "rounds": [
-       23,
-       31,
-       29,
-       15
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2005,
+    "roman": "II",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Kristianstad",
+          "Djupedal",
+          "Lilla Vik",
+          "Falsterbo"
+        ],
+        "standings": [
+          {
+            "name": "Vessla",
+            "placering": 1,
+            "total": 126,
+            "rounds": [
+              37,
+              27,
+              35,
+              27
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 130,
+            "rounds": [
+              27,
+              30,
+              36,
+              37
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 121,
+            "rounds": [
+              22,
+              30,
+              32,
+              37
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 4,
+            "total": 113,
+            "rounds": [
+              29,
+              23,
+              33,
+              28
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 115,
+            "rounds": [
+              29,
+              27,
+              30,
+              29
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 119,
+            "rounds": [
+              32,
+              35,
+              28,
+              24
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 111,
+            "rounds": [
+              29,
+              30,
+              27,
+              25
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 8,
+            "total": 98,
+            "rounds": [
+              23,
+              31,
+              29,
+              15
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2006,
-  "roman": "III",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Bäckavattnet",
-     "Halmstad Norra",
-     "Halmstad Södra",
-     "Ringenäs"
-    ],
-    "standings": [
-     {
-      "name": "Chuleta",
-      "placering": 1,
-      "total": 144,
-      "rounds": [
-       35,
-       31,
-       36,
-       42
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 2,
-      "total": 126,
-      "rounds": [
-       30,
-       28,
-       35,
-       33
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 3,
-      "total": 130,
-      "rounds": [
-       37,
-       29,
-       32,
-       32
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 132,
-      "rounds": [
-       40,
-       31,
-       26,
-       35
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 5,
-      "total": 125,
-      "rounds": [
-       28,
-       37,
-       30,
-       30
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 6,
-      "total": 127,
-      "rounds": [
-       37,
-       29,
-       31,
-       30
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 7,
-      "total": 113,
-      "rounds": [
-       23,
-       26,
-       27,
-       37
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 8,
-      "total": 108,
-      "rounds": [
-       27,
-       32,
-       21,
-       28
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 9,
-      "total": 103,
-      "rounds": [
-       22,
-       33,
-       27,
-       21
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2006,
+    "roman": "III",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Bäckavattnet",
+          "Halmstad Norra",
+          "Halmstad Södra",
+          "Ringenäs"
+        ],
+        "standings": [
+          {
+            "name": "Chuleta",
+            "placering": 1,
+            "total": 144,
+            "rounds": [
+              35,
+              31,
+              36,
+              42
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 2,
+            "total": 126,
+            "rounds": [
+              30,
+              28,
+              35,
+              33
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 3,
+            "total": 130,
+            "rounds": [
+              37,
+              29,
+              32,
+              32
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 132,
+            "rounds": [
+              40,
+              31,
+              26,
+              35
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 5,
+            "total": 125,
+            "rounds": [
+              28,
+              37,
+              30,
+              30
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 6,
+            "total": 127,
+            "rounds": [
+              37,
+              29,
+              31,
+              30
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 7,
+            "total": 113,
+            "rounds": [
+              23,
+              26,
+              27,
+              37
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 8,
+            "total": 108,
+            "rounds": [
+              27,
+              32,
+              21,
+              28
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 9,
+            "total": 103,
+            "rounds": [
+              22,
+              33,
+              27,
+              21
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2007,
-  "roman": "IV",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Båstad",
-     "Halmstad Norra",
-     "Halmstad Södra",
-     "Holms"
-    ],
-    "standings": [
-     {
-      "name": "Vessla",
-      "placering": 1,
-      "total": 122,
-      "rounds": [
-       29,
-       35,
-       30,
-       28
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 124,
-      "rounds": [
-       32,
-       34,
-       26,
-       32
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 3,
-      "total": 119,
-      "rounds": [
-       30,
-       34,
-       19,
-       36
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 117,
-      "rounds": [
-       32,
-       29,
-       28,
-       28
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 5,
-      "total": 112,
-      "rounds": [
-       29,
-       31,
-       26,
-       26
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 6,
-      "total": 112,
-      "rounds": [
-       29,
-       22,
-       30,
-       31
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 7,
-      "total": 116,
-      "rounds": [
-       29,
-       32,
-       34,
-       21
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 8,
-      "total": 104,
-      "rounds": [
-       27,
-       30,
-       23,
-       24
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 54,
-      "rounds": [
-       29,
-       null,
-       null,
-       25
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Båstad",
-     "Halmstad Norra",
-     "Halmstad Södra",
-     "Holms"
-    ],
-    "standings": [
-     {
-      "name": "Chuleta",
-      "placering": 1,
-      "total": 164,
-      "rounds": [
-       78,
-       null,
-       null,
-       86
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 311,
-      "rounds": [
-       75,
-       74,
-       85,
-       77
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 3,
-      "total": 311,
-      "rounds": [
-       77,
-       73,
-       80,
-       81
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 4,
-      "total": 314,
-      "rounds": [
-       77,
-       74,
-       90,
-       73
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 5,
-      "total": 318,
-      "rounds": [
-       74,
-       79,
-       81,
-       84
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 320,
-      "rounds": [
-       79,
-       77,
-       82,
-       82
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 7,
-      "total": 323,
-      "rounds": [
-       79,
-       80,
-       75,
-       89
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 8,
-      "total": 325,
-      "rounds": [
-       77,
-       86,
-       80,
-       82
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 9,
-      "total": 334,
-      "rounds": [
-       81,
-       78,
-       86,
-       89
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2007,
+    "roman": "IV",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Båstad",
+          "Halmstad Norra",
+          "Halmstad Södra",
+          "Holms"
+        ],
+        "standings": [
+          {
+            "name": "Vessla",
+            "placering": 1,
+            "total": 122,
+            "rounds": [
+              29,
+              35,
+              30,
+              28
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 124,
+            "rounds": [
+              32,
+              34,
+              26,
+              32
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 3,
+            "total": 119,
+            "rounds": [
+              30,
+              34,
+              19,
+              36
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 117,
+            "rounds": [
+              32,
+              29,
+              28,
+              28
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 5,
+            "total": 112,
+            "rounds": [
+              29,
+              31,
+              26,
+              26
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 6,
+            "total": 112,
+            "rounds": [
+              29,
+              22,
+              30,
+              31
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 7,
+            "total": 116,
+            "rounds": [
+              29,
+              32,
+              34,
+              21
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 8,
+            "total": 104,
+            "rounds": [
+              27,
+              30,
+              23,
+              24
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 54,
+            "rounds": [
+              29,
+              null,
+              null,
+              25
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Båstad",
+          "Halmstad Norra",
+          "Halmstad Södra",
+          "Holms"
+        ],
+        "standings": [
+          {
+            "name": "Chuleta",
+            "placering": 1,
+            "total": 164,
+            "rounds": [
+              78,
+              null,
+              null,
+              86
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 311,
+            "rounds": [
+              75,
+              74,
+              85,
+              77
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 3,
+            "total": 311,
+            "rounds": [
+              77,
+              73,
+              80,
+              81
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 4,
+            "total": 314,
+            "rounds": [
+              77,
+              74,
+              90,
+              73
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 5,
+            "total": 318,
+            "rounds": [
+              74,
+              79,
+              81,
+              84
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 320,
+            "rounds": [
+              79,
+              77,
+              82,
+              82
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 7,
+            "total": 323,
+            "rounds": [
+              79,
+              80,
+              75,
+              89
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 8,
+            "total": 325,
+            "rounds": [
+              77,
+              86,
+              80,
+              82
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 9,
+            "total": 334,
+            "rounds": [
+              81,
+              78,
+              86,
+              89
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2008,
-  "roman": "V",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Kristianstad",
-     "Lilla Vik",
-     "Lilla Vk",
-     "Halmstad Norra"
-    ],
-    "standings": [
-     {
-      "name": "Mad Dogg",
-      "placering": 1,
-      "total": 139,
-      "rounds": [
-       31,
-       39,
-       36,
-       33
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 2,
-      "total": 123,
-      "rounds": [
-       31,
-       29,
-       34,
-       29
-      ]
-     },
-     {
-      "name": "Stekarn",
-      "placering": 3,
-      "total": 116,
-      "rounds": [
-       28,
-       32,
-       33,
-       23
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 4,
-      "total": 113,
-      "rounds": [
-       33,
-       31,
-       26,
-       23
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 5,
-      "total": 96,
-      "rounds": [
-       31,
-       29,
-       36,
-       null
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 91,
-      "rounds": [
-       32,
-       33,
-       26,
-       null
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Kristianstad",
-     "Lilla Vik",
-     "Lilla Vk",
-     "Halmstad Norra"
-    ],
-    "standings": [
-     {
-      "name": "Mad Dogg",
-      "placering": 1,
-      "total": 292,
-      "rounds": [
-       77,
-       69,
-       72,
-       74
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 2,
-      "total": 310,
-      "rounds": [
-       77,
-       75,
-       82,
-       76
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 3,
-      "total": 311,
-      "rounds": [
-       77,
-       79,
-       74,
-       81
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 313,
-      "rounds": [
-       78,
-       81,
-       75,
-       79
-      ]
-     },
-     {
-      "name": "Stekarn",
-      "placering": 5,
-      "total": 324,
-      "rounds": [
-       81,
-       80,
-       75,
-       88
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 325,
-      "rounds": [
-       75,
-       80,
-       82,
-       88
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2008,
+    "roman": "V",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Kristianstad",
+          "Lilla Vik",
+          "Lilla Vk",
+          "Halmstad Norra"
+        ],
+        "standings": [
+          {
+            "name": "Mad Dogg",
+            "placering": 1,
+            "total": 139,
+            "rounds": [
+              31,
+              39,
+              36,
+              33
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 2,
+            "total": 123,
+            "rounds": [
+              31,
+              29,
+              34,
+              29
+            ]
+          },
+          {
+            "name": "Stekarn",
+            "placering": 3,
+            "total": 116,
+            "rounds": [
+              28,
+              32,
+              33,
+              23
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 4,
+            "total": 113,
+            "rounds": [
+              33,
+              31,
+              26,
+              23
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 5,
+            "total": 96,
+            "rounds": [
+              31,
+              29,
+              36,
+              null
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 91,
+            "rounds": [
+              32,
+              33,
+              26,
+              null
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Kristianstad",
+          "Lilla Vik",
+          "Lilla Vk",
+          "Halmstad Norra"
+        ],
+        "standings": [
+          {
+            "name": "Mad Dogg",
+            "placering": 1,
+            "total": 292,
+            "rounds": [
+              77,
+              69,
+              72,
+              74
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 2,
+            "total": 310,
+            "rounds": [
+              77,
+              75,
+              82,
+              76
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 3,
+            "total": 311,
+            "rounds": [
+              77,
+              79,
+              74,
+              81
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 313,
+            "rounds": [
+              78,
+              81,
+              75,
+              79
+            ]
+          },
+          {
+            "name": "Stekarn",
+            "placering": 5,
+            "total": 324,
+            "rounds": [
+              81,
+              80,
+              75,
+              88
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 325,
+            "rounds": [
+              75,
+              80,
+              82,
+              88
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2009,
-  "roman": "VI",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Gumbalde",
-     "Slite",
-     "Slite",
-     "Visby"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 128,
-      "rounds": [
-       34,
-       29,
-       37,
-       28
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 2,
-      "total": 125,
-      "rounds": [
-       32,
-       28,
-       33,
-       32
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 3,
-      "total": 123,
-      "rounds": [
-       37,
-       24,
-       39,
-       23
-      ]
-     },
-     {
-      "name": "Stekarn",
-      "placering": 4,
-      "total": 118,
-      "rounds": [
-       32,
-       27,
-       32,
-       27
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 5,
-      "total": 117,
-      "rounds": [
-       34,
-       29,
-       30,
-       24
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 6,
-      "total": 113,
-      "rounds": [
-       24,
-       34,
-       30,
-       25
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 111,
-      "rounds": [
-       28,
-       32,
-       32,
-       19
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 8,
-      "total": 103,
-      "rounds": [
-       26,
-       28,
-       26,
-       23
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 9,
-      "total": 101,
-      "rounds": [
-       32,
-       29,
-       21,
-       19
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2009,
+    "roman": "VI",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Gumbalde",
+          "Slite",
+          "Slite",
+          "Visby"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 128,
+            "rounds": [
+              34,
+              29,
+              37,
+              28
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 2,
+            "total": 125,
+            "rounds": [
+              32,
+              28,
+              33,
+              32
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 3,
+            "total": 123,
+            "rounds": [
+              37,
+              24,
+              39,
+              23
+            ]
+          },
+          {
+            "name": "Stekarn",
+            "placering": 4,
+            "total": 118,
+            "rounds": [
+              32,
+              27,
+              32,
+              27
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 5,
+            "total": 117,
+            "rounds": [
+              34,
+              29,
+              30,
+              24
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 6,
+            "total": 113,
+            "rounds": [
+              24,
+              34,
+              30,
+              25
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 111,
+            "rounds": [
+              28,
+              32,
+              32,
+              19
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 8,
+            "total": 103,
+            "rounds": [
+              26,
+              28,
+              26,
+              23
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 9,
+            "total": 101,
+            "rounds": [
+              32,
+              29,
+              21,
+              19
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2010,
-  "roman": "VII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Holms",
-     "Tylösand",
-     "Tylösand",
-     "Ringenäs"
-    ],
-    "standings": [
-     {
-      "name": "Stekarn",
-      "placering": 1,
-      "total": 126,
-      "rounds": [
-       35,
-       29,
-       32,
-       30
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 2,
-      "total": 121,
-      "rounds": [
-       36,
-       30,
-       29,
-       26
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 3,
-      "total": 116,
-      "rounds": [
-       29,
-       27,
-       28,
-       32
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 4,
-      "total": 113,
-      "rounds": [
-       31,
-       27,
-       27,
-       28
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 5,
-      "total": 109,
-      "rounds": [
-       43,
-       21,
-       20,
-       25
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 103,
-      "rounds": [
-       25,
-       25,
-       31,
-       22
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2010,
+    "roman": "VII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Holms",
+          "Tylösand",
+          "Tylösand",
+          "Ringenäs"
+        ],
+        "standings": [
+          {
+            "name": "Stekarn",
+            "placering": 1,
+            "total": 126,
+            "rounds": [
+              35,
+              29,
+              32,
+              30
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 2,
+            "total": 121,
+            "rounds": [
+              36,
+              30,
+              29,
+              26
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 3,
+            "total": 116,
+            "rounds": [
+              29,
+              27,
+              28,
+              32
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 4,
+            "total": 113,
+            "rounds": [
+              31,
+              27,
+              27,
+              28
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 5,
+            "total": 109,
+            "rounds": [
+              43,
+              21,
+              20,
+              25
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 103,
+            "rounds": [
+              25,
+              25,
+              31,
+              22
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2011,
-  "roman": "VIII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "La Manga Club - North Course",
-     "La Manga Club - South Course",
-     "La Manga Club - West Course"
-    ],
-    "standings": [
-     {
-      "name": "Wåffla",
-      "placering": 1,
-      "total": 99,
-      "rounds": [
-       30,
-       32,
-       37
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 93,
-      "rounds": [
-       39,
-       27,
-       27
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 73,
-      "rounds": [
-       31,
-       null,
-       42
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 4,
-      "total": 72,
-      "rounds": [
-       34,
-       38,
-       null
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 5,
-      "total": 71,
-      "rounds": [
-       33,
-       38,
-       null
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 46,
-      "rounds": [
-       25,
-       21,
-       null
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 25,
-      "rounds": [
-       25,
-       null,
-       null
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "La Manga Club - North Course",
-     "La Manga Club - South Course",
-     "La Manga Club - West Course"
-    ],
-    "standings": [
-     {
-      "name": "Besserwisser",
-      "placering": 1,
-      "total": 225,
-      "rounds": [
-       78,
-       80,
-       67
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 226,
-      "rounds": [
-       75,
-       73,
-       78
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 231,
-      "rounds": [
-       79,
-       79,
-       73
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 4,
-      "total": 239,
-      "rounds": [
-       70,
-       85,
-       84
-      ]
-     },
-     {
-      "name": "Jorge",
-      "placering": 5,
-      "total": 245,
-      "rounds": [
-       76,
-       90,
-       79
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 261,
-      "rounds": [
-       87,
-       88,
-       86
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 7,
-      "total": 263,
-      "rounds": [
-       88,
-       95,
-       80
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2011,
+    "roman": "VIII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "La Manga Club - North Course",
+          "La Manga Club - South Course",
+          "La Manga Club - West Course"
+        ],
+        "standings": [
+          {
+            "name": "Wåffla",
+            "placering": 1,
+            "total": 99,
+            "rounds": [
+              30,
+              32,
+              37
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 93,
+            "rounds": [
+              39,
+              27,
+              27
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 73,
+            "rounds": [
+              31,
+              null,
+              42
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 4,
+            "total": 72,
+            "rounds": [
+              34,
+              38,
+              null
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 5,
+            "total": 71,
+            "rounds": [
+              33,
+              38,
+              null
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 46,
+            "rounds": [
+              25,
+              21,
+              null
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 25,
+            "rounds": [
+              25,
+              null,
+              null
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "La Manga Club - North Course",
+          "La Manga Club - South Course",
+          "La Manga Club - West Course"
+        ],
+        "standings": [
+          {
+            "name": "Besserwisser",
+            "placering": 1,
+            "total": 225,
+            "rounds": [
+              78,
+              80,
+              67
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 226,
+            "rounds": [
+              75,
+              73,
+              78
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 231,
+            "rounds": [
+              79,
+              79,
+              73
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 4,
+            "total": 239,
+            "rounds": [
+              70,
+              85,
+              84
+            ]
+          },
+          {
+            "name": "Jorge",
+            "placering": 5,
+            "total": 245,
+            "rounds": [
+              76,
+              90,
+              79
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 261,
+            "rounds": [
+              87,
+              88,
+              86
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 7,
+            "total": 263,
+            "rounds": [
+              88,
+              95,
+              80
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2012,
-  "roman": "IX",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "La Manga Club - North Course",
-     "La Manga Club - West Course",
-     "La Manga Club - South Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 97,
-      "rounds": [
-       24,
-       31,
-       42
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 89,
-      "rounds": [
-       30,
-       29,
-       30
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 3,
-      "total": 67,
-      "rounds": [
-       31,
-       36,
-       null
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 60,
-      "rounds": [
-       27,
-       33,
-       null
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 5,
-      "total": 59,
-      "rounds": [
-       30,
-       29,
-       null
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 6,
-      "total": 52,
-      "rounds": [
-       25,
-       27,
-       null
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 7,
-      "total": 52,
-      "rounds": [
-       24,
-       28,
-       null
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "La Manga Club - North Course",
-     "La Manga Club - West Course",
-     "La Manga Club - South Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 237,
-      "rounds": [
-       90,
-       80,
-       67
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 241,
-      "rounds": [
-       80,
-       81,
-       80
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 3,
-      "total": 241,
-      "rounds": [
-       83,
-       80,
-       78
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 4,
-      "total": 243,
-      "rounds": [
-       77,
-       77,
-       89
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 5,
-      "total": 246,
-      "rounds": [
-       78,
-       82,
-       86
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 247,
-      "rounds": [
-       82,
-       79,
-       86
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 7,
-      "total": 251,
-      "rounds": [
-       85,
-       82,
-       84
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "La Manga Club - North Course",
-     "La Manga Club - West Course",
-     "La Manga Club - South Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 274,
-      "rounds": [
-       102,
-       93,
-       79
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 281,
-      "rounds": [
-       96,
-       94,
-       91
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 3,
-      "total": 282,
-      "rounds": [
-       89,
-       95,
-       98
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 4,
-      "total": 285,
-      "rounds": [
-       94,
-       97,
-       94
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 5,
-      "total": 295,
-      "rounds": [
-       97,
-       96,
-       102
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 6,
-      "total": 306,
-      "rounds": [
-       102,
-       102,
-       102
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 356,
-      "rounds": [
-       113,
-       117,
-       126
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2012,
+    "roman": "IX",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "La Manga Club - North Course",
+          "La Manga Club - West Course",
+          "La Manga Club - South Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 97,
+            "rounds": [
+              24,
+              31,
+              42
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 89,
+            "rounds": [
+              30,
+              29,
+              30
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 3,
+            "total": 67,
+            "rounds": [
+              31,
+              36,
+              null
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 60,
+            "rounds": [
+              27,
+              33,
+              null
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 5,
+            "total": 59,
+            "rounds": [
+              30,
+              29,
+              null
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 6,
+            "total": 52,
+            "rounds": [
+              25,
+              27,
+              null
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 7,
+            "total": 52,
+            "rounds": [
+              24,
+              28,
+              null
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "La Manga Club - North Course",
+          "La Manga Club - West Course",
+          "La Manga Club - South Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 237,
+            "rounds": [
+              90,
+              80,
+              67
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 241,
+            "rounds": [
+              80,
+              81,
+              80
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 3,
+            "total": 241,
+            "rounds": [
+              83,
+              80,
+              78
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 4,
+            "total": 243,
+            "rounds": [
+              77,
+              77,
+              89
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 5,
+            "total": 246,
+            "rounds": [
+              78,
+              82,
+              86
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 247,
+            "rounds": [
+              82,
+              79,
+              86
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 7,
+            "total": 251,
+            "rounds": [
+              85,
+              82,
+              84
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "La Manga Club - North Course",
+          "La Manga Club - West Course",
+          "La Manga Club - South Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 274,
+            "rounds": [
+              102,
+              93,
+              79
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 281,
+            "rounds": [
+              96,
+              94,
+              91
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 3,
+            "total": 282,
+            "rounds": [
+              89,
+              95,
+              98
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 4,
+            "total": 285,
+            "rounds": [
+              94,
+              97,
+              94
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 5,
+            "total": 295,
+            "rounds": [
+              97,
+              96,
+              102
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 6,
+            "total": 306,
+            "rounds": [
+              102,
+              102,
+              102
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 356,
+            "rounds": [
+              113,
+              117,
+              126
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2013,
-  "roman": "X",
-  "hasRoundData": true,
-  "sections": {
-   "nettoslag": {
-    "courses": [
-     "Pormarnock GC",
-     "The Island",
-     "Pormarnock Links",
-     "Baltray"
-    ],
-    "standings": [
-     {
-      "name": "Wåffla",
-      "placering": 1,
-      "total": 318,
-      "rounds": [
-       82,
-       79,
-       79,
-       78
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 321,
-      "rounds": [
-       96,
-       67,
-       92,
-       66
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 3,
-      "total": 328,
-      "rounds": [
-       88,
-       77,
-       81,
-       82
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 4,
-      "total": 334,
-      "rounds": [
-       86,
-       78,
-       77,
-       93
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 5,
-      "total": 339,
-      "rounds": [
-       87,
-       80,
-       81,
-       91
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 6,
-      "total": 346,
-      "rounds": [
-       85,
-       83,
-       86,
-       92
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 360,
-      "rounds": [
-       92,
-       88,
-       90,
-       90
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Pormarnock GC",
-     "The Island",
-     "Pormarnock Links",
-     "Baltray"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 359,
-      "rounds": [
-       95,
-       87,
-       88,
-       89
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 369,
-      "rounds": [
-       94,
-       94,
-       91,
-       90
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 3,
-      "total": 373,
-      "rounds": [
-       95,
-       90,
-       86,
-       102
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 388,
-      "rounds": [
-       94,
-       96,
-       95,
-       103
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 5,
-      "total": 403,
-      "rounds": [
-       102,
-       99,
-       96,
-       106
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 410,
-      "rounds": [
-       103,
-       103,
-       101,
-       103
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 452,
-      "rounds": [
-       128,
-       106,
-       122,
-       96
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2013,
+    "roman": "X",
+    "hasRoundData": true,
+    "sections": {
+      "nettoslag": {
+        "courses": [
+          "Pormarnock GC",
+          "The Island",
+          "Pormarnock Links",
+          "Baltray"
+        ],
+        "standings": [
+          {
+            "name": "Wåffla",
+            "placering": 1,
+            "total": 318,
+            "rounds": [
+              82,
+              79,
+              79,
+              78
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 321,
+            "rounds": [
+              96,
+              67,
+              92,
+              66
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 3,
+            "total": 328,
+            "rounds": [
+              88,
+              77,
+              81,
+              82
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 4,
+            "total": 334,
+            "rounds": [
+              86,
+              78,
+              77,
+              93
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 5,
+            "total": 339,
+            "rounds": [
+              87,
+              80,
+              81,
+              91
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 6,
+            "total": 346,
+            "rounds": [
+              85,
+              83,
+              86,
+              92
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 360,
+            "rounds": [
+              92,
+              88,
+              90,
+              90
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Pormarnock GC",
+          "The Island",
+          "Pormarnock Links",
+          "Baltray"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 359,
+            "rounds": [
+              95,
+              87,
+              88,
+              89
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 369,
+            "rounds": [
+              94,
+              94,
+              91,
+              90
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 3,
+            "total": 373,
+            "rounds": [
+              95,
+              90,
+              86,
+              102
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 388,
+            "rounds": [
+              94,
+              96,
+              95,
+              103
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 5,
+            "total": 403,
+            "rounds": [
+              102,
+              99,
+              96,
+              106
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 410,
+            "rounds": [
+              103,
+              103,
+              101,
+              103
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 452,
+            "rounds": [
+              128,
+              106,
+              122,
+              96
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Irland"
   },
-  "country": "Irland"
- },
- {
-  "year": 2014,
-  "roman": "XI",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Dag1",
-     "Dag2",
-     "Dag3"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 98,
-      "rounds": [
-       29,
-       34,
-       35
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 2,
-      "total": 97,
-      "rounds": [
-       31,
-       33,
-       33
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 3,
-      "total": 97,
-      "rounds": [
-       30,
-       35,
-       32
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 4,
-      "total": 81,
-      "rounds": [
-       25,
-       25,
-       31
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 80,
-      "rounds": [
-       31,
-       29,
-       20
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 64,
-      "rounds": [
-       28,
-       36,
-       null
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 31,
-      "rounds": [
-       null,
-       null,
-       31
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 8,
-      "total": 30,
-      "rounds": [
-       30,
-       null,
-       null
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 9,
-      "total": 25,
-      "rounds": [
-       null,
-       null,
-       25
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Dag1",
-     "Dag2",
-     "Dag3"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 227,
-      "rounds": [
-       80,
-       74,
-       73
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 2,
-      "total": 228,
-      "rounds": [
-       77,
-       75,
-       76
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 3,
-      "total": 228,
-      "rounds": [
-       79,
-       73,
-       76
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 241,
-      "rounds": [
-       85,
-       77,
-       79
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 5,
-      "total": 244,
-      "rounds": [
-       82,
-       72,
-       90
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 6,
-      "total": 246,
-      "rounds": [
-       79,
-       82,
-       85
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 7,
-      "total": 249,
-      "rounds": [
-       78,
-       82,
-       89
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 251,
-      "rounds": [
-       86,
-       86,
-       79
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 9,
-      "total": 257,
-      "rounds": [
-       86,
-       85,
-       86
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Dag1",
-     "Dag2",
-     "Dag3"
-    ],
-    "standings": [
-     {
-      "name": "Besserwisser",
-      "placering": 1,
-      "total": 205,
-      "rounds": [
-       null,
-       101,
-       104
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 259,
-      "rounds": [
-       90,
-       84,
-       85
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 3,
-      "total": 267,
-      "rounds": [
-       89,
-       87,
-       91
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 269,
-      "rounds": [
-       90,
-       88,
-       91
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 5,
-      "total": 270,
-      "rounds": [
-       92,
-       86,
-       92
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 6,
-      "total": 281,
-      "rounds": [
-       90,
-       93,
-       98
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 7,
-      "total": 281,
-      "rounds": [
-       88,
-       92,
-       101
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 298,
-      "rounds": [
-       101,
-       101,
-       96
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 339,
-      "rounds": [
-       113,
-       103,
-       123
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2014,
+    "roman": "XI",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Dag1",
+          "Dag2",
+          "Dag3"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 98,
+            "rounds": [
+              29,
+              34,
+              35
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 2,
+            "total": 97,
+            "rounds": [
+              31,
+              33,
+              33
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 3,
+            "total": 97,
+            "rounds": [
+              30,
+              35,
+              32
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 4,
+            "total": 81,
+            "rounds": [
+              25,
+              25,
+              31
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 80,
+            "rounds": [
+              31,
+              29,
+              20
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 64,
+            "rounds": [
+              28,
+              36,
+              null
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 31,
+            "rounds": [
+              null,
+              null,
+              31
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 8,
+            "total": 30,
+            "rounds": [
+              30,
+              null,
+              null
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 9,
+            "total": 25,
+            "rounds": [
+              null,
+              null,
+              25
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Dag1",
+          "Dag2",
+          "Dag3"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 227,
+            "rounds": [
+              80,
+              74,
+              73
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 2,
+            "total": 228,
+            "rounds": [
+              77,
+              75,
+              76
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 3,
+            "total": 228,
+            "rounds": [
+              79,
+              73,
+              76
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 241,
+            "rounds": [
+              85,
+              77,
+              79
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 5,
+            "total": 244,
+            "rounds": [
+              82,
+              72,
+              90
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 6,
+            "total": 246,
+            "rounds": [
+              79,
+              82,
+              85
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 7,
+            "total": 249,
+            "rounds": [
+              78,
+              82,
+              89
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 251,
+            "rounds": [
+              86,
+              86,
+              79
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 9,
+            "total": 257,
+            "rounds": [
+              86,
+              85,
+              86
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Dag1",
+          "Dag2",
+          "Dag3"
+        ],
+        "standings": [
+          {
+            "name": "Besserwisser",
+            "placering": 1,
+            "total": 205,
+            "rounds": [
+              null,
+              101,
+              104
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 259,
+            "rounds": [
+              90,
+              84,
+              85
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 3,
+            "total": 267,
+            "rounds": [
+              89,
+              87,
+              91
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 269,
+            "rounds": [
+              90,
+              88,
+              91
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 5,
+            "total": 270,
+            "rounds": [
+              92,
+              86,
+              92
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 6,
+            "total": 281,
+            "rounds": [
+              90,
+              93,
+              98
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 7,
+            "total": 281,
+            "rounds": [
+              88,
+              92,
+              101
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 298,
+            "rounds": [
+              101,
+              101,
+              96
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 339,
+            "rounds": [
+              113,
+              103,
+              123
+            ]
+          }
+        ]
+      }
+    },
+    "country": null
   },
-  "country": null
- },
- {
-  "year": 2015,
-  "roman": "XII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "PGA Catalunya-Stadium Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 132,
-      "rounds": [
-       36,
-       35,
-       33,
-       28
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 104,
-      "rounds": [
-       30,
-       26,
-       28,
-       20
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 93,
-      "rounds": [
-       34,
-       null,
-       30,
-       29
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 83,
-      "rounds": [
-       19,
-       23,
-       25,
-       16
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 5,
-      "total": 78,
-      "rounds": [
-       31,
-       null,
-       27,
-       20
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 77,
-      "rounds": [
-       21,
-       27,
-       null,
-       29
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 64,
-      "rounds": [
-       17,
-       null,
-       24,
-       23
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 8,
-      "total": 60,
-      "rounds": [
-       32,
-       null,
-       null,
-       28
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 9,
-      "total": 51,
-      "rounds": [
-       27,
-       null,
-       null,
-       24
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "PGA Catalunya-Stadium Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 308,
-      "rounds": [
-       72,
-       74,
-       80,
-       82
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 315,
-      "rounds": [
-       75,
-       79,
-       81,
-       80
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 321,
-      "rounds": [
-       76,
-       76,
-       89,
-       80
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 333,
-      "rounds": [
-       77,
-       84,
-       82,
-       90
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 5,
-      "total": 339,
-      "rounds": [
-       81,
-       89,
-       83,
-       86
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 346,
-      "rounds": [
-       91,
-       80,
-       91,
-       84
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 357,
-      "rounds": [
-       81,
-       87,
-       89,
-       100
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 368,
-      "rounds": [
-       97,
-       92,
-       92,
-       87
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 9,
-      "total": 371,
-      "rounds": [
-       99,
-       90,
-       86,
-       96
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "PGA Catalunya-Stadium Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Choke",
-      "placering": 1,
-      "total": 115,
-      "rounds": [
-       115,
-       null,
-       null,
-       null
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 116,
-      "rounds": [
-       116,
-       null,
-       null,
-       null
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 3,
-      "total": 227,
-      "rounds": [
-       115,
-       null,
-       null,
-       112
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 4,
-      "total": 346,
-      "rounds": [
-       84,
-       81,
-       87,
-       94
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 368,
-      "rounds": [
-       90,
-       85,
-       98,
-       95
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 6,
-      "total": 375,
-      "rounds": [
-       90,
-       92,
-       90,
-       103
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 7,
-      "total": 383,
-      "rounds": [
-       95,
-       93,
-       95,
-       100
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 8,
-      "total": 395,
-      "rounds": [
-       98,
-       100,
-       94,
-       103
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 9,
-      "total": 398,
-      "rounds": [
-       104,
-       93,
-       104,
-       97
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2015,
+    "roman": "XII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "PGA Catalunya-Stadium Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 132,
+            "rounds": [
+              36,
+              35,
+              33,
+              28
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 104,
+            "rounds": [
+              30,
+              26,
+              28,
+              20
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 93,
+            "rounds": [
+              34,
+              null,
+              30,
+              29
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 83,
+            "rounds": [
+              19,
+              23,
+              25,
+              16
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 5,
+            "total": 78,
+            "rounds": [
+              31,
+              null,
+              27,
+              20
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 77,
+            "rounds": [
+              21,
+              27,
+              null,
+              29
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 64,
+            "rounds": [
+              17,
+              null,
+              24,
+              23
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 8,
+            "total": 60,
+            "rounds": [
+              32,
+              null,
+              null,
+              28
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 9,
+            "total": 51,
+            "rounds": [
+              27,
+              null,
+              null,
+              24
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "PGA Catalunya-Stadium Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 308,
+            "rounds": [
+              72,
+              74,
+              80,
+              82
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 315,
+            "rounds": [
+              75,
+              79,
+              81,
+              80
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 321,
+            "rounds": [
+              76,
+              76,
+              89,
+              80
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 333,
+            "rounds": [
+              77,
+              84,
+              82,
+              90
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 5,
+            "total": 339,
+            "rounds": [
+              81,
+              89,
+              83,
+              86
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 346,
+            "rounds": [
+              91,
+              80,
+              91,
+              84
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 357,
+            "rounds": [
+              81,
+              87,
+              89,
+              100
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 368,
+            "rounds": [
+              97,
+              92,
+              92,
+              87
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 9,
+            "total": 371,
+            "rounds": [
+              99,
+              90,
+              86,
+              96
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "PGA Catalunya-Stadium Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Choke",
+            "placering": 1,
+            "total": 115,
+            "rounds": [
+              115,
+              null,
+              null,
+              null
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 116,
+            "rounds": [
+              116,
+              null,
+              null,
+              null
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 3,
+            "total": 227,
+            "rounds": [
+              115,
+              null,
+              null,
+              112
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 4,
+            "total": 346,
+            "rounds": [
+              84,
+              81,
+              87,
+              94
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 368,
+            "rounds": [
+              90,
+              85,
+              98,
+              95
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 6,
+            "total": 375,
+            "rounds": [
+              90,
+              92,
+              90,
+              103
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 7,
+            "total": 383,
+            "rounds": [
+              95,
+              93,
+              95,
+              100
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 8,
+            "total": 395,
+            "rounds": [
+              98,
+              100,
+              94,
+              103
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 9,
+            "total": 398,
+            "rounds": [
+              104,
+              93,
+              104,
+              97
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2016,
-  "roman": "XIII",
-  "hasRoundData": true,
-  "sections": {
-   "nettoslag": {
-    "courses": [
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Stadium Course",
-     "PGA Catalunya-Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Mad Dogg",
-      "placering": 1,
-      "total": 312,
-      "rounds": [
-       81,
-       75,
-       83,
-       73
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 315,
-      "rounds": [
-       77,
-       80,
-       78,
-       80
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 316,
-      "rounds": [
-       75,
-       81,
-       79,
-       81
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 4,
-      "total": 323,
-      "rounds": [
-       77,
-       83,
-       83,
-       80
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 5,
-      "total": 331,
-      "rounds": [
-       83,
-       91,
-       80,
-       77
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 348,
-      "rounds": [
-       87,
-       82,
-       84,
-       95
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Tour Course",
-     "PGA Catalunya-Stadium Course",
-     "PGA Catalunya-Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 349,
-      "rounds": [
-       81,
-       87,
-       92,
-       89
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 357,
-      "rounds": [
-       85,
-       88,
-       91,
-       93
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 362,
-      "rounds": [
-       84,
-       90,
-       93,
-       95
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 4,
-      "total": 372,
-      "rounds": [
-       93,
-       87,
-       101,
-       91
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 386,
-      "rounds": [
-       94,
-       89,
-       96,
-       107
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 461,
-      "rounds": [
-       112,
-       120,
-       116,
-       113
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2016,
+    "roman": "XIII",
+    "hasRoundData": true,
+    "sections": {
+      "nettoslag": {
+        "courses": [
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Stadium Course",
+          "PGA Catalunya-Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Mad Dogg",
+            "placering": 1,
+            "total": 312,
+            "rounds": [
+              81,
+              75,
+              83,
+              73
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 315,
+            "rounds": [
+              77,
+              80,
+              78,
+              80
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 316,
+            "rounds": [
+              75,
+              81,
+              79,
+              81
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 4,
+            "total": 323,
+            "rounds": [
+              77,
+              83,
+              83,
+              80
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 5,
+            "total": 331,
+            "rounds": [
+              83,
+              91,
+              80,
+              77
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 348,
+            "rounds": [
+              87,
+              82,
+              84,
+              95
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Tour Course",
+          "PGA Catalunya-Stadium Course",
+          "PGA Catalunya-Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 349,
+            "rounds": [
+              81,
+              87,
+              92,
+              89
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 357,
+            "rounds": [
+              85,
+              88,
+              91,
+              93
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 362,
+            "rounds": [
+              84,
+              90,
+              93,
+              95
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 4,
+            "total": 372,
+            "rounds": [
+              93,
+              87,
+              101,
+              91
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 386,
+            "rounds": [
+              94,
+              89,
+              96,
+              107
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 461,
+            "rounds": [
+              112,
+              120,
+              116,
+              113
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2017,
-  "roman": "XIV",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Praia D´el Rey",
-     "Royal Obidos Course",
-     "Royal Obidos Course",
-     "West Cliffs Golf"
-    ],
-    "standings": [
-     {
-      "name": "Besserwisser",
-      "placering": 1,
-      "total": 136,
-      "rounds": [
-       35,
-       34,
-       36,
-       31
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 130,
-      "rounds": [
-       33,
-       35,
-       35,
-       27
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 95,
-      "rounds": [
-       32,
-       39,
-       null,
-       24
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 92,
-      "rounds": [
-       30,
-       34,
-       null,
-       28
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 5,
-      "total": 85,
-      "rounds": [
-       28,
-       29,
-       null,
-       28
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 85,
-      "rounds": [
-       26,
-       34,
-       null,
-       25
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 7,
-      "total": 79,
-      "rounds": [
-       25,
-       29,
-       null,
-       25
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 8,
-      "total": 77,
-      "rounds": [
-       28,
-       26,
-       null,
-       23
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 9,
-      "total": 77,
-      "rounds": [
-       30,
-       23,
-       null,
-       24
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Praia D´el Rey",
-     "Royal Obidos Course",
-     "Royal Obidos Course",
-     "West Cliffs Golf"
-    ],
-    "standings": [
-     {
-      "name": "Besserwisser",
-      "placering": 1,
-      "total": 301,
-      "rounds": [
-       74,
-       74,
-       73,
-       80
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 308,
-      "rounds": [
-       78,
-       73,
-       75,
-       82
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 311,
-      "rounds": [
-       78,
-       69,
-       80,
-       84
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 314,
-      "rounds": [
-       79,
-       77,
-       76,
-       82
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 327,
-      "rounds": [
-       85,
-       74,
-       84,
-       84
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 6,
-      "total": 330,
-      "rounds": [
-       83,
-       82,
-       72,
-       93
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 7,
-      "total": 336,
-      "rounds": [
-       85,
-       80,
-       81,
-       90
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 343,
-      "rounds": [
-       84,
-       88,
-       81,
-       90
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 352,
-      "rounds": [
-       90,
-       85,
-       93,
-       84
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Praia D´el Rey",
-     "Royal Obidos Course",
-     "Royal Obidos Course",
-     "West Cliffs Golf"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 338,
-      "rounds": [
-       84,
-       82,
-       84,
-       88
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 348,
-      "rounds": [
-       86,
-       80,
-       90,
-       92
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 3,
-      "total": 352,
-      "rounds": [
-       87,
-       88,
-       87,
-       90
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 364,
-      "rounds": [
-       88,
-       91,
-       90,
-       95
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 366,
-      "rounds": [
-       93,
-       85,
-       95,
-       93
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 382,
-      "rounds": [
-       95,
-       93,
-       94,
-       100
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 7,
-      "total": 392,
-      "rounds": [
-       97,
-       99,
-       89,
-       107
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 405,
-      "rounds": [
-       98,
-       105,
-       98,
-       104
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 473,
-      "rounds": [
-       118,
-       117,
-       125,
-       113
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2017,
+    "roman": "XIV",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Praia D´el Rey",
+          "Royal Obidos Course",
+          "Royal Obidos Course",
+          "West Cliffs Golf"
+        ],
+        "standings": [
+          {
+            "name": "Besserwisser",
+            "placering": 1,
+            "total": 136,
+            "rounds": [
+              35,
+              34,
+              36,
+              31
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 130,
+            "rounds": [
+              33,
+              35,
+              35,
+              27
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 95,
+            "rounds": [
+              32,
+              39,
+              null,
+              24
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 92,
+            "rounds": [
+              30,
+              34,
+              null,
+              28
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 5,
+            "total": 85,
+            "rounds": [
+              28,
+              29,
+              null,
+              28
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 85,
+            "rounds": [
+              26,
+              34,
+              null,
+              25
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 7,
+            "total": 79,
+            "rounds": [
+              25,
+              29,
+              null,
+              25
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 8,
+            "total": 77,
+            "rounds": [
+              28,
+              26,
+              null,
+              23
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 9,
+            "total": 77,
+            "rounds": [
+              30,
+              23,
+              null,
+              24
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Praia D´el Rey",
+          "Royal Obidos Course",
+          "Royal Obidos Course",
+          "West Cliffs Golf"
+        ],
+        "standings": [
+          {
+            "name": "Besserwisser",
+            "placering": 1,
+            "total": 301,
+            "rounds": [
+              74,
+              74,
+              73,
+              80
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 308,
+            "rounds": [
+              78,
+              73,
+              75,
+              82
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 311,
+            "rounds": [
+              78,
+              69,
+              80,
+              84
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 314,
+            "rounds": [
+              79,
+              77,
+              76,
+              82
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 327,
+            "rounds": [
+              85,
+              74,
+              84,
+              84
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 6,
+            "total": 330,
+            "rounds": [
+              83,
+              82,
+              72,
+              93
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 7,
+            "total": 336,
+            "rounds": [
+              85,
+              80,
+              81,
+              90
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 343,
+            "rounds": [
+              84,
+              88,
+              81,
+              90
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 352,
+            "rounds": [
+              90,
+              85,
+              93,
+              84
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Praia D´el Rey",
+          "Royal Obidos Course",
+          "Royal Obidos Course",
+          "West Cliffs Golf"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 338,
+            "rounds": [
+              84,
+              82,
+              84,
+              88
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 348,
+            "rounds": [
+              86,
+              80,
+              90,
+              92
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 3,
+            "total": 352,
+            "rounds": [
+              87,
+              88,
+              87,
+              90
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 364,
+            "rounds": [
+              88,
+              91,
+              90,
+              95
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 366,
+            "rounds": [
+              93,
+              85,
+              95,
+              93
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 382,
+            "rounds": [
+              95,
+              93,
+              94,
+              100
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 7,
+            "total": 392,
+            "rounds": [
+              97,
+              99,
+              89,
+              107
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 405,
+            "rounds": [
+              98,
+              105,
+              98,
+              104
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 473,
+            "rounds": [
+              118,
+              117,
+              125,
+              113
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Portugal"
   },
-  "country": "Portugal"
- },
- {
-  "year": 2018,
-  "roman": "XV",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Garda, Bianco & Rosso",
-     "Jack Nicklaus",
-     "Jack Nicklaus",
-     "Garda, Rosso & Giallo"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 128,
-      "rounds": [
-       37,
-       29,
-       34,
-       28
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 127,
-      "rounds": [
-       38,
-       30,
-       30,
-       29
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 126,
-      "rounds": [
-       32,
-       33,
-       32,
-       29
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 4,
-      "total": 120,
-      "rounds": [
-       31,
-       27,
-       31,
-       31
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 5,
-      "total": 119,
-      "rounds": [
-       30,
-       25,
-       29,
-       35
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 111,
-      "rounds": [
-       31,
-       29,
-       26,
-       25
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 7,
-      "total": 108,
-      "rounds": [
-       31,
-       30,
-       27,
-       20
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 8,
-      "total": 106,
-      "rounds": [
-       27,
-       33,
-       20,
-       26
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 9,
-      "total": 105,
-      "rounds": [
-       27,
-       36,
-       20,
-       22
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Garda, Bianco & Rosso",
-     "Jack Nicklaus",
-     "Jack Nicklaus",
-     "Garda, Rosso & Giallo"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 306,
-      "rounds": [
-       71,
-       80,
-       74,
-       81
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 306,
-      "rounds": [
-       70,
-       79,
-       79,
-       78
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 306,
-      "rounds": [
-       76,
-       75,
-       77,
-       78
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 316,
-      "rounds": [
-       79,
-       84,
-       79,
-       74
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 5,
-      "total": 329,
-      "rounds": [
-       80,
-       88,
-       79,
-       82
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 331,
-      "rounds": [
-       77,
-       80,
-       83,
-       91
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 332,
-      "rounds": [
-       83,
-       75,
-       91,
-       83
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 332,
-      "rounds": [
-       85,
-       80,
-       84,
-       83
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 9,
-      "total": 341,
-      "rounds": [
-       82,
-       72,
-       93,
-       94
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Garda, Bianco & Rosso",
-     "Jack Nicklaus",
-     "Jack Nicklaus",
-     "Garda, Rosso & Giallo"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 330,
-      "rounds": [
-       79,
-       84,
-       80,
-       87
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 346,
-      "rounds": [
-       82,
-       87,
-       89,
-       88
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 3,
-      "total": 356,
-      "rounds": [
-       91,
-       92,
-       89,
-       84
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 369,
-      "rounds": [
-       94,
-       89,
-       92,
-       94
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 378,
-      "rounds": [
-       91,
-       88,
-       95,
-       104
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 6,
-      "total": 383,
-      "rounds": [
-       98,
-       86,
-       103,
-       96
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 7,
-      "total": 388,
-      "rounds": [
-       99,
-       103,
-       86,
-       100
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 402,
-      "rounds": [
-       105,
-       95,
-       101,
-       101
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 470,
-      "rounds": [
-       117,
-       102,
-       124,
-       127
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2018,
+    "roman": "XV",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Garda, Bianco & Rosso",
+          "Jack Nicklaus",
+          "Jack Nicklaus",
+          "Garda, Rosso & Giallo"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 128,
+            "rounds": [
+              37,
+              29,
+              34,
+              28
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 127,
+            "rounds": [
+              38,
+              30,
+              30,
+              29
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 126,
+            "rounds": [
+              32,
+              33,
+              32,
+              29
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 4,
+            "total": 120,
+            "rounds": [
+              31,
+              27,
+              31,
+              31
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 5,
+            "total": 119,
+            "rounds": [
+              30,
+              25,
+              29,
+              35
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 111,
+            "rounds": [
+              31,
+              29,
+              26,
+              25
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 7,
+            "total": 108,
+            "rounds": [
+              31,
+              30,
+              27,
+              20
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 8,
+            "total": 106,
+            "rounds": [
+              27,
+              33,
+              20,
+              26
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 9,
+            "total": 105,
+            "rounds": [
+              27,
+              36,
+              20,
+              22
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Garda, Bianco & Rosso",
+          "Jack Nicklaus",
+          "Jack Nicklaus",
+          "Garda, Rosso & Giallo"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 306,
+            "rounds": [
+              71,
+              80,
+              74,
+              81
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 306,
+            "rounds": [
+              70,
+              79,
+              79,
+              78
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 306,
+            "rounds": [
+              76,
+              75,
+              77,
+              78
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 316,
+            "rounds": [
+              79,
+              84,
+              79,
+              74
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 5,
+            "total": 329,
+            "rounds": [
+              80,
+              88,
+              79,
+              82
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 331,
+            "rounds": [
+              77,
+              80,
+              83,
+              91
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 332,
+            "rounds": [
+              83,
+              75,
+              91,
+              83
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 332,
+            "rounds": [
+              85,
+              80,
+              84,
+              83
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 9,
+            "total": 341,
+            "rounds": [
+              82,
+              72,
+              93,
+              94
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Garda, Bianco & Rosso",
+          "Jack Nicklaus",
+          "Jack Nicklaus",
+          "Garda, Rosso & Giallo"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 330,
+            "rounds": [
+              79,
+              84,
+              80,
+              87
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 346,
+            "rounds": [
+              82,
+              87,
+              89,
+              88
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 3,
+            "total": 356,
+            "rounds": [
+              91,
+              92,
+              89,
+              84
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 369,
+            "rounds": [
+              94,
+              89,
+              92,
+              94
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 378,
+            "rounds": [
+              91,
+              88,
+              95,
+              104
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 6,
+            "total": 383,
+            "rounds": [
+              98,
+              86,
+              103,
+              96
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 7,
+            "total": 388,
+            "rounds": [
+              99,
+              103,
+              86,
+              100
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 402,
+            "rounds": [
+              105,
+              95,
+              101,
+              101
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 470,
+            "rounds": [
+              117,
+              102,
+              124,
+              127
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Italien"
   },
-  "country": "Italien"
- },
- {
-  "year": 2019,
-  "roman": "XVI",
-  "hasRoundData": true,
-  "sections": {
-   "nettoslag": {
-    "courses": [
-     "Real Golf El Prat-Pink Course",
-     "Real Golf El Prat-Yellow Course",
-     "Real Golf El Prat-Pink Course",
-     "Real Golf El Prat-Yellow Course"
-    ],
-    "standings": [
-     {
-      "name": "Besserwisser",
-      "placering": 1,
-      "total": 312,
-      "rounds": [
-       81,
-       84,
-       78,
-       69
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 316,
-      "rounds": [
-       84,
-       81,
-       74,
-       77
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 3,
-      "total": 319,
-      "rounds": [
-       83,
-       73,
-       83,
-       80
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 323,
-      "rounds": [
-       81,
-       76,
-       85,
-       81
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 5,
-      "total": 327,
-      "rounds": [
-       81,
-       86,
-       82,
-       78
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 334,
-      "rounds": [
-       84,
-       81,
-       85,
-       84
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Real Golf El Prat-Pink Course",
-     "Real Golf El Prat-Yellow Course",
-     "Real Golf El Prat-Pink Course",
-     "Real Golf El Prat-Yellow Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 347,
-      "rounds": [
-       90,
-       80,
-       90,
-       87
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 363,
-      "rounds": [
-       91,
-       86,
-       95,
-       91
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 3,
-      "total": 371,
-      "rounds": [
-       92,
-       97,
-       93,
-       89
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 376,
-      "rounds": [
-       97,
-       100,
-       94,
-       85
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 382,
-      "rounds": [
-       96,
-       93,
-       97,
-       96
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 450,
-      "rounds": [
-       118,
-       114,
-       108,
-       110
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2019,
+    "roman": "XVI",
+    "hasRoundData": true,
+    "sections": {
+      "nettoslag": {
+        "courses": [
+          "Real Golf El Prat-Pink Course",
+          "Real Golf El Prat-Yellow Course",
+          "Real Golf El Prat-Pink Course",
+          "Real Golf El Prat-Yellow Course"
+        ],
+        "standings": [
+          {
+            "name": "Besserwisser",
+            "placering": 1,
+            "total": 312,
+            "rounds": [
+              81,
+              84,
+              78,
+              69
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 316,
+            "rounds": [
+              84,
+              81,
+              74,
+              77
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 3,
+            "total": 319,
+            "rounds": [
+              83,
+              73,
+              83,
+              80
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 323,
+            "rounds": [
+              81,
+              76,
+              85,
+              81
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 5,
+            "total": 327,
+            "rounds": [
+              81,
+              86,
+              82,
+              78
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 334,
+            "rounds": [
+              84,
+              81,
+              85,
+              84
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Real Golf El Prat-Pink Course",
+          "Real Golf El Prat-Yellow Course",
+          "Real Golf El Prat-Pink Course",
+          "Real Golf El Prat-Yellow Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 347,
+            "rounds": [
+              90,
+              80,
+              90,
+              87
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 363,
+            "rounds": [
+              91,
+              86,
+              95,
+              91
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 3,
+            "total": 371,
+            "rounds": [
+              92,
+              97,
+              93,
+              89
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 376,
+            "rounds": [
+              97,
+              100,
+              94,
+              85
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 382,
+            "rounds": [
+              96,
+              93,
+              97,
+              96
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 450,
+            "rounds": [
+              118,
+              114,
+              108,
+              110
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2020,
-  "roman": "XVII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Barsebäck-Ocean Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Ocean Course"
-    ],
-    "standings": [
-     {
-      "name": "Jet Set",
-      "placering": 1,
-      "total": 117,
-      "rounds": [
-       38,
-       29,
-       18,
-       32
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 116,
-      "rounds": [
-       36,
-       37,
-       11,
-       32
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 3,
-      "total": 115,
-      "rounds": [
-       28,
-       35,
-       22,
-       30
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 112,
-      "rounds": [
-       33,
-       29,
-       15,
-       35
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 5,
-      "total": 111,
-      "rounds": [
-       31,
-       31,
-       16,
-       33
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 94,
-      "rounds": [
-       24,
-       29,
-       10,
-       31
-      ]
-     },
-     {
-      "name": "Vessla",
-      "placering": 7,
-      "total": 87,
-      "rounds": [
-       26,
-       25,
-       9,
-       27
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Barsebäck-Ocean Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Ocean Course"
-    ],
-    "standings": [
-     {
-      "name": "Jet Set",
-      "placering": 1,
-      "total": 263,
-      "rounds": [
-       72,
-       78,
-       36,
-       77
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 265,
-      "rounds": [
-       74,
-       70,
-       44,
-       77
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 3,
-      "total": 265,
-      "rounds": [
-       81,
-       72,
-       32,
-       80
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 268,
-      "rounds": [
-       76,
-       79,
-       39,
-       74
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 5,
-      "total": 276,
-      "rounds": [
-       81,
-       77,
-       41,
-       77
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 290,
-      "rounds": [
-       86,
-       78,
-       45,
-       81
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 7,
-      "total": 292,
-      "rounds": [
-       83,
-       82,
-       45,
-       82
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Barsebäck-Ocean Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Pine Course",
-     "Barsebäck-Ocean Course"
-    ],
-    "standings": [
-     {
-      "name": "Hjärna",
-      "placering": 1,
-      "total": 300,
-      "rounds": [
-       86,
-       87,
-       43,
-       84
-      ]
-     },
-     {
-      "name": "Mad Dogg",
-      "placering": 2,
-      "total": 315,
-      "rounds": [
-       93,
-       87,
-       46,
-       89
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 319,
-      "rounds": [
-       91,
-       84,
-       51,
-       93
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 321,
-      "rounds": [
-       91,
-       92,
-       43,
-       95
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 326,
-      "rounds": [
-       94,
-       90,
-       49,
-       93
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 330,
-      "rounds": [
-       98,
-       88,
-       50,
-       94
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 339,
-      "rounds": [
-       104,
-       91,
-       42,
-       102
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2020,
+    "roman": "XVII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Barsebäck-Ocean Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Ocean Course"
+        ],
+        "standings": [
+          {
+            "name": "Jet Set",
+            "placering": 1,
+            "total": 117,
+            "rounds": [
+              38,
+              29,
+              18,
+              32
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 116,
+            "rounds": [
+              36,
+              37,
+              11,
+              32
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 3,
+            "total": 115,
+            "rounds": [
+              28,
+              35,
+              22,
+              30
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 112,
+            "rounds": [
+              33,
+              29,
+              15,
+              35
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 5,
+            "total": 111,
+            "rounds": [
+              31,
+              31,
+              16,
+              33
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 94,
+            "rounds": [
+              24,
+              29,
+              10,
+              31
+            ]
+          },
+          {
+            "name": "Vessla",
+            "placering": 7,
+            "total": 87,
+            "rounds": [
+              26,
+              25,
+              9,
+              27
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Barsebäck-Ocean Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Ocean Course"
+        ],
+        "standings": [
+          {
+            "name": "Jet Set",
+            "placering": 1,
+            "total": 263,
+            "rounds": [
+              72,
+              78,
+              36,
+              77
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 265,
+            "rounds": [
+              74,
+              70,
+              44,
+              77
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 3,
+            "total": 265,
+            "rounds": [
+              81,
+              72,
+              32,
+              80
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 268,
+            "rounds": [
+              76,
+              79,
+              39,
+              74
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 5,
+            "total": 276,
+            "rounds": [
+              81,
+              77,
+              41,
+              77
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 290,
+            "rounds": [
+              86,
+              78,
+              45,
+              81
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 7,
+            "total": 292,
+            "rounds": [
+              83,
+              82,
+              45,
+              82
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Barsebäck-Ocean Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Pine Course",
+          "Barsebäck-Ocean Course"
+        ],
+        "standings": [
+          {
+            "name": "Hjärna",
+            "placering": 1,
+            "total": 300,
+            "rounds": [
+              86,
+              87,
+              43,
+              84
+            ]
+          },
+          {
+            "name": "Mad Dogg",
+            "placering": 2,
+            "total": 315,
+            "rounds": [
+              93,
+              87,
+              46,
+              89
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 319,
+            "rounds": [
+              91,
+              84,
+              51,
+              93
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 321,
+            "rounds": [
+              91,
+              92,
+              43,
+              95
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 326,
+            "rounds": [
+              94,
+              90,
+              49,
+              93
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 330,
+            "rounds": [
+              98,
+              88,
+              50,
+              94
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 339,
+            "rounds": [
+              104,
+              91,
+              42,
+              102
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2021,
-  "roman": "XVIII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Club de Golf Alcanada",
-     "Son Vida",
-     "Son Vida",
-     "Son Gual"
-    ],
-    "standings": [
-     {
-      "name": "Chuleta",
-      "placering": 1,
-      "total": 116,
-      "rounds": [
-       35,
-       28,
-       19,
-       34
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 110,
-      "rounds": [
-       29,
-       31,
-       18,
-       32
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 107,
-      "rounds": [
-       29,
-       34,
-       16,
-       28
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 4,
-      "total": 99,
-      "rounds": [
-       27,
-       29,
-       17,
-       26
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 5,
-      "total": 98,
-      "rounds": [
-       27,
-       29,
-       19,
-       23
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 6,
-      "total": 94,
-      "rounds": [
-       26,
-       21,
-       16,
-       31
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 87,
-      "rounds": [
-       28,
-       23,
-       13,
-       23
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 86,
-      "rounds": [
-       22,
-       25,
-       21,
-       18
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Club de Golf Alcanada",
-     "Son Vida",
-     "Son Vida",
-     "Son Gual"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 269,
-      "rounds": [
-       79,
-       79,
-       35,
-       76
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 2,
-      "total": 269,
-      "rounds": [
-       76,
-       84,
-       34,
-       75
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 274,
-      "rounds": [
-       80,
-       77,
-       37,
-       80
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 4,
-      "total": 283,
-      "rounds": [
-       84,
-       79,
-       36,
-       84
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 5,
-      "total": 285,
-      "rounds": [
-       83,
-       79,
-       35,
-       88
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 6,
-      "total": 293,
-      "rounds": [
-       80,
-       86,
-       40,
-       87
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 7,
-      "total": 293,
-      "rounds": [
-       86,
-       92,
-       38,
-       77
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 299,
-      "rounds": [
-       86,
-       85,
-       32,
-       96
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Club de Golf Alcanada",
-     "Son Vida",
-     "Son Vida",
-     "Son Gual"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 300,
-      "rounds": [
-       89,
-       87,
-       39,
-       85
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 328,
-      "rounds": [
-       91,
-       95,
-       44,
-       98
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 334,
-      "rounds": [
-       100,
-       93,
-       43,
-       98
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 336,
-      "rounds": [
-       99,
-       94,
-       46,
-       97
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 5,
-      "total": 338,
-      "rounds": [
-       100,
-       104,
-       44,
-       90
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 6,
-      "total": 339,
-      "rounds": [
-       99,
-       94,
-       43,
-       103
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 7,
-      "total": 375,
-      "rounds": [
-       109,
-       106,
-       43,
-       117
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 8,
-      "total": 384,
-      "rounds": [
-       110,
-       117,
-       50,
-       107
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2021,
+    "roman": "XVIII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Club de Golf Alcanada",
+          "Son Vida",
+          "Son Vida",
+          "Son Gual"
+        ],
+        "standings": [
+          {
+            "name": "Chuleta",
+            "placering": 1,
+            "total": 116,
+            "rounds": [
+              35,
+              28,
+              19,
+              34
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 110,
+            "rounds": [
+              29,
+              31,
+              18,
+              32
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 107,
+            "rounds": [
+              29,
+              34,
+              16,
+              28
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 4,
+            "total": 99,
+            "rounds": [
+              27,
+              29,
+              17,
+              26
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 5,
+            "total": 98,
+            "rounds": [
+              27,
+              29,
+              19,
+              23
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 6,
+            "total": 94,
+            "rounds": [
+              26,
+              21,
+              16,
+              31
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 87,
+            "rounds": [
+              28,
+              23,
+              13,
+              23
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 86,
+            "rounds": [
+              22,
+              25,
+              21,
+              18
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Club de Golf Alcanada",
+          "Son Vida",
+          "Son Vida",
+          "Son Gual"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 269,
+            "rounds": [
+              79,
+              79,
+              35,
+              76
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 2,
+            "total": 269,
+            "rounds": [
+              76,
+              84,
+              34,
+              75
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 274,
+            "rounds": [
+              80,
+              77,
+              37,
+              80
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 4,
+            "total": 283,
+            "rounds": [
+              84,
+              79,
+              36,
+              84
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 5,
+            "total": 285,
+            "rounds": [
+              83,
+              79,
+              35,
+              88
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 6,
+            "total": 293,
+            "rounds": [
+              80,
+              86,
+              40,
+              87
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 7,
+            "total": 293,
+            "rounds": [
+              86,
+              92,
+              38,
+              77
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 299,
+            "rounds": [
+              86,
+              85,
+              32,
+              96
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Club de Golf Alcanada",
+          "Son Vida",
+          "Son Vida",
+          "Son Gual"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 300,
+            "rounds": [
+              89,
+              87,
+              39,
+              85
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 328,
+            "rounds": [
+              91,
+              95,
+              44,
+              98
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 334,
+            "rounds": [
+              100,
+              93,
+              43,
+              98
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 336,
+            "rounds": [
+              99,
+              94,
+              46,
+              97
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 5,
+            "total": 338,
+            "rounds": [
+              100,
+              104,
+              44,
+              90
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 6,
+            "total": 339,
+            "rounds": [
+              99,
+              94,
+              43,
+              103
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 7,
+            "total": 375,
+            "rounds": [
+              109,
+              106,
+              43,
+              117
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 8,
+            "total": 384,
+            "rounds": [
+              110,
+              117,
+              50,
+              107
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2022,
-  "roman": "XIX",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 127,
-      "rounds": [
-       30,
-       28,
-       32,
-       37
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 120,
-      "rounds": [
-       28,
-       30,
-       32,
-       30
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 3,
-      "total": 120,
-      "rounds": [
-       26,
-       33,
-       29,
-       32
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 4,
-      "total": 110,
-      "rounds": [
-       24,
-       28,
-       26,
-       32
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 5,
-      "total": 110,
-      "rounds": [
-       30,
-       27,
-       24,
-       29
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 6,
-      "total": 98,
-      "rounds": [
-       21,
-       24,
-       25,
-       28
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 87,
-      "rounds": [
-       22,
-       25,
-       19,
-       21
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 309,
-      "rounds": [
-       79,
-       82,
-       77,
-       71
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 313,
-      "rounds": [
-       80,
-       79,
-       76,
-       78
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 325,
-      "rounds": [
-       84,
-       80,
-       85,
-       76
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 326,
-      "rounds": [
-       87,
-       78,
-       82,
-       79
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 5,
-      "total": 332,
-      "rounds": [
-       83,
-       81,
-       89,
-       79
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 6,
-      "total": 337,
-      "rounds": [
-       86,
-       85,
-       82,
-       84
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 7,
-      "total": 346,
-      "rounds": [
-       90,
-       87,
-       85,
-       84
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 8,
-      "total": 365,
-      "rounds": [
-       97,
-       84,
-       95,
-       89
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 9,
-      "total": 374,
-      "rounds": [
-       95,
-       98,
-       93,
-       88
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 10,
-      "total": 381,
-      "rounds": [
-       95,
-       93,
-       101,
-       92
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 11,
-      "total": 383,
-      "rounds": [
-       101,
-       92,
-       97,
-       93
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 12,
-      "total": 384,
-      "rounds": [
-       99,
-       96,
-       95,
-       94
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 13,
-      "total": 389,
-      "rounds": [
-       100,
-       96,
-       101,
-       92
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 14,
-      "total": 465,
-      "rounds": [
-       122,
-       109,
-       120,
-       114
-      ]
-     },
-     {
-      "name": "1",
-      "placering": 15,
-      "total": null,
-      "rounds": [
-       2,
-       null,
-       4,
-       null
-      ]
-     },
-     {
-      "name": "Bruttoslag",
-      "placering": 16,
-      "total": null,
-      "rounds": [
-       null,
-       null,
-       null,
-       null
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club",
-     "Marco Simone Golf & Country Club"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 337,
-      "rounds": [
-       86,
-       85,
-       82,
-       84
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 2,
-      "total": 374,
-      "rounds": [
-       95,
-       98,
-       93,
-       88
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 3,
-      "total": 381,
-      "rounds": [
-       95,
-       93,
-       101,
-       92
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 383,
-      "rounds": [
-       101,
-       92,
-       97,
-       93
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 5,
-      "total": 384,
-      "rounds": [
-       99,
-       96,
-       95,
-       94
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 6,
-      "total": 389,
-      "rounds": [
-       100,
-       96,
-       101,
-       92
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 465,
-      "rounds": [
-       122,
-       109,
-       120,
-       114
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2022,
+    "roman": "XIX",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 127,
+            "rounds": [
+              30,
+              28,
+              32,
+              37
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 120,
+            "rounds": [
+              28,
+              30,
+              32,
+              30
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 3,
+            "total": 120,
+            "rounds": [
+              26,
+              33,
+              29,
+              32
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 4,
+            "total": 110,
+            "rounds": [
+              24,
+              28,
+              26,
+              32
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 5,
+            "total": 110,
+            "rounds": [
+              30,
+              27,
+              24,
+              29
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 6,
+            "total": 98,
+            "rounds": [
+              21,
+              24,
+              25,
+              28
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 87,
+            "rounds": [
+              22,
+              25,
+              19,
+              21
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 309,
+            "rounds": [
+              79,
+              82,
+              77,
+              71
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 313,
+            "rounds": [
+              80,
+              79,
+              76,
+              78
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 325,
+            "rounds": [
+              84,
+              80,
+              85,
+              76
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 326,
+            "rounds": [
+              87,
+              78,
+              82,
+              79
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 5,
+            "total": 332,
+            "rounds": [
+              83,
+              81,
+              89,
+              79
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 6,
+            "total": 346,
+            "rounds": [
+              90,
+              87,
+              85,
+              84
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 365,
+            "rounds": [
+              97,
+              84,
+              95,
+              89
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club",
+          "Marco Simone Golf & Country Club"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 337,
+            "rounds": [
+              86,
+              85,
+              82,
+              84
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 2,
+            "total": 374,
+            "rounds": [
+              95,
+              98,
+              93,
+              88
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 3,
+            "total": 381,
+            "rounds": [
+              95,
+              93,
+              101,
+              92
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 383,
+            "rounds": [
+              101,
+              92,
+              97,
+              93
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 5,
+            "total": 384,
+            "rounds": [
+              99,
+              96,
+              95,
+              94
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 6,
+            "total": 389,
+            "rounds": [
+              100,
+              96,
+              101,
+              92
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 465,
+            "rounds": [
+              122,
+              109,
+              120,
+              114
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Italien"
   },
-  "country": "Italien"
- },
- {
-  "year": 2023,
-  "roman": "XX",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 144,
-      "rounds": [
-       34,
-       40,
-       39,
-       31
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 2,
-      "total": 140,
-      "rounds": [
-       43,
-       29,
-       32,
-       36
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 3,
-      "total": 139,
-      "rounds": [
-       35,
-       39,
-       32,
-       33
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 4,
-      "total": 139,
-      "rounds": [
-       36,
-       28,
-       32,
-       43
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 5,
-      "total": 139,
-      "rounds": [
-       28,
-       29,
-       37,
-       45
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 6,
-      "total": 137,
-      "rounds": [
-       37,
-       37,
-       34,
-       29
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 126,
-      "rounds": [
-       28,
-       31,
-       40,
-       27
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 8,
-      "total": 122,
-      "rounds": [
-       33,
-       31,
-       32,
-       26
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 9,
-      "total": 115,
-      "rounds": [
-       42,
-       29,
-       17,
-       27
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 293,
-      "rounds": [
-       74,
-       68,
-       69,
-       82
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 2,
-      "total": 295,
-      "rounds": [
-       71,
-       71,
-       74,
-       79
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 296,
-      "rounds": [
-       72,
-       81,
-       78,
-       65
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 4,
-      "total": 297,
-      "rounds": [
-       65,
-       83,
-       77,
-       72
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 5,
-      "total": 302,
-      "rounds": [
-       74,
-       74,
-       78,
-       76
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 6,
-      "total": 303,
-      "rounds": [
-       88,
-       81,
-       71,
-       63
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 7,
-      "total": 310,
-      "rounds": [
-       82,
-       79,
-       68,
-       81
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 8,
-      "total": 320,
-      "rounds": [
-       76,
-       79,
-       80,
-       85
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 9,
-      "total": 323,
-      "rounds": [
-       66,
-       79,
-       95,
-       83
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb",
-     "Visby Golfklubb"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 321,
-      "rounds": [
-       78,
-       78,
-       80,
-       85
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 2,
-      "total": 355,
-      "rounds": [
-       90,
-       84,
-       84,
-       97
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 366,
-      "rounds": [
-       90,
-       98,
-       95,
-       83
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 4,
-      "total": 376,
-      "rounds": [
-       90,
-       93,
-       94,
-       99
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 5,
-      "total": 379,
-      "rounds": [
-       99,
-       96,
-       86,
-       98
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 6,
-      "total": 382,
-      "rounds": [
-       86,
-       104,
-       98,
-       94
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 7,
-      "total": 391,
-      "rounds": [
-       83,
-       96,
-       112,
-       100
-      ]
-     },
-     {
-      "name": "Choke",
-      "placering": 8,
-      "total": 397,
-      "rounds": [
-       111,
-       104,
-       95,
-       87
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 9,
-      "total": 409,
-      "rounds": [
-       101,
-       101,
-       104,
-       103
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2023,
+    "roman": "XX",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 144,
+            "rounds": [
+              34,
+              40,
+              39,
+              31
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 2,
+            "total": 140,
+            "rounds": [
+              43,
+              29,
+              32,
+              36
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 3,
+            "total": 139,
+            "rounds": [
+              35,
+              39,
+              32,
+              33
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 4,
+            "total": 139,
+            "rounds": [
+              36,
+              28,
+              32,
+              43
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 5,
+            "total": 139,
+            "rounds": [
+              28,
+              29,
+              37,
+              45
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 6,
+            "total": 137,
+            "rounds": [
+              37,
+              37,
+              34,
+              29
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 126,
+            "rounds": [
+              28,
+              31,
+              40,
+              27
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 8,
+            "total": 122,
+            "rounds": [
+              33,
+              31,
+              32,
+              26
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 9,
+            "total": 115,
+            "rounds": [
+              42,
+              29,
+              17,
+              27
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 293,
+            "rounds": [
+              74,
+              68,
+              69,
+              82
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 2,
+            "total": 295,
+            "rounds": [
+              71,
+              71,
+              74,
+              79
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 296,
+            "rounds": [
+              72,
+              81,
+              78,
+              65
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 4,
+            "total": 297,
+            "rounds": [
+              65,
+              83,
+              77,
+              72
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 5,
+            "total": 302,
+            "rounds": [
+              74,
+              74,
+              78,
+              76
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 6,
+            "total": 303,
+            "rounds": [
+              88,
+              81,
+              71,
+              63
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 7,
+            "total": 310,
+            "rounds": [
+              82,
+              79,
+              68,
+              81
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 8,
+            "total": 320,
+            "rounds": [
+              76,
+              79,
+              80,
+              85
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 9,
+            "total": 323,
+            "rounds": [
+              66,
+              79,
+              95,
+              83
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb",
+          "Visby Golfklubb"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 321,
+            "rounds": [
+              78,
+              78,
+              80,
+              85
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 2,
+            "total": 355,
+            "rounds": [
+              90,
+              84,
+              84,
+              97
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 366,
+            "rounds": [
+              90,
+              98,
+              95,
+              83
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 4,
+            "total": 376,
+            "rounds": [
+              90,
+              93,
+              94,
+              99
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 5,
+            "total": 379,
+            "rounds": [
+              99,
+              96,
+              86,
+              98
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 6,
+            "total": 382,
+            "rounds": [
+              86,
+              104,
+              98,
+              94
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 7,
+            "total": 391,
+            "rounds": [
+              83,
+              96,
+              112,
+              100
+            ]
+          },
+          {
+            "name": "Choke",
+            "placering": 8,
+            "total": 397,
+            "rounds": [
+              111,
+              104,
+              95,
+              87
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 9,
+            "total": 409,
+            "rounds": [
+              101,
+              101,
+              104,
+              103
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Sverige"
   },
-  "country": "Sverige"
- },
- {
-  "year": 2024,
-  "roman": "XXI",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Camiral - Stadium Course",
-     "Camiral - Tour Course",
-     "Camiral - Tour Course",
-     "Camiral - Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 143,
-      "rounds": [
-       31,
-       37,
-       40,
-       35
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 2,
-      "total": 142,
-      "rounds": [
-       39,
-       32,
-       36,
-       35
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 3,
-      "total": 141,
-      "rounds": [
-       33,
-       33,
-       42,
-       33
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 131,
-      "rounds": [
-       35,
-       26,
-       39,
-       31
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 128,
-      "rounds": [
-       30,
-       26,
-       36,
-       36
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 128,
-      "rounds": [
-       30,
-       25,
-       32,
-       41
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 7,
-      "total": 103,
-      "rounds": [
-       29,
-       26,
-       25,
-       23
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Camiral - Stadium Course",
-     "Camiral - Tour Course",
-     "Camiral - Tour Course",
-     "Camiral - Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 289,
-      "rounds": [
-       77,
-       71,
-       68,
-       73
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 2,
-      "total": 295,
-      "rounds": [
-       75,
-       78,
-       66,
-       76
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 296,
-      "rounds": [
-       69,
-       78,
-       73,
-       76
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 301,
-      "rounds": [
-       73,
-       82,
-       69,
-       77
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 309,
-      "rounds": [
-       78,
-       84,
-       75,
-       72
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 310,
-      "rounds": [
-       79,
-       85,
-       78,
-       68
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 7,
-      "total": 334,
-      "rounds": [
-       79,
-       83,
-       85,
-       87
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Camiral - Stadium Course",
-     "Camiral - Tour Course",
-     "Camiral - Tour Course",
-     "Camiral - Stadium Course"
-    ],
-    "standings": [
-     {
-      "name": "Kotte",
-      "placering": 1,
-      "total": 314,
-      "rounds": [
-       85,
-       76,
-       73,
-       80
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 2,
-      "total": 336,
-      "rounds": [
-       87,
-       87,
-       75,
-       87
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 3,
-      "total": 365,
-      "rounds": [
-       89,
-       93,
-       88,
-       95
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 4,
-      "total": 370,
-      "rounds": [
-       93,
-       97,
-       84,
-       96
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 383,
-      "rounds": [
-       98,
-       100,
-       91,
-       94
-      ]
-     },
-     {
-      "name": "Mädz",
-      "placering": 6,
-      "total": 398,
-      "rounds": [
-       97,
-       97,
-       99,
-       105
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 405,
-      "rounds": [
-       105,
-       106,
-       99,
-       95
-      ]
-     }
-    ]
-   }
+  {
+    "year": 2024,
+    "roman": "XXI",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Camiral - Stadium Course",
+          "Camiral - Tour Course",
+          "Camiral - Tour Course",
+          "Camiral - Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 143,
+            "rounds": [
+              31,
+              37,
+              40,
+              35
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 2,
+            "total": 142,
+            "rounds": [
+              39,
+              32,
+              36,
+              35
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 3,
+            "total": 141,
+            "rounds": [
+              33,
+              33,
+              42,
+              33
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 131,
+            "rounds": [
+              35,
+              26,
+              39,
+              31
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 128,
+            "rounds": [
+              30,
+              26,
+              36,
+              36
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 128,
+            "rounds": [
+              30,
+              25,
+              32,
+              41
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 7,
+            "total": 103,
+            "rounds": [
+              29,
+              26,
+              25,
+              23
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Camiral - Stadium Course",
+          "Camiral - Tour Course",
+          "Camiral - Tour Course",
+          "Camiral - Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 289,
+            "rounds": [
+              77,
+              71,
+              68,
+              73
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 2,
+            "total": 295,
+            "rounds": [
+              75,
+              78,
+              66,
+              76
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 296,
+            "rounds": [
+              69,
+              78,
+              73,
+              76
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 301,
+            "rounds": [
+              73,
+              82,
+              69,
+              77
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 309,
+            "rounds": [
+              78,
+              84,
+              75,
+              72
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 310,
+            "rounds": [
+              79,
+              85,
+              78,
+              68
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 7,
+            "total": 334,
+            "rounds": [
+              79,
+              83,
+              85,
+              87
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Camiral - Stadium Course",
+          "Camiral - Tour Course",
+          "Camiral - Tour Course",
+          "Camiral - Stadium Course"
+        ],
+        "standings": [
+          {
+            "name": "Kotte",
+            "placering": 1,
+            "total": 314,
+            "rounds": [
+              85,
+              76,
+              73,
+              80
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 2,
+            "total": 336,
+            "rounds": [
+              87,
+              87,
+              75,
+              87
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 3,
+            "total": 365,
+            "rounds": [
+              89,
+              93,
+              88,
+              95
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 4,
+            "total": 370,
+            "rounds": [
+              93,
+              97,
+              84,
+              96
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 383,
+            "rounds": [
+              98,
+              100,
+              91,
+              94
+            ]
+          },
+          {
+            "name": "Mädz",
+            "placering": 6,
+            "total": 398,
+            "rounds": [
+              97,
+              97,
+              99,
+              105
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 405,
+            "rounds": [
+              105,
+              106,
+              99,
+              95
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Spanien"
   },
-  "country": "Spanien"
- },
- {
-  "year": 2025,
-  "roman": "XXII",
-  "hasRoundData": true,
-  "sections": {
-   "poängbogey": {
-    "courses": [
-     "Glasgow Gailes",
-     "Dundonald Links",
-     "Barassie Links",
-     "Dundonald Links"
-    ],
-    "standings": [
-     {
-      "name": "Jet Set",
-      "placering": 1,
-      "total": 142,
-      "rounds": [
-       37,
-       34,
-       34,
-       37
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 140,
-      "rounds": [
-       38,
-       38,
-       30,
-       34
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 136,
-      "rounds": [
-       36,
-       38,
-       23,
-       39
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 4,
-      "total": 132,
-      "rounds": [
-       28,
-       33,
-       35,
-       36
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 5,
-      "total": 131,
-      "rounds": [
-       28,
-       37,
-       30,
-       36
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 122,
-      "rounds": [
-       32,
-       33,
-       29,
-       28
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 7,
-      "total": 105,
-      "rounds": [
-       27,
-       34,
-       23,
-       21
-      ]
-     }
-    ]
-   },
-   "nettoslag": {
-    "courses": [
-     "Glasgow Gailes",
-     "Dundonald Links",
-     "Barassie Links",
-     "Dundonald Links"
-    ],
-    "standings": [
-     {
-      "name": "Jet Set",
-      "placering": 1,
-      "total": 293,
-      "rounds": [
-       73,
-       75,
-       74,
-       71
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 2,
-      "total": 296,
-      "rounds": [
-       71,
-       71,
-       80,
-       74
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 3,
-      "total": 297,
-      "rounds": [
-       72,
-       70,
-       85,
-       70
-      ]
-     },
-     {
-      "name": "Krabba",
-      "placering": 4,
-      "total": 302,
-      "rounds": [
-       79,
-       78,
-       73,
-       72
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 5,
-      "total": 305,
-      "rounds": [
-       81,
-       72,
-       78,
-       74
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 6,
-      "total": 322,
-      "rounds": [
-       76,
-       81,
-       79,
-       86
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 7,
-      "total": 328,
-      "rounds": [
-       80,
-       74,
-       86,
-       88
-      ]
-     }
-    ]
-   },
-   "bruttoslag": {
-    "courses": [
-     "Glasgow Gailes",
-     "Dundonald Links",
-     "Barassie Links",
-     "Dundonald Links"
-    ],
-    "standings": [
-     {
-      "name": "Krabba",
-      "placering": 1,
-      "total": 338,
-      "rounds": [
-       89,
-       88,
-       80,
-       81
-      ]
-     },
-     {
-      "name": "Jet Set",
-      "placering": 2,
-      "total": 345,
-      "rounds": [
-       86,
-       89,
-       85,
-       85
-      ]
-     },
-     {
-      "name": "Kotte",
-      "placering": 3,
-      "total": 348,
-      "rounds": [
-       86,
-       79,
-       90,
-       93
-      ]
-     },
-     {
-      "name": "Hjärna",
-      "placering": 4,
-      "total": 354,
-      "rounds": [
-       86,
-       86,
-       93,
-       89
-      ]
-     },
-     {
-      "name": "Wåffla",
-      "placering": 5,
-      "total": 358,
-      "rounds": [
-       88,
-       86,
-       98,
-       86
-      ]
-     },
-     {
-      "name": "Besserwisser",
-      "placering": 6,
-      "total": 373,
-      "rounds": [
-       100,
-       89,
-       93,
-       91
-      ]
-     },
-     {
-      "name": "Chuleta",
-      "placering": 7,
-      "total": 411,
-      "rounds": [
-       99,
-       104,
-       99,
-       109
-      ]
-     }
-    ]
-   }
-  },
-  "country": "Skottland"
- }
+  {
+    "year": 2025,
+    "roman": "XXII",
+    "hasRoundData": true,
+    "sections": {
+      "poängbogey": {
+        "courses": [
+          "Glasgow Gailes",
+          "Dundonald Links",
+          "Barassie Links",
+          "Dundonald Links"
+        ],
+        "standings": [
+          {
+            "name": "Jet Set",
+            "placering": 1,
+            "total": 142,
+            "rounds": [
+              37,
+              34,
+              34,
+              37
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 140,
+            "rounds": [
+              38,
+              38,
+              30,
+              34
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 136,
+            "rounds": [
+              36,
+              38,
+              23,
+              39
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 4,
+            "total": 132,
+            "rounds": [
+              28,
+              33,
+              35,
+              36
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 5,
+            "total": 131,
+            "rounds": [
+              28,
+              37,
+              30,
+              36
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 122,
+            "rounds": [
+              32,
+              33,
+              29,
+              28
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 7,
+            "total": 105,
+            "rounds": [
+              27,
+              34,
+              23,
+              21
+            ]
+          }
+        ]
+      },
+      "nettoslag": {
+        "courses": [
+          "Glasgow Gailes",
+          "Dundonald Links",
+          "Barassie Links",
+          "Dundonald Links"
+        ],
+        "standings": [
+          {
+            "name": "Jet Set",
+            "placering": 1,
+            "total": 293,
+            "rounds": [
+              73,
+              75,
+              74,
+              71
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 2,
+            "total": 296,
+            "rounds": [
+              71,
+              71,
+              80,
+              74
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 3,
+            "total": 297,
+            "rounds": [
+              72,
+              70,
+              85,
+              70
+            ]
+          },
+          {
+            "name": "Krabba",
+            "placering": 4,
+            "total": 302,
+            "rounds": [
+              79,
+              78,
+              73,
+              72
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 5,
+            "total": 305,
+            "rounds": [
+              81,
+              72,
+              78,
+              74
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 6,
+            "total": 322,
+            "rounds": [
+              76,
+              81,
+              79,
+              86
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 7,
+            "total": 328,
+            "rounds": [
+              80,
+              74,
+              86,
+              88
+            ]
+          }
+        ]
+      },
+      "bruttoslag": {
+        "courses": [
+          "Glasgow Gailes",
+          "Dundonald Links",
+          "Barassie Links",
+          "Dundonald Links"
+        ],
+        "standings": [
+          {
+            "name": "Krabba",
+            "placering": 1,
+            "total": 338,
+            "rounds": [
+              89,
+              88,
+              80,
+              81
+            ]
+          },
+          {
+            "name": "Jet Set",
+            "placering": 2,
+            "total": 345,
+            "rounds": [
+              86,
+              89,
+              85,
+              85
+            ]
+          },
+          {
+            "name": "Kotte",
+            "placering": 3,
+            "total": 348,
+            "rounds": [
+              86,
+              79,
+              90,
+              93
+            ]
+          },
+          {
+            "name": "Hjärna",
+            "placering": 4,
+            "total": 354,
+            "rounds": [
+              86,
+              86,
+              93,
+              89
+            ]
+          },
+          {
+            "name": "Wåffla",
+            "placering": 5,
+            "total": 358,
+            "rounds": [
+              88,
+              86,
+              98,
+              86
+            ]
+          },
+          {
+            "name": "Besserwisser",
+            "placering": 6,
+            "total": 373,
+            "rounds": [
+              100,
+              89,
+              93,
+              91
+            ]
+          },
+          {
+            "name": "Chuleta",
+            "placering": 7,
+            "total": 411,
+            "rounds": [
+              99,
+              104,
+              99,
+              109
+            ]
+          }
+        ]
+      }
+    },
+    "country": "Skottland"
+  }
 ]
