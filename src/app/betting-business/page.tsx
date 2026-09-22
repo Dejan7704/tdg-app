@@ -185,9 +185,9 @@ function LiveTotalsTable({ live }: { live: LiveBokslut }) {
 
   if (names.length === 0) {
     return (
-      <div className="rounded-xl border border-stone-200 bg-white px-4 py-6 text-center text-sm text-stone-400">
+      <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">
         Inga rondresultat registrerade än.
-      </div>
+      </p>
     );
   }
 
