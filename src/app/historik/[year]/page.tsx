@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import {
   editions,
   getEdition,
-  getMainSectionKey,
   getPlayerByNickname,
   SECTION_LABELS,
   type SectionKey,
@@ -24,10 +23,12 @@ export const dynamic = "force-dynamic";
 
 // Nettoslag visas alltid först och märks "Tävlingens huvudresultat" - David
 // bad om detta 2026-09-22 för samtliga historiska år (inte bara 2026 och
-// framåt), som en ren visningsändring: ordningen och badgen nedan är
-// oberoende av `mainKey`/`getMainSectionKey()`, som fortsätter styra den
-// faktiska placeringen (getWinner() m.fl.) och amber-varningen om att
-// Poängbogey saknas - de rör sig inte om vilken tabell som visas överst.
+// framåt), som en ren visningsändring. Den tidigare amber-varningen om att
+// "Poängbogey saknas... placeringen baseras istället på nettoslag" togs
+// bort helt samma dag (nästa rad i chatten) - David ville inte ha någon
+// text alls om att Poängbogey/Bruttoslag saknas för ett visst år.
+// getMainSectionKey() (som styr getWinner() m.fl. på andra sidor) är
+// oförändrad och opåverkad - bara denna sidas UI slutade fråga efter den.
 const SECTION_ORDER: SectionKey[] = ["nettoslag", "bruttoslag", "poängbogey"];
 
 export default async function EditionPage({
@@ -132,7 +133,6 @@ export default async function EditionPage({
   }
 
   const availableSections = SECTION_ORDER.filter((key) => edition.sections[key]);
-  const mainKey = getMainSectionKey(edition);
   const allCourses = new Set<string>();
   for (const key of availableSections) {
     for (const c of edition.sections[key]!.courses) allCourses.add(c);
@@ -156,13 +156,6 @@ export default async function EditionPage({
         <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
           Endast slutplacering finns registrerad för det här året – rondresultat saknas i
           källdatan.
-        </p>
-      )}
-
-      {edition.hasRoundData && mainKey && mainKey !== "poängbogey" && (
-        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Poängbogey saknas i källdatan för det här året – placeringen baseras istället på{" "}
-          {SECTION_LABELS[mainKey].toLowerCase()}.
         </p>
       )}
 
