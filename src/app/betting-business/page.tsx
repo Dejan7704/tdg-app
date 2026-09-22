@@ -138,9 +138,15 @@ function LivePlayerLink({ playerId, playerName }: { playerId: string; playerName
   );
 }
 
-function LiveRoundCard({ round, year }: { round: LiveBokslut["rounds"][number]; year: number }) {
-  const edition = getEdition(year);
-  const course = edition ? getMainSection(edition)?.courses[round.round - 1] : undefined;
+function LiveRoundCard({
+  round,
+  courses,
+}: {
+  round: LiveBokslut["rounds"][number];
+  /** Bannamn per runda för den pågående säsongen (index 0 = Runda 1), från `LiveBokslut.courses` - INTE `getEdition()`, som aldrig hittar den pågående säsongen i den statiska editions.json (den blir en "riktig" upplaga där först när säsongen avslutas). Tillagt 2026-09-22. */
+  courses: string[];
+}) {
+  const course = courses[round.round - 1] || undefined;
 
   return (
     <div className="overflow-hidden rounded-xl bg-tdg-gray-light">
@@ -593,7 +599,7 @@ export default async function BettingBusinessPage({
             ) : (
               <div className="grid gap-3 lg:grid-cols-2">
                 {live.rounds.map((r) => (
-                  <LiveRoundCard key={r.round} round={r} year={live.year} />
+                  <LiveRoundCard key={r.round} round={r} courses={live.courses} />
                 ))}
               </div>
             )}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/data";
 import { getCountryFlag } from "@/lib/countryFlags";
 import { getLiveEditionStandings, type LiveEditionStandings } from "@/lib/liveBokslut";
+import { roundNumbers } from "@/lib/betzExpz";
 
 // Sidan måste renderas dynamiskt (per request) - annars skulle den pågående
 // säsongens live-kort bara hämtas en gång vid deploy (Vercel-bygget) istället
@@ -24,9 +25,12 @@ function LiveStandingsTable({ live }: { live: LiveEditionStandings }) {
           <tr>
             <th className="px-4 py-2 font-medium">Plac.</th>
             <th className="px-4 py-2 font-medium">Spelare</th>
-            {[1, 2, 3, 4].map((r) => (
+            {roundNumbers(live.roundCount).map((r) => (
               <th key={r} className="px-4 py-2 font-medium">
-                R{r}
+                <div>R{r}</div>
+                {live.courses[r - 1] && (
+                  <div className="text-xs font-normal text-stone-400">{live.courses[r - 1]}</div>
+                )}
               </th>
             ))}
             <th className="px-4 py-2 font-medium">Totalt</th>
@@ -121,7 +125,19 @@ export default async function HistorikPage() {
                 </Link>
               </div>
               <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
-                <span>{live.roundsRegistered} av 4 rundor spelade</span>
+                {live.country && (
+                  <span>
+                    {getCountryFlag(live.country) && (
+                      <span aria-hidden="true" className="mr-1">
+                        {getCountryFlag(live.country)}
+                      </span>
+                    )}
+                    {live.country}
+                  </span>
+                )}
+                <span>
+                  {live.roundsRegistered} av {live.roundCount} rundor spelade
+                </span>
                 <span>Uppdateras live från Betz &amp; Expz</span>
               </div>
             </div>

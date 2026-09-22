@@ -25,6 +25,12 @@ export type EditionRow = {
   closed_at: string | null;
   /** Spelar-id:n som INTE är med den här upplagan (tom lista = alla 9 med). */
   non_participants: string[];
+  /** Fritext, t.ex. "Spanien" - samma svenska landsbenämningar som editions.json/countryFlags.ts (tillagd 0003, 2026-09-22). */
+  country: string | null;
+  /** Antal rundor (1-4) - David bad om detta 2026-09-22 eftersom TDG 2026 bara spelar 3. Styr rondvalen på Betz & Expz och antal kolumner i Historik-sidans live-vy. */
+  round_count: number;
+  /** Bannamn per runda, index 0 = Runda 1 osv. Längd bör matcha round_count (upprätthålls av UI:t, inte databasen). */
+  courses: string[];
 };
 
 export type EntryRow = {

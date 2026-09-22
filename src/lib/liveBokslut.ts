@@ -9,6 +9,7 @@ import {
   mapRoundResultRows,
   buildAllEntries,
   playerName,
+  roundNumbers,
 } from "@/lib/betzExpz";
 
 // Läser in en "live"-sammanställning av den pågående säsongen (den öppna
@@ -45,6 +46,12 @@ export type LiveSettlementRow = {
 export type LiveBokslut = {
   year: number;
   editionId: number;
+  /** Antal rundor upplagan spelar (1-4) - tillagt 2026-09-22, se `courses` nedan. */
+  roundCount: number;
+  /** Fritext, t.ex. "Spanien" - null om inte ifyllt än. Tillagt 2026-09-22. */
+  country: string | null;
+  /** Bannamn per runda, index 0 = Runda 1 osv (längd roundCount). Tillagt 2026-09-22 - används av LiveRoundCard istället för den tidigare (trasiga) getEdition()-uppslagningen, som aldrig kan hitta den pågående säsongen i den statiska editions.json. */
+  courses: string[];
   rounds: LiveRound[];
   totals: Record<string, Partial<Record<Exclude<BettingCategory, "sweepstake">, number>>>;
   settlement: LiveSettlementRow[];
@@ -77,7 +84,7 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
   // player-id:n som lagras i round_results/entries-tabellerna (bara
   // smeknamn), se arkitektur-dokumentet.
   const rounds: LiveRound[] = [];
-  for (let runda = 1; runda <= 4; runda++) {
+  for (const runda of roundNumbers(edition.round_count)) {
     const result = roundResults[runda];
     if (!result) continue;
     const wins: LiveBettingWin[] = [];
@@ -102,7 +109,7 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
     }
   }
 
-  const allEntries = buildAllEntries(entries, sweepstakeBets, roundResults);
+  const allEntries = buildAllEntries(entries, sweepstakeBets, roundResults, edition.round_count);
 
   // Avräkning - en rad per deltagande spelare (även den som ännu inte
   // registrerat något får en nollrad, så rutan visar hela gruppen från
@@ -166,6 +173,9 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
   return {
     year: edition.year,
     editionId: edition.id,
+    roundCount: edition.round_count,
+    country: edition.country,
+    courses: edition.courses,
     rounds,
     totals,
     settlement,
@@ -199,7 +209,13 @@ export type LiveStandingRow = {
 export type LiveEditionStandings = {
   year: number;
   editionId: number;
-  /** Hur många av rundorna 1-4 som har ett sparat facit (oavsett om alla nettoscore/kategorivinnare är ifyllda). */
+  /** Antal rundor upplagan spelar (1-4). Tillagt 2026-09-22 - styr hur många R-kolumner tabellen visar. */
+  roundCount: number;
+  /** Fritext, t.ex. "Spanien" - null om inte ifyllt än. Tillagt 2026-09-22. */
+  country: string | null;
+  /** Bannamn per runda, index 0 = Runda 1 osv (längd roundCount). Tillagt 2026-09-22. */
+  courses: string[];
+  /** Hur många av rundorna som har ett sparat facit (oavsett om alla nettoscore/kategorivinnare är ifyllda). */
   roundsRegistered: number;
   standings: LiveStandingRow[];
 };
@@ -226,7 +242,9 @@ export async function getLiveEditionStandings(): Promise<LiveEditionStandings | 
   const activePlayers = players.filter((p) => !nonParticipants.includes(p.id));
 
   const withTotals = activePlayers.map((p) => {
-    const rounds: (number | null)[] = [1, 2, 3, 4].map((r) => roundResults[r]?.netto[p.id] ?? null);
+    const rounds: (number | null)[] = roundNumbers(edition.round_count).map(
+      (r) => roundResults[r]?.netto[p.id] ?? null
+    );
     const registered = rounds.filter((r): r is number => r != null);
     const total = registered.length > 0 ? registered.reduce((a, b) => a + b, 0) : null;
     return { playerId: p.id, playerName: p.fullName, rounds, total };
@@ -250,6 +268,9 @@ export async function getLiveEditionStandings(): Promise<LiveEditionStandings | 
   return {
     year: edition.year,
     editionId: edition.id,
+    roundCount: edition.round_count,
+    country: edition.country,
+    courses: edition.courses,
     roundsRegistered,
     standings,
   };

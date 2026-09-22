@@ -23,3 +23,9 @@ export function getCountryFlag(country: string | null | undefined): string | nul
   if (!country) return null;
   return COUNTRY_FLAGS[country] ?? null;
 }
+
+// De länder som redan förekommit, som förslag i land-fältet på Betz & Expz
+// ("Upplaga TDG {år}", tillagd 2026-09-22) - fältet är fritext (ett nytt land
+// kan alltid skrivas in för hand), det här är bara en bekväm datalist-lista
+// så samma stavning återanvänds (och därmed matchar flagg-uppslaget ovan).
+export const KNOWN_COUNTRIES = Object.keys(COUNTRY_FLAGS);

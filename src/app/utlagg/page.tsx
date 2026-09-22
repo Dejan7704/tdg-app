@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { players } from "@/lib/data";
 import { CATEGORY_LABELS, type BettingCategory } from "@/lib/business";
 import { InfoTooltip } from "@/components/InfoTooltip";
+import { KNOWN_COUNTRIES } from "@/lib/countryFlags";
 import {
   supabase,
   type EditionRow,
@@ -17,6 +18,7 @@ import {
   RESULT_CATEGORIES,
   formatSek,
   playerName,
+  roundNumbers,
   mapEntryRow,
   mapSweepstakeBetRow,
   mapRoundResultRows,
@@ -55,6 +57,37 @@ function SelectField({
       >
         {children}
       </select>
+    </label>
+  );
+}
+
+// Fritextfält - används av "Upplaga"-rutan (land, bannamn per runda). En
+// valfri `list`-prop kopplar ett <datalist> (se land-fältet nedan) utan att
+// hindra att man skriver in något som inte finns i listan.
+function TextField({
+  label,
+  value,
+  onChange,
+  placeholder,
+  list,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  list?: string;
+}) {
+  return (
+    <label className="flex flex-col gap-1 text-sm">
+      <span className="font-medium text-stone-600">{label}</span>
+      <input
+        type="text"
+        value={value}
+        placeholder={placeholder}
+        list={list}
+        onChange={(e) => onChange(e.target.value)}
+        className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 focus:border-tdg-green focus:outline-none"
+      />
     </label>
   );
 }
@@ -217,6 +250,68 @@ export default function UtlaggPage() {
     }
     const updatedEdition = data as EditionRow;
     setEditions((prev) => prev.map((e) => (e.id === updatedEdition.id ? updatedEdition : e)));
+  }
+
+  // --- Upplaga: land, antal rundor och bannamn per runda (David bad om
+  // detta 2026-09-22 - nytt för TDG 2026 är att bara 3 rundor spelas, inte 4
+  // som tidigare alltid antogs). Styr Sweepstakets och Resultat-rutans
+  // rondval nedan samt Historik-sidans live-vy (flagga + bannamn per runda).
+  // Eget "utkast"-state (inte direkt bundet till activeEdition) så man kan
+  // skriva klart land/banor innan man trycker Spara, precis som de andra
+  // formulären - synkas om från activeEdition när säsongen byts (Bokslut).
+  const [draftCountry, setDraftCountry] = useState("");
+  const [draftRoundCount, setDraftRoundCount] = useState(4);
+  const [draftCourses, setDraftCourses] = useState<string[]>([]);
+  const [upplagaSubmitting, setUpplagaSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!activeEdition) return;
+    setDraftCountry(activeEdition.country ?? "");
+    setDraftRoundCount(activeEdition.round_count ?? 4);
+    setDraftCourses(activeEdition.courses ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEdition?.id]);
+
+  function setDraftRoundCountAndResizeCourses(n: number) {
+    setDraftRoundCount(n);
+    setDraftCourses((prev) => {
+      const next = prev.slice(0, n);
+      while (next.length < n) next.push("");
+      return next;
+    });
+  }
+
+  function setDraftCourse(index: number, value: string) {
+    setDraftCourses((prev) => {
+      const next = [...prev];
+      next[index] = value;
+      return next;
+    });
+  }
+
+  async function saveUpplagaDetails() {
+    if (!activeEdition || upplagaSubmitting) return;
+    setUpplagaSubmitting(true);
+    const courses = roundNumbers(draftRoundCount).map((r) => (draftCourses[r - 1] ?? "").trim());
+    const { data, error } = await supabase
+      .from("editions")
+      .update({
+        country: draftCountry.trim() || null,
+        round_count: draftRoundCount,
+        courses,
+      })
+      .eq("id", activeEdition.id)
+      .select()
+      .single();
+    setUpplagaSubmitting(false);
+    if (error) {
+      console.error(error);
+      alert("Kunde inte spara upplagans detaljer - försök igen.");
+      return;
+    }
+    const updatedEdition = data as EditionRow;
+    setEditions((prev) => prev.map((e) => (e.id === updatedEdition.id ? updatedEdition : e)));
+    showToast(`Upplagans detaljer sparade för TDG ${updatedEdition.year}`);
   }
 
   async function loadEditionData(editionId: number) {
@@ -461,6 +556,16 @@ export default function UtlaggPage() {
     setResultWinners(existing?.winners ?? {});
   }
 
+  // Om antalet rundor minskas i Upplaga-rutan (t.ex. till 3 för TDG 2026)
+  // efter att ett rondval redan gjorts här eller i Sweepstake ovan, dra ner
+  // de valen så de inte pekar på en runda som inte längre finns.
+  useEffect(() => {
+    const max = activeEdition?.round_count ?? 4;
+    setSweepRunda((prev) => Math.min(prev, max));
+    if (resultRunda > max) selectResultRunda(max);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEdition?.round_count]);
+
   async function registerRoundResult() {
     if (!activeEdition || resultSubmitting) return;
     setResultSubmitting(true);
@@ -579,8 +684,8 @@ export default function UtlaggPage() {
   }
 
   const allEntries = useMemo(
-    () => buildAllEntries(entries, sweepstakeBets, roundResults),
-    [entries, sweepstakeBets, roundResults]
+    () => buildAllEntries(entries, sweepstakeBets, roundResults, activeEdition?.round_count ?? 4),
+    [entries, sweepstakeBets, roundResults, activeEdition?.round_count]
   );
 
   const viewingEdition = closedEditions.find((e) => e.year === viewingArchiveYear) ?? null;
@@ -588,9 +693,14 @@ export default function UtlaggPage() {
   const archivedEntries = useMemo(
     () =>
       viewingSnapshot
-        ? buildAllEntries(viewingSnapshot.entries, viewingSnapshot.sweepstakeBets, viewingSnapshot.roundResults)
+        ? buildAllEntries(
+            viewingSnapshot.entries,
+            viewingSnapshot.sweepstakeBets,
+            viewingSnapshot.roundResults,
+            viewingEdition?.round_count ?? 4
+          )
         : [],
-    [viewingSnapshot]
+    [viewingSnapshot, viewingEdition?.round_count]
   );
 
   if (loading) {
@@ -717,6 +827,76 @@ export default function UtlaggPage() {
             );
           })}
         </div>
+      </section>
+
+      {/* Upplaga: land, antal rundor och bannamn per runda (David bad om
+          detta 2026-09-22 - nytt för TDG 2026 är att bara 3 rundor spelas,
+          inte 4 som tidigare alltid antogs). Styr Sweepstakets och
+          Resultat-rutans rondval ovan/nedan, samt Historik-sidans live-vy
+          (flagga + bannamn per runda). Eget utkast-state, sparas explicit
+          med en knapp (inte varje knapptryck) eftersom bannamnen är fritext. */}
+      <section className="rounded-xl bg-tdg-gray-light p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
+          Upplaga TDG {activeYear}
+        </h2>
+        <p className="mt-1 text-xs text-stone-500">
+          Land, antal rundor och bannamn - styr rondvalen ovan/nedan samt Historik-sidan.
+        </p>
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+          <div className="max-w-xs flex-1">
+            <TextField
+              label="Land"
+              value={draftCountry}
+              onChange={setDraftCountry}
+              placeholder="T.ex. Spanien"
+              list="known-countries"
+            />
+            <datalist id="known-countries">
+              {KNOWN_COUNTRIES.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+          </div>
+          <div className="flex flex-col gap-1 text-sm">
+            <span className="font-medium text-stone-600">Antal rundor</span>
+            <div className="flex gap-1.5">
+              {[1, 2, 3, 4].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setDraftRoundCountAndResizeCourses(n)}
+                  className={
+                    "h-9 w-9 rounded-lg text-sm font-semibold transition " +
+                    (draftRoundCount === n
+                      ? "bg-tdg-green-dark text-white"
+                      : "bg-white text-stone-600 hover:text-tdg-green")
+                  }
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {roundNumbers(draftRoundCount).map((r) => (
+            <TextField
+              key={r}
+              label={`Bana - Runda ${r}`}
+              value={draftCourses[r - 1] ?? ""}
+              onChange={(v) => setDraftCourse(r - 1, v)}
+              placeholder="Namn på golfbana"
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={saveUpplagaDetails}
+          disabled={upplagaSubmitting}
+          className="mt-3 rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
+        >
+          {upplagaSubmitting ? "Sparar…" : "Spara"}
+        </button>
       </section>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -872,9 +1052,10 @@ export default function UtlaggPage() {
             value={String(sweepRunda)}
             onChange={(v) => setSweepRunda(Number(v))}
           >
-            {[1, 2, 3, 4].map((r) => (
+            {roundNumbers(activeEdition.round_count).map((r) => (
               <option key={r} value={r}>
                 Runda {r}
+                {activeEdition.courses[r - 1] ? ` – ${activeEdition.courses[r - 1]}` : ""}
               </option>
             ))}
           </SelectField>
@@ -935,9 +1116,10 @@ export default function UtlaggPage() {
             value={String(resultRunda)}
             onChange={(v) => selectResultRunda(Number(v))}
           >
-            {[1, 2, 3, 4].map((r) => (
+            {roundNumbers(activeEdition.round_count).map((r) => (
               <option key={r} value={r}>
                 Runda {r}
+                {activeEdition.courses[r - 1] ? ` – ${activeEdition.courses[r - 1]}` : ""}
                 {roundResults[r] ? " (registrerad)" : ""}
               </option>
             ))}

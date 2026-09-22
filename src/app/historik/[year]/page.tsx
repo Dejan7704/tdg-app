@@ -8,6 +8,8 @@ import {
   type SectionKey,
 } from "@/lib/data";
 import { getLiveEditionStandings } from "@/lib/liveBokslut";
+import { getCountryFlag } from "@/lib/countryFlags";
+import { roundNumbers } from "@/lib/betzExpz";
 
 export function generateStaticParams() {
   return editions.map((e) => ({ year: String(e.year) }));
@@ -64,9 +66,27 @@ export default async function EditionPage({
                 Pågår
               </span>
             </h1>
-            <p className="mt-1 text-stone-500">
-              {live.roundsRegistered} av 4 rundor spelade – uppdateras live från Betz &amp; Expz.
+            <p className="mt-1 flex flex-wrap items-center gap-x-3 text-stone-500">
+              {live.country && (
+                <span>
+                  {getCountryFlag(live.country) && (
+                    <span aria-hidden="true" className="mr-1">
+                      {getCountryFlag(live.country)}
+                    </span>
+                  )}
+                  {live.country}
+                </span>
+              )}
+              <span>
+                {live.roundsRegistered} av {live.roundCount} rundor spelade – uppdateras live från
+                Betz &amp; Expz.
+              </span>
             </p>
+            {live.courses.some(Boolean) && (
+              <p className="mt-1 text-stone-500">
+                Banor: {live.courses.filter(Boolean).join(", ")}
+              </p>
+            )}
           </div>
 
           {live.roundsRegistered === 0 ? (
@@ -87,9 +107,14 @@ export default async function EditionPage({
                     <tr>
                       <th className="px-4 py-2 font-medium">Plac.</th>
                       <th className="px-4 py-2 font-medium">Spelare</th>
-                      {[1, 2, 3, 4].map((r) => (
+                      {roundNumbers(live.roundCount).map((r) => (
                         <th key={r} className="px-4 py-2 font-medium">
-                          R{r}
+                          <div>R{r}</div>
+                          {live.courses[r - 1] && (
+                            <div className="text-xs font-normal text-stone-400">
+                              {live.courses[r - 1]}
+                            </div>
+                          )}
                         </th>
                       ))}
                       <th className="px-4 py-2 font-medium">Totalt</th>

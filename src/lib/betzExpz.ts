@@ -96,6 +96,13 @@ export function mapRoundResultRows(rows: RoundResultRow[]): Record<number, Round
   return out;
 }
 
+// [1, 2, ..., roundCount] - liten hjälpfunktion så "vilka rundor finns" inte
+// behöver hårdkodas som [1,2,3,4] på flera ställen (Betz & Expz rondval,
+// Bokslut/Historik-sidornas tabellkolumner).
+export function roundNumbers(roundCount: number): number[] {
+  return Array.from({ length: roundCount }, (_, i) => i + 1);
+}
+
 export function formatSek(n: number): string {
   const rounded = Math.round(n);
   return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + " kr";
@@ -120,14 +127,19 @@ export function playerName(id: string): string {
 // insatser väntar orörda tills rundan avgörs.
 export function computeAutoEntries(
   roundResults: Record<number, RoundResult>,
-  sweepstakeBets: SweepstakeBet[]
+  sweepstakeBets: SweepstakeBet[],
+  // Antal rundor den här upplagan spelar (1-4, default 4 för bakåtkompatibilitet
+  // med arkiverade år som saknar ett eget round_count-värde). David bad om
+  // detta 2026-09-22 eftersom TDG 2026 bara spelar 3 rundor, inte 4 som
+  // tidigare alltid antogs.
+  roundCount = 4
 ): Entry[] {
   const out: Entry[] = [];
   let syntheticId = -1;
 
   for (const kategori of RESULT_CATEGORIES) {
     let carry = 0;
-    for (let runda = 1; runda <= 4; runda++) {
+    for (let runda = 1; runda <= roundCount; runda++) {
       const result = roundResults[runda];
       const winnerId = result?.winners[kategori];
       if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
@@ -202,9 +214,10 @@ export function computeSweepstakeInsatsEntries(sweepstakeBets: SweepstakeBet[]):
 export function buildAllEntries(
   entries: Entry[],
   sweepstakeBets: SweepstakeBet[],
-  roundResults: Record<number, RoundResult>
+  roundResults: Record<number, RoundResult>,
+  roundCount = 4
 ): Entry[] {
-  const autoEntries = computeAutoEntries(roundResults, sweepstakeBets);
+  const autoEntries = computeAutoEntries(roundResults, sweepstakeBets, roundCount);
   const sweepstakeInsatsEntries = computeSweepstakeInsatsEntries(sweepstakeBets);
   return [...entries, ...sweepstakeInsatsEntries, ...autoEntries].sort((a, b) => {
     // Manuella poster (har ett riktigt timestamp) sorteras nyast-först;
