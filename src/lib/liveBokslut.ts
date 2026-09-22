@@ -180,10 +180,12 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
 // netto`, per spelare) ÄR samma sorts siffra som den historiska
 // "Nettoslag"-sektionen i editions.json (rena slag per rond, lägre är
 // bättre - bekräftat genom att jämföra värdeintervallet, se t.ex. 2019 års
-// nettoslag-data). Poängbogey (tävlingens officiella huvudresultat) hanteras
-// medvetet inte här - det registreras inte i appen alls, se
-// arkitektur-dokumentet - så den pågående säsongen visas alltid som en
-// "Nettoslag"-tabell, aldrig som ett riktigt slutresultat. ---
+// nettoslag-data). Från och med 2026 är nettoscore (lägst totalt över 4
+// rundor) tävlingens officiella huvudresultat - Poängbogey registreras inte
+// längre alls, i appen eller på annat sätt (bekräftat av David 2026-09-22).
+// Den pågående säsongens "Nettoslag"-tabell är alltså inte en preliminär
+// föraning om ett "riktigt" facit som kommer senare - den ÄR facit, bara
+// ofullständig tills alla 4 rundor är spelade. ---
 
 export type LiveStandingRow = {
   playerId: string;

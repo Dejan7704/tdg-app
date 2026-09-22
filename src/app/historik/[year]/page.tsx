@@ -37,7 +37,11 @@ export default async function EditionPage({
   // - om året som efterfrågas råkar vara den öppna säsongen visas istället
   // en live-vy byggd av round_results.netto, tydligt märkt "Pågår". David
   // bad om detta 2026-09-22 som en del av att Historik ska fyllas på
-  // löpande allteftersom rondresultat registreras.
+  // löpande allteftersom rondresultat registreras. Från och med 2026 är
+  // nettoscore (lägst totalt över 4 rundor) tävlingens officiella
+  // huvudresultat - Poängbogey registreras inte längre alls (bekräftat av
+  // David 2026-09-22), så nettoslaget här är inte en "preliminär" siffra
+  // som väntar på något annat facit, det ÄR facit.
   if (!edition) {
     const live = await getLiveEditionStandings();
     if (live && live.year === Number(year)) {
@@ -67,7 +71,7 @@ export default async function EditionPage({
               <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
                 Nettoslag
                 <span className="ml-2 rounded-full bg-tdg-green-dark px-2 py-0.5 text-xs font-medium normal-case text-white">
-                  Preliminärt
+                  Tävlingens huvudresultat
                 </span>
               </h2>
               <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
@@ -110,9 +114,8 @@ export default async function EditionPage({
                 </table>
               </div>
               <p className="text-xs text-stone-400">
-                Nettoslag registreras löpande i Betz &amp; Expz Resultat-ruta. Poängbogey
-                (tävlingens officiella huvudresultat) registreras separat först när säsongen
-                avslutas.
+                Nettoslag registreras löpande i Betz &amp; Expz Resultat-ruta – lägst totalt
+                nettoscore när alla 4 rundor är spelade avgör vinnaren.
               </p>
             </div>
           )}
