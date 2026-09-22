@@ -16,10 +16,75 @@ import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection, getPl
 import { DualAxisLineChart } from "@/components/LineChart";
 import { getLiveBokslut, type LiveBokslut } from "@/lib/liveBokslut";
 import { RESULT_CATEGORIES } from "@/lib/betzExpz";
+import { InfoTooltip } from "@/components/InfoTooltip";
 
 function formatSek(n: number): string {
   const rounded = Math.round(n);
   return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + " kr";
+}
+
+// Räknar ut föreslagna betalningar som nollställer samtliga spelares
+// justering, med minsta möjliga antal transaktioner (girig matchning av
+// störst skuld mot störst fordran, samma metod som t.ex. Splitwise) - David
+// bad om detta 2026-09-22 för att kunna se "vem ska betala vem" direkt på
+// Bokslut-sidan även för den pågående säsongen, inte bara som en manuellt
+// ikryssad notering (som de avslutade årens `note`-fält). Uppdateras
+// automatiskt varje gång justeringen ändras, dvs varje gång en ny post
+// registreras på Betz & Expz.
+function settleBalances(
+  rows: { playerId: string; playerName: string; justering: number }[]
+): { fromId: string; fromName: string; toId: string; toName: string; amount: number }[] {
+  const creditors = rows
+    .filter((r) => r.justering > 0.5)
+    .map((r) => ({ id: r.playerId, name: r.playerName, amount: r.justering }))
+    .sort((a, b) => b.amount - a.amount);
+  const debtors = rows
+    .filter((r) => r.justering < -0.5)
+    .map((r) => ({ id: r.playerId, name: r.playerName, amount: -r.justering }))
+    .sort((a, b) => b.amount - a.amount);
+
+  const transactions: { fromId: string; fromName: string; toId: string; toName: string; amount: number }[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < debtors.length && j < creditors.length) {
+    const debtor = debtors[i];
+    const creditor = creditors[j];
+    const amount = Math.min(debtor.amount, creditor.amount);
+    if (amount > 0.5) {
+      transactions.push({
+        fromId: debtor.id,
+        fromName: debtor.name,
+        toId: creditor.id,
+        toName: creditor.name,
+        amount: Math.round(amount),
+      });
+    }
+    debtor.amount -= amount;
+    creditor.amount -= amount;
+    if (debtor.amount <= 0.5) i++;
+    if (creditor.amount <= 0.5) j++;
+  }
+  return transactions;
+}
+
+function settlementTextByPlayer(
+  rows: { playerId: string; playerName: string; justering: number }[]
+): Record<string, string> {
+  const transactions = settleBalances(rows);
+  const out: Record<string, string> = {};
+  for (const r of rows) {
+    const pays = transactions.filter((t) => t.fromId === r.playerId);
+    const gets = transactions.filter((t) => t.toId === r.playerId);
+    const parts: string[] = [];
+    if (pays.length > 0) {
+      parts.push(`Betalar ${pays.map((t) => `${t.amount.toLocaleString("sv-SE")} kr till ${t.toName}`).join(", ")}`);
+    }
+    if (gets.length > 0) {
+      parts.push(`Får ${gets.map((t) => `${t.amount.toLocaleString("sv-SE")} kr av ${t.fromName}`).join(", ")}`);
+    }
+    out[r.playerId] = parts.length > 0 ? parts.join(" · ") : "Kvitt";
+  }
+  return out;
 }
 
 // --- Live-vy för den pågående säsongen (tillagd 2026-09-22) - samma sorts
@@ -150,32 +215,51 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
             <th className="px-4 py-2 font-medium">Golfbetting</th>
             <th className="px-4 py-2 font-medium">Sweepstake</th>
             <th className="px-4 py-2 font-medium">Betting totalt</th>
-            <th className="px-4 py-2 font-medium">Justering</th>
+            <th className="px-4 py-2 font-medium">
+              Justering
+              <InfoTooltip
+                variant="light"
+                label="Om Justering"
+                text="Utlägg minus gruppens snittutlägg, plus Betting totalt. Positivt = ska få pengar, negativt = ska betala."
+              />
+            </th>
+            <th className="px-4 py-2 font-medium">
+              Avräkning
+              <InfoTooltip
+                variant="light"
+                label="Om Avräkning"
+                text="Förslag på vem som betalar vem för att nollställa Justering - räknas om automatiskt vid varje ny registrering."
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
-            <tr key={r.playerId} className="border-t border-stone-100">
-              <td className="px-4 py-2">
-                <LivePlayerLink playerId={r.playerId} playerName={r.playerName} />
-              </td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.utlagg)}</td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbetting)}</td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.sweepstake)}</td>
-              <td className="px-4 py-2 font-medium text-stone-700">
-                {formatSek(r.poker + r.golfbetting + r.sweepstake)}
-              </td>
-              <td
-                className={
-                  "px-4 py-2 font-semibold " +
-                  (r.justering >= 0 ? "text-tdg-green" : "text-red-600")
-                }
-              >
-                {formatSek(r.justering)}
-              </td>
-            </tr>
-          ))}
+          {(() => {
+            const settlementText = settlementTextByPlayer(rows);
+            return rows.map((r) => (
+              <tr key={r.playerId} className="border-t border-stone-100">
+                <td className="px-4 py-2">
+                  <LivePlayerLink playerId={r.playerId} playerName={r.playerName} />
+                </td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.utlagg)}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbetting)}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.sweepstake)}</td>
+                <td className="px-4 py-2 font-medium text-stone-700">
+                  {formatSek(r.poker + r.golfbetting + r.sweepstake)}
+                </td>
+                <td
+                  className={
+                    "px-4 py-2 font-semibold " +
+                    (r.justering >= 0 ? "text-tdg-green" : "text-red-600")
+                  }
+                >
+                  {formatSek(r.justering)}
+                </td>
+                <td className="px-4 py-2 text-stone-500">{settlementText[r.playerId]}</td>
+              </tr>
+            ));
+          })()}
         </tbody>
       </table>
     </div>
@@ -483,19 +567,15 @@ export default async function BettingBusinessPage({
           </section>
 
           <section className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            <h2 className="flex items-center text-sm font-semibold uppercase tracking-wide text-stone-500">
               Utlägg, betting & avräkning {live.year}
+              <InfoTooltip
+                variant="light"
+                label="Om betting och avräkning"
+                text="Golfbetting är obligatoriskt för alla i upplagan. Poker och Sweepstake är frivilliga - regleras direkt mellan de som deltog i just den satsningen, och påverkar aldrig gruppens snittutlägg. Preliminärt tills säsongen avslutas."
+              />
             </h2>
             <LiveSettlementTable live={live} />
-            <p className="text-xs text-stone-400">
-              Poker och Sweepstake är frivilliga sidospel - alla nio är inte nödvändigtvis med
-              varje gång. Insatser/vinster regleras alltid direkt mellan de spelare som faktiskt
-              deltog i en given satsning eller omgång (deras netto räknas in individuellt i
-              Betting totalt/Justering ovan) - det påverkar aldrig gruppens gemensamma
-              snittutlägg, som bara beräknas på Utlägg-kategorin. Justering = utlägg minus
-              gruppens snittutlägg, plus Betting totalt. Positivt betyder att spelaren ska få
-              pengar, negativt att spelaren ska betala – preliminärt tills säsongen avslutas.
-            </p>
           </section>
         </>
       ) : !business ? (
@@ -524,17 +604,15 @@ export default async function BettingBusinessPage({
           </section>
 
           <section className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            <h2 className="flex items-center text-sm font-semibold uppercase tracking-wide text-stone-500">
               Utlägg, betting & avräkning {year}
+              <InfoTooltip
+                variant="light"
+                label="Om betting och avräkning"
+                text="Golfbetting är obligatoriskt för alla i upplagan. Poker är frivilligt - regleras direkt mellan de som deltog, och påverkar aldrig gruppens snittutlägg."
+              />
             </h2>
             <SettlementTable business={business} />
-            <p className="text-xs text-stone-400">
-              Poker är ett frivilligt sidospel - insatser/vinster regleras direkt mellan de
-              spelare som deltog, och påverkar aldrig gruppens gemensamma snittutlägg (som bara
-              beräknas på Utlägg-kategorin). Justering = utlägg minus gruppens snittutlägg, plus
-              Betting totalt (poker- och golfbetting-netto). Positivt betyder att spelaren ska få
-              pengar, negativt att spelaren ska betala.
-            </p>
           </section>
 
           {(() => {
