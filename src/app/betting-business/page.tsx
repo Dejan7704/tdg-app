@@ -149,6 +149,7 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
             <th className="px-4 py-2 font-medium">Poker</th>
             <th className="px-4 py-2 font-medium">Golfbetting</th>
             <th className="px-4 py-2 font-medium">Sweepstake</th>
+            <th className="px-4 py-2 font-medium">Betting totalt</th>
             <th className="px-4 py-2 font-medium">Justering</th>
           </tr>
         </thead>
@@ -162,6 +163,9 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
               <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
               <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbetting)}</td>
               <td className="px-4 py-2 text-stone-600">{formatSek(r.sweepstake)}</td>
+              <td className="px-4 py-2 font-medium text-stone-700">
+                {formatSek(r.poker + r.golfbetting + r.sweepstake)}
+              </td>
               <td
                 className={
                   "px-4 py-2 font-semibold " +
@@ -304,6 +308,7 @@ function SettlementTable({ business }: { business: BusinessYear }) {
             <th className="px-4 py-2 font-medium">Utlägg</th>
             <th className="px-4 py-2 font-medium">Poker</th>
             <th className="px-4 py-2 font-medium">Betting</th>
+            <th className="px-4 py-2 font-medium">Betting totalt</th>
             <th className="px-4 py-2 font-medium">Justering</th>
             <th className="px-4 py-2 font-medium">Avräkning</th>
           </tr>
@@ -317,6 +322,9 @@ function SettlementTable({ business }: { business: BusinessYear }) {
               <td className="px-4 py-2 text-stone-600">{r.utlagg.toLocaleString("sv-SE")} kr</td>
               <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
               <td className="px-4 py-2 text-stone-600">{formatSek(r.betting)}</td>
+              <td className="px-4 py-2 font-medium text-stone-700">
+                {formatSek(r.poker + r.betting)}
+              </td>
               <td
                 className={
                   "px-4 py-2 font-semibold " +
@@ -476,13 +484,17 @@ export default async function BettingBusinessPage({
 
           <section className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-              Utlägg, poker & avräkning {live.year}
+              Utlägg, betting & avräkning {live.year}
             </h2>
             <LiveSettlementTable live={live} />
             <p className="text-xs text-stone-400">
-              Justering = utlägg minus gruppens snittutlägg, plus poker-, golfbetting- och
-              sweepstake-netto. Positivt betyder att spelaren ska få pengar, negativt att
-              spelaren ska betala – preliminärt tills säsongen avslutas.
+              Poker och Sweepstake är frivilliga sidospel - alla nio är inte nödvändigtvis med
+              varje gång. Insatser/vinster regleras alltid direkt mellan de spelare som faktiskt
+              deltog i en given satsning eller omgång (deras netto räknas in individuellt i
+              Betting totalt/Justering ovan) - det påverkar aldrig gruppens gemensamma
+              snittutlägg, som bara beräknas på Utlägg-kategorin. Justering = utlägg minus
+              gruppens snittutlägg, plus Betting totalt. Positivt betyder att spelaren ska få
+              pengar, negativt att spelaren ska betala – preliminärt tills säsongen avslutas.
             </p>
           </section>
         </>
@@ -513,13 +525,15 @@ export default async function BettingBusinessPage({
 
           <section className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-              Utlägg, poker & avräkning {year}
+              Utlägg, betting & avräkning {year}
             </h2>
             <SettlementTable business={business} />
             <p className="text-xs text-stone-400">
-              Justering = utlägg minus gruppens snittutlägg, plus poker- och
-              betting-netto. Positivt betyder att spelaren ska få pengar, negativt att
-              spelaren ska betala.
+              Poker är ett frivilligt sidospel - insatser/vinster regleras direkt mellan de
+              spelare som deltog, och påverkar aldrig gruppens gemensamma snittutlägg (som bara
+              beräknas på Utlägg-kategorin). Justering = utlägg minus gruppens snittutlägg, plus
+              Betting totalt (poker- och golfbetting-netto). Positivt betyder att spelaren ska få
+              pengar, negativt att spelaren ska betala.
             </p>
           </section>
 
