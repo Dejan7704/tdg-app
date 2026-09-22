@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/data";
+import { getCountryFlag } from "@/lib/countryFlags";
 
 export default function HistorikPage() {
   const sorted = [...editions].sort((a, b) => b.year - a.year);
 
-  const uniqueCountries = new Set(editions.map((e) => e.country).filter(Boolean)).size;
+  // Sorterad lista över de unika länderna (inte bara antalet) - David bad
+  // 2026-09-22 om att flaggorna för samtliga listas i "Länder spelade
+  // i"-rutan, inte bara siffran.
+  const uniqueCountryList = Array.from(
+    new Set(editions.map((e) => e.country).filter((c): c is string => Boolean(c)))
+  ).sort((a, b) => a.localeCompare(b, "sv"));
+  const uniqueCountries = uniqueCountryList.length;
   const uniqueCourses = new Set(
     editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? []))
       .map((c) => c.trim())
@@ -22,7 +29,22 @@ export default function HistorikPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:max-w-md">
-        <Stat label="Länder spelade i" value={uniqueCountries} />
+        <Stat
+          label="Länder spelade i"
+          value={uniqueCountries}
+          extra={
+            <>
+              {uniqueCountryList.map((country) => {
+                const flag = getCountryFlag(country);
+                return flag ? (
+                  <span key={country} title={country}>
+                    {flag}
+                  </span>
+                ) : null;
+              })}
+            </>
+          }
+        />
         <Stat label="Unika banor spelade" value={uniqueCourses} />
       </div>
 
@@ -49,7 +71,20 @@ export default function HistorikPage() {
                   </Link>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-stone-600">
-                  <span>{e.country ?? <span className="italic text-stone-400">Land okänt</span>}</span>
+                  <span>
+                    {e.country ? (
+                      <>
+                        {getCountryFlag(e.country) && (
+                          <span aria-hidden="true" className="mr-1">
+                            {getCountryFlag(e.country)}
+                          </span>
+                        )}
+                        {e.country}
+                      </>
+                    ) : (
+                      <span className="italic text-stone-400">Land okänt</span>
+                    )}
+                  </span>
                   <span>{participants.length} spelare</span>
                   <span>
                     Vinnare:{" "}
@@ -123,11 +158,20 @@ export default function HistorikPage() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({
+  label,
+  value,
+  extra,
+}: {
+  label: string;
+  value: number;
+  extra?: React.ReactNode;
+}) {
   return (
     <div className="rounded-xl bg-tdg-gray-light p-4 text-center">
       <div className="text-2xl font-bold text-tdg-green">{value}</div>
       <div className="mt-1 text-xs text-stone-600">{label}</div>
+      {extra && <div className="mt-2 flex flex-wrap justify-center gap-1 text-lg">{extra}</div>}
     </div>
   );
 }
