@@ -18,9 +18,28 @@ import { getLiveBokslut, getSupabaseSeasonStats, type LiveBokslut } from "@/lib/
 import { RESULT_CATEGORIES } from "@/lib/betzExpz";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
-function formatSek(n: number): string {
+// David bad 2026-09-23 om att ta bort "kr"-enheten i alla Bokslut-tabellernas
+// belopps-celler (TotalsTable/LiveTotalsTable/SettlementTable/
+// LiveSettlementTable) - tar bara onödig plats, det är ändå tydligt att det
+// handlar om pengar där. `unit: false` styr det. Rond-korten (RoundCard/
+// LiveRoundCard) och löptext utanför tabellerna (sweepstake-pott som rullar
+// vidare, insats-raden i formuläret ovan) behåller "kr" oförändrat - det är
+// inte "bokslutstabeller" och läses som hela meningar där.
+function formatSek(n: number, opts?: { unit?: boolean }): string {
   const rounded = Math.round(n);
-  return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + " kr";
+  const unit = opts?.unit ?? true;
+  return (rounded > 0 ? "+" : "") + rounded.toLocaleString("sv-SE") + (unit ? " kr" : "");
+}
+
+// Kortnamn för avräkningscellen ("David H" istället för "David Hedlund") -
+// David bad om detta 2026-09-23 för att spara plats. Förnamn räcker inte
+// ensamt eftersom TDG har två spelare med samma förnamn (David Hedlund/David
+// Malmström) - första bokstaven i efternamnet disambiguerar. "TBD" (ingen
+// riktig spelare) lämnas oförändrad.
+function shortName(fullName: string): string {
+  if (fullName === TBD_ID) return fullName;
+  const parts = fullName.trim().split(/\s+/);
+  return parts.length < 2 ? (parts[0] ?? fullName) : `${parts[0]} ${parts[1][0]}`;
 }
 
 // Räknar ut föreslagna betalningar som nollställer samtliga spelares
@@ -104,6 +123,12 @@ type SettlementDisplay = {
   hasOutstanding: boolean;
 };
 
+// Omgjord 2026-09-23 på Davids begäran: bara den som ska BETALA får text i
+// sin cell, i det kompakta formatet "1,866 -> TBD" (siffra, tusentalsavgränsat
+// med komma precis som i Davids exempel, inte "kr", pil till kortnamnet på
+// mottagaren). Den som ska FÅ pengar behöver ingen text alls i sin cell -
+// "dubbeladmin" enligt David, informationen finns redan i motpartens
+// betalar-cell. Går varken att betala eller få (nollställd) visas "Kvitt".
 function settlementDisplay(
   rows: { playerId: string; playerName: string; justering: number }[]
 ): SettlementDisplay {
@@ -111,15 +136,14 @@ function settlementDisplay(
   const textByPlayer: Record<string, string> = {};
   for (const r of rows) {
     const pays = transactions.filter((t) => t.fromId === r.playerId);
-    const gets = transactions.filter((t) => t.toId === r.playerId);
-    const parts: string[] = [];
+    const getsSomething = transactions.some((t) => t.toId === r.playerId);
     if (pays.length > 0) {
-      parts.push(`Betalar ${pays.map((t) => `${t.amount.toLocaleString("sv-SE")} kr till ${t.toName}`).join(", ")}`);
+      textByPlayer[r.playerId] = pays
+        .map((t) => `${t.amount.toLocaleString("en-US")} -> ${shortName(t.toName)}`)
+        .join(", ");
+    } else {
+      textByPlayer[r.playerId] = getsSomething ? "" : "Kvitt";
     }
-    if (gets.length > 0) {
-      parts.push(`Får ${gets.map((t) => `${t.amount.toLocaleString("sv-SE")} kr av ${t.fromName}`).join(", ")}`);
-    }
-    textByPlayer[r.playerId] = parts.length > 0 ? parts.join(" · ") : "Kvitt";
   }
   return { textByPlayer, hasOutstanding: transactions.some((t) => t.toId === TBD_ID) };
 }
@@ -259,10 +283,10 @@ function LiveTotalsTable({ live }: { live: LiveBokslut }) {
                 </td>
                 {RESULT_CATEGORIES.map((cat) => (
                   <td key={cat} className="px-4 py-2 text-stone-600">
-                    {row[cat] ? formatSek(row[cat]!) : "–"}
+                    {row[cat] ? formatSek(row[cat]!, { unit: false }) : "–"}
                   </td>
                 ))}
-                <td className="px-4 py-2 font-semibold">{formatSek(sum)}</td>
+                <td className="px-4 py-2 font-semibold">{formatSek(sum, { unit: false })}</td>
               </tr>
             );
           })}
@@ -356,26 +380,26 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
                 <td className="px-4 py-2">
                   <LivePlayerLink playerId={r.playerId} playerName={r.playerName} />
                 </td>
-                <td className="px-4 py-2 text-stone-600">{formatSek(r.utlagg)}</td>
-                <td className="px-4 py-2 text-stone-600">{formatSek(r.golfInsats)}</td>
-                <td className="px-4 py-2 text-stone-600">{formatSek(r.sharedCost)}</td>
-                <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbettingVinster)}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.utlagg, { unit: false })}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.golfInsats, { unit: false })}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.sharedCost, { unit: false })}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.golfbettingVinster, { unit: false })}</td>
                 <td
                   className={
                     "px-4 py-2 font-medium " + (r.justeringPrimar >= 0 ? "text-tdg-green" : "text-red-600")
                   }
                 >
-                  {formatSek(r.justeringPrimar)}
+                  {formatSek(r.justeringPrimar, { unit: false })}
                 </td>
-                <td className="px-4 py-2 border-l border-stone-100 text-stone-600">{formatSek(r.sweepstake)}</td>
-                <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
+                <td className="px-4 py-2 border-l border-stone-100 text-stone-600">{formatSek(r.sweepstake, { unit: false })}</td>
+                <td className="px-4 py-2 text-stone-600">{formatSek(r.poker, { unit: false })}</td>
                 <td
                   className={
                     "px-4 py-2 border-l border-stone-100 font-semibold " +
                     (r.justeringTotal >= 0 ? "text-tdg-green" : "text-red-600")
                   }
                 >
-                  {formatSek(r.justeringTotal)}
+                  {formatSek(r.justeringTotal, { unit: false })}
                 </td>
                 <td className="px-4 py-2 text-stone-500">{settlement.textByPlayer[r.playerId]}</td>
               </tr>
@@ -487,10 +511,10 @@ function TotalsTable({ business }: { business: BusinessYear }) {
                 </td>
                 {CATEGORY_ORDER.map((cat) => (
                   <td key={cat} className="px-4 py-2 text-stone-600">
-                    {row[cat] ? formatSek(row[cat]!) : "–"}
+                    {row[cat] ? formatSek(row[cat]!, { unit: false }) : "–"}
                   </td>
                 ))}
-                <td className="px-4 py-2 font-semibold">{formatSek(sum)}</td>
+                <td className="px-4 py-2 font-semibold">{formatSek(sum, { unit: false })}</td>
               </tr>
             );
           })}
@@ -531,11 +555,11 @@ function SettlementTable({ business }: { business: BusinessYear }) {
               <td className="px-4 py-2">
                 <PlayerBadge nickname={r.nickname} />
               </td>
-              <td className="px-4 py-2 text-stone-600">{r.utlagg.toLocaleString("sv-SE")} kr</td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.poker)}</td>
-              <td className="px-4 py-2 text-stone-600">{formatSek(r.betting)}</td>
+              <td className="px-4 py-2 text-stone-600">{r.utlagg.toLocaleString("sv-SE")}</td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.poker, { unit: false })}</td>
+              <td className="px-4 py-2 text-stone-600">{formatSek(r.betting, { unit: false })}</td>
               <td className="px-4 py-2 font-medium text-stone-700">
-                {formatSek(r.poker + r.betting)}
+                {formatSek(r.poker + r.betting, { unit: false })}
               </td>
               <td
                 className={
@@ -543,7 +567,7 @@ function SettlementTable({ business }: { business: BusinessYear }) {
                   (r.justering >= 0 ? "text-tdg-green" : "text-red-600")
                 }
               >
-                {formatSek(r.justering)}
+                {formatSek(r.justering, { unit: false })}
               </td>
               <td className="px-4 py-2 text-stone-500">{r.note ?? "–"}</td>
             </tr>
