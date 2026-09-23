@@ -363,6 +363,8 @@ export type SupabaseSeasonStats = {
   year: number;
   /** "closed" först när "Bokslut <år>"-knappen tryckts på Betz & Expz-sidan - används av spelarsidans siffrutor (Upplagor spelade/Segrar/Bästa placering/Snittplacering) för att bara räkna med FÄRDIGA år, se getPlayerCareerTotals nedan. Diagrammen längre ner på spelarsidan/Bokslut-sidan räknar däremot in "open" också (uppdateras löpande). */
   status: "open" | "closed";
+  /** Fritext, t.ex. "Sverige" - null om inte ifyllt än. Tillagt 2026-09-23 för att kunna räkna in stängda Supabase-år i Projected winner-prognosens Sverige-historik. */
+  country: string | null;
   /** Totalt utbetalt i golfbetting/sweepstake, samtliga spelare - motsvarande getYearlyTotals().bettingTotal. */
   bettingTotal: number;
   /** Totalt registrerat utlägg, samtliga spelare - motsvarande getYearlyTotals().utlaggTotal. */
@@ -468,7 +470,14 @@ export async function getSupabaseSeasonStats(): Promise<SupabaseSeasonStats[]> {
         };
       }
 
-      return { year: edition.year, status: edition.status, bettingTotal, utlaggTotal, players: playersOut };
+      return {
+        year: edition.year,
+        status: edition.status,
+        country: edition.country,
+        bettingTotal,
+        utlaggTotal,
+        players: playersOut,
+      };
     })
   );
 

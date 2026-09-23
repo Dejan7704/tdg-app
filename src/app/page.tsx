@@ -1,15 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { editions, getWinner, getSegerrekord, getPlayerByNickname } from "@/lib/data";
-import { getProjectedWinner2026, PROJECTED_YEAR } from "@/lib/prognosis";
+import { getProjectedWinnerForNextSeason } from "@/lib/prognosis";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
-export default function Home() {
+// force-dynamic sedan 2026-09-23 (tidigare statisk sida) - "Projected
+// winner"-prognosen ska räknas om från Supabase varje sidladdning, så den
+// automatiskt hoppar fram ett år så fort "Bokslut <år>"-knappen tryckts på
+// Betz & Expz-sidan, se getProjectedWinnerForNextSeason i prognosis.ts.
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
   const latest = editions[editions.length - 1];
   const winner = editions[editions.length - 1] ? getWinner(latest) : undefined;
   const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
   const segerrekord = getSegerrekord().slice(0, 3);
-  const projected = getProjectedWinner2026();
+  const projected = await getProjectedWinnerForNextSeason();
 
   return (
     <div className="flex flex-col gap-8">
@@ -46,7 +52,7 @@ export default function Home() {
             nyckelsiffror förklaras i en (i)-tooltip istället för att lassa på
             texten i själva raden. Logik i src/lib/prognosis.ts. */}
         <p className="mt-1 text-white/85">
-          <span className="font-medium text-white">🔮 Projected winner {PROJECTED_YEAR}:</span>{" "}
+          <span className="font-medium text-white">🔮 Projected winner {projected.year}:</span>{" "}
           <Link
             href={`/spelare/${projected.entry.player.id}`}
             className="font-semibold text-tdg-yellow hover:underline"

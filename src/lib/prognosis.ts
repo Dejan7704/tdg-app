@@ -6,23 +6,30 @@ import {
   getPlayerHistory,
   getPlayerWinYears,
   getPlayerAveragePlacering,
+  EDITIONS_MAX_YEAR,
   type Player,
 } from "@/lib/data";
 import { getPlayerBettingWinsSeries } from "@/lib/business";
+import { getSupabaseSeasonStats, type SupabaseSeasonStats } from "@/lib/liveBokslut";
 
 // "Projected winner"-prognosen för nästa TDG-upplaga (David bad om detta
-// 2026-09-19). Bygger fyra delfaktorer per spelare, viktade enligt Davids
-// egna prioriteringar från den diskussionen:
+// 2026-09-19, formeln förenklad 2026-09-23 så den ordagrant matchar
+// tooltip-texten). Bygger fyra delfaktorer per spelare, viktade enligt
+// Davids egna prioriteringar:
 //
-//   1. Senaste formen + trend   40%  (viktigast - vad gör spelaren just nu)
-//   2. Karriärstatistik         25%  (segrar + snittplacering över alla år)
-//   3. Sverige-historik         20%  (TDG 2026 spelas i Sverige - kolla hur
-//                                     spelaren presterat de gånger tävlingen
-//                                     faktiskt hållits här: 2004-2010, 2020,
-//                                     2023 - alltså inte bara två år som
-//                                     ursprungligen diskuterat, utan nio)
-//   4. Golfbetting-form         15%  (färsk signal, men brusigare data - hålls
-//                                     medvetet lägst viktad)
+//   1. Senaste 3 årens TDG-placeringar   40%  (viktigast - vad gör spelaren
+//                                              just nu, rent snitt över de
+//                                              senaste 3 spelade upplagorna)
+//   2. Antal TDG-vinster totalt sett     25%  (ren vinsträkning över karriären)
+//   3. Sverige-historik                  20%  (TDG 2026 spelas i Sverige - kolla
+//                                              hur spelaren presterat de gånger
+//                                              tävlingen faktiskt hållits här:
+//                                              2004-2010, 2020, 2023 - alltså
+//                                              inte bara två år som ursprungligen
+//                                              diskuterat, utan nio)
+//   4. Golfbetting-form                  15%  (färsk signal, men brusigare
+//                                              data - hålls medvetet lägst
+//                                              viktad)
 //
 // Varje delfaktor normaliseras 0-100 över de 9 spelarna (bästa spelaren i
 // just den kategorin får 100, sämsta får 0, resten linjärt däremellan) innan
@@ -32,8 +39,9 @@ import { getPlayerBettingWinsSeries } from "@/lib/business";
 // Medvetet transparent/enkel poängmodell (inte ML, inte en svart låda) - på
 // Davids uttryckliga önskan, eftersom det ska gå att förklara i en kort
 // tooltip och vara kul att diskutera snarare än att kännas som ett facit.
+// Formeln ska alltid räkna exakt det tooltip-texten beskriver - inga dolda
+// delfaktorer utöver de fyra ovan.
 
-export const PROJECTED_YEAR = 2026;
 const HOST_COUNTRY = "Sverige";
 
 const WEIGHTS = {
@@ -43,13 +51,7 @@ const WEIGHTS = {
   bettingForm: 0.15,
 };
 
-// Inom "Senaste formen + trend": själva snittet väger tyngre än trendriktningen.
-const RECENT_FORM_SPLIT = { avg: 0.7, trend: 0.3 };
-// Inom "Karriärstatistik": vinstprocent och snittplacering vägs lika.
-const CAREER_SPLIT = { winRate: 0.5, avgPlacering: 0.5 };
-
-const RECENT_EDITIONS_COUNT = 5; // hur många senast spelade upplagor "formen" baseras på
-const TREND_EDITIONS_COUNT = 7; // hur många senast spelade upplagor trenden baseras på
+const RECENT_EDITIONS_COUNT = 3; // hur många senast spelade upplagor "formen" baseras på
 const RECENT_BETTING_YEARS_COUNT = 5; // hur många senaste betting-år som räknas
 
 /** Viktat snitt där nyaste värdet (index 0) väger tyngst, äldsta minst - vikter n, n-1, ..., 1. */
@@ -66,22 +68,6 @@ function weightedAverage(newestFirst: number[]): number | null {
   return sumWeighted / sumWeight;
 }
 
-/** Lutningen (minsta-kvadrat-linjär regression) för en serie mot dess egna kronologiska index - negativ lutning för placering betyder att spelaren förbättrats (lägre placeringssiffra är bättre). */
-function linearSlope(values: number[]): number {
-  const n = values.length;
-  if (n < 2) return 0;
-  const xs = values.map((_, i) => i);
-  const meanX = xs.reduce((a, b) => a + b, 0) / n;
-  const meanY = values.reduce((a, b) => a + b, 0) / n;
-  let num = 0;
-  let den = 0;
-  for (let i = 0; i < n; i++) {
-    num += (xs[i] - meanX) * (values[i] - meanY);
-    den += (xs[i] - meanX) ** 2;
-  }
-  return den === 0 ? 0 : num / den;
-}
-
 /** Min-max-normaliserar en lista råvärden till 0-100. `lowerIsBetter` styr riktningen (placering: lägre=bättre, vinstprocent: högre=bättre). Om alla spelare har exakt samma värde får alla 100 (ingen särskiljer sig, så ingen ska straffas). */
 function normalize(values: number[], lowerIsBetter: boolean): number[] {
   const min = Math.min(...values);
@@ -96,11 +82,10 @@ function normalize(values: number[], lowerIsBetter: boolean): number[] {
 
 type PlayerRawStats = {
   player: Player;
-  recentAvgPlacering: number; // viktat snitt, senaste upp till 5 spelade upplagor
+  recentAvgPlacering: number; // viktat snitt, senaste upp till 3 spelade upplagor
   recentEditionsUsed: number;
-  trendSlope: number; // negativ = förbättring
   winRate: number; // segrar / spelade upplagor
-  careerAvgPlacering: number;
+  careerAvgPlacering: number; // visas i tooltip-texten, ingår inte längre i själva poängen
   totalSegrar: number;
   totalUpplagor: number;
   swedenAvgPlacering: number; // med fallback till karriärsnitt om spelaren aldrig spelat i Sverige (borde inte hända - alla 9 var med redan 2004-2010)
@@ -108,26 +93,55 @@ type PlayerRawStats = {
   bettingWeightedAvg: number; // viktat snitt antal golfbetting-vinster/år, senaste upp till 5 betting-år
 };
 
-function computeRawStats(player: Player): PlayerRawStats {
+/**
+ * `closedSeasons` = stängda Supabase-upplagor (från "Bokslut <år>"-knappen på
+ * Betz & Expz, se getSupabaseSeasonStats), kronologiskt stigande, tillagt
+ * 2026-09-23 så prognosen räknas om utifrån nyss avslutade TDG-upplagor
+ * istället för att stanna på de statiska filerna t.o.m. 2025. Tom lista ger
+ * exakt samma resultat som innan (bara statisk historik).
+ */
+function computeRawStats(player: Player, closedSeasons: SupabaseSeasonStats[]): PlayerRawStats {
   const history = getPlayerHistory(player.id); // kronologisk ordning, bara upplagor spelaren faktiskt spelade
 
-  const recentSlice = history.slice(-RECENT_EDITIONS_COUNT);
-  const recentNewestFirst = [...recentSlice].reverse().map((h) => h.standing.placering);
-  const recentAvgPlacering = weightedAverage(recentNewestFirst) ?? getPlayerAveragePlacering(player.id) ?? 5;
+  // Kombinerad placeringshistorik: statiska upplagor + stängda Supabase-år
+  // spelaren faktiskt deltog i och har en registrerad placering för.
+  const combinedPlaceringar: { year: number; placering: number }[] = [
+    ...history.map((h) => ({ year: h.year, placering: h.standing.placering })),
+  ];
+  for (const season of closedSeasons) {
+    const p = season.players[player.id];
+    if (p?.participated && p.placering != null) {
+      combinedPlaceringar.push({ year: season.year, placering: p.placering });
+    }
+  }
+  combinedPlaceringar.sort((a, b) => a.year - b.year);
 
-  const trendSlice = history.slice(-TREND_EDITIONS_COUNT).map((h) => h.standing.placering);
-  const trendSlope = linearSlope(trendSlice);
+  const recentSlice = combinedPlaceringar.slice(-RECENT_EDITIONS_COUNT);
+  const recentNewestFirst = [...recentSlice].reverse().map((h) => h.placering);
+  const recentAvgPlacering =
+    weightedAverage(recentNewestFirst) ?? getPlayerAveragePlacering(player.id) ?? 5;
 
-  const totalUpplagor = history.length;
-  const totalSegrar = getPlayerWinYears(player.id).length;
+  const totalUpplagor = combinedPlaceringar.length;
+  const closedSeasonWins = closedSeasons.filter(
+    (season) => season.players[player.id]?.placering === 1
+  ).length;
+  const totalSegrar = getPlayerWinYears(player.id).length + closedSeasonWins;
   const winRate = totalUpplagor > 0 ? totalSegrar / totalUpplagor : 0;
-  const careerAvgPlacering = getPlayerAveragePlacering(player.id) ?? 5;
+  const careerAvgPlacering =
+    combinedPlaceringar.length > 0
+      ? combinedPlaceringar.reduce((acc, h) => acc + h.placering, 0) / combinedPlaceringar.length
+      : (getPlayerAveragePlacering(player.id) ?? 5);
 
   const swedenPlaceringar: number[] = [];
   for (const e of editions) {
     if (e.country !== HOST_COUNTRY) continue;
     const standing = getMainSection(e)?.standings.find((s) => player.nicknames.includes(s.name));
     if (standing) swedenPlaceringar.push(standing.placering);
+  }
+  for (const season of closedSeasons) {
+    if (season.country !== HOST_COUNTRY) continue;
+    const p = season.players[player.id];
+    if (p?.participated && p.placering != null) swedenPlaceringar.push(p.placering);
   }
   const swedenAppearances = swedenPlaceringar.length;
   const swedenAvgPlacering =
@@ -136,15 +150,24 @@ function computeRawStats(player: Player): PlayerRawStats {
       : careerAvgPlacering; // fallback: ingen Sverige-data -> neutralt, använd karriärsnittet istället
 
   const bettingSeries = getPlayerBettingWinsSeries(player.id); // kronologisk ordning, bara år med betting-data
-  const bettingRecent = bettingSeries.slice(-RECENT_BETTING_YEARS_COUNT);
-  const bettingNewestFirst = [...bettingRecent].reverse().map((s) => s.value ?? 0);
+  const combinedBetting: { year: number; value: number }[] = [
+    ...bettingSeries.map((s) => ({ year: s.year, value: s.value ?? 0 })),
+  ];
+  for (const season of closedSeasons) {
+    const p = season.players[player.id];
+    if (!p) continue;
+    const winCount = Object.values(p.categoryWinCounts).reduce((a, b) => a + (b ?? 0), 0);
+    combinedBetting.push({ year: season.year, value: winCount });
+  }
+  combinedBetting.sort((a, b) => a.year - b.year);
+  const bettingRecent = combinedBetting.slice(-RECENT_BETTING_YEARS_COUNT);
+  const bettingNewestFirst = [...bettingRecent].reverse().map((s) => s.value);
   const bettingWeightedAvg = weightedAverage(bettingNewestFirst) ?? 0;
 
   return {
     player,
     recentAvgPlacering,
     recentEditionsUsed: recentSlice.length,
-    trendSlope,
     winRate,
     careerAvgPlacering,
     totalSegrar,
@@ -167,20 +190,18 @@ export type ProjectedWinnerEntry = {
   stats: PlayerRawStats;
 };
 
-/** Räknar ut hela prognosen för samtliga 9 spelare, rankade fallande efter totalpoäng. Vid exakt lika totalpoäng avgör flest karriärsegrar, sedan alfabetiskt - rent deterministiskt så resultatet inte skiftar mellan sidladdningar. */
-export function getProjectedWinnerRanking(): ProjectedWinnerEntry[] {
-  const raw = players.map((p) => computeRawStats(p));
+/** Räknar ut hela prognosen för samtliga 9 spelare, rankade fallande efter totalpoäng. Vid exakt lika totalpoäng avgör flest karriärsegrar, sedan alfabetiskt - rent deterministiskt så resultatet inte skiftar mellan sidladdningar. `closedSeasons` = stängda Supabase-upplagor att räkna in utöver den statiska historiken, se computeRawStats. */
+export function getProjectedWinnerRanking(closedSeasons: SupabaseSeasonStats[] = []): ProjectedWinnerEntry[] {
+  const raw = players.map((p) => computeRawStats(p, closedSeasons));
 
   const recentAvgNorm = normalize(raw.map((r) => r.recentAvgPlacering), true);
-  const trendNorm = normalize(raw.map((r) => r.trendSlope), true);
   const winRateNorm = normalize(raw.map((r) => r.winRate), false);
-  const careerAvgNorm = normalize(raw.map((r) => r.careerAvgPlacering), true);
   const swedenNorm = normalize(raw.map((r) => r.swedenAvgPlacering), true);
   const bettingNorm = normalize(raw.map((r) => r.bettingWeightedAvg), false);
 
   const entries: ProjectedWinnerEntry[] = raw.map((r, i) => {
-    const recentForm = RECENT_FORM_SPLIT.avg * recentAvgNorm[i] + RECENT_FORM_SPLIT.trend * trendNorm[i];
-    const careerStats = CAREER_SPLIT.winRate * winRateNorm[i] + CAREER_SPLIT.avgPlacering * careerAvgNorm[i];
+    const recentForm = recentAvgNorm[i];
+    const careerStats = winRateNorm[i];
     const swedenHistory = swedenNorm[i];
     const bettingForm = bettingNorm[i];
     const totalScore =
@@ -203,14 +224,33 @@ export function getProjectedWinnerRanking(): ProjectedWinnerEntry[] {
   });
 }
 
-/** Bekvämlighetsfunktion: bara favoriten (etta i rankingen), plus en kort svensk motiveringstext att visa i en tooltip. */
-export function getProjectedWinner2026(): { entry: ProjectedWinnerEntry; explanation: string } {
-  const ranking = getProjectedWinnerRanking();
+/**
+ * Hela "Projected winner"-prognosen för nästa TDG-upplaga, inklusive vilket
+ * år prognosen faktiskt gäller. Läser stängda Supabase-upplagor (via
+ * getSupabaseSeasonStats) och räknar med dem både i formeln (computeRawStats)
+ * och i vilket år som räknas som "nästa" - så prognosen blir "2027" så fort
+ * "Bokslut 2026"-knappen tryckts på Betz & Expz-sidan, utan att någon behöver
+ * röra koden. Tillagd 2026-09-23 på Davids begäran. Körs bara server-side
+ * (async, läser Supabase) - se src/app/page.tsx som await:ar den direkt i en
+ * force-dynamic Server Component så den alltid räknas om per sidladdning.
+ */
+export async function getProjectedWinnerForNextSeason(): Promise<{
+  year: number;
+  entry: ProjectedWinnerEntry;
+  explanation: string;
+}> {
+  const allSeasons = await getSupabaseSeasonStats();
+  const closedSeasons = allSeasons.filter((s) => s.status === "closed");
+
+  const latestClosedYear = closedSeasons.reduce((max, s) => Math.max(max, s.year), EDITIONS_MAX_YEAR);
+  const year = latestClosedYear + 1;
+
+  const ranking = getProjectedWinnerRanking(closedSeasons);
   const entry = ranking[0];
   const s = entry.stats;
   const explanation =
-    `Beräknat utifrån senaste TDG total resultaten (40%), Antal TDG vinster (25%), historik vid TDG Sverige-upplagor (20%) och TDG golfbetting vinster (15%). ` +
-    `${entry.player.fullName}: snitt ${s.recentAvgPlacering.toFixed(1)} de senaste ${s.recentEditionsUsed} spelade upplagorna, ${s.totalSegrar} segrar totalt (snitt ${s.careerAvgPlacering.toFixed(1)} över ${s.totalUpplagor} upplagor), ` +
+    `Beräknat utifrån senaste 3 årens TDG placeringar (40%), Antal TDG vinster totalt sett (25%), historik vid TDG Sverige-upplagor (20%) och TDG golfbetting vinster (15%). ` +
+    `${entry.player.fullName}: snittplacering ${s.recentAvgPlacering.toFixed(1)} de senaste ${s.recentEditionsUsed} spelade upplagorna, ${s.totalSegrar} segrar totalt ` +
     `och snitt ${s.swedenAvgPlacering.toFixed(1)} vid de ${s.swedenAppearances} upplagor som spelats i Sverige. Obs: en lekfull uppskattning, inget facit!`;
-  return { entry, explanation };
+  return { year, entry, explanation };
 }
