@@ -233,7 +233,19 @@ const HUVUDKATEGORI_ORDER: Entry["huvudkategori"][] = [
 // inget eget registreringstillfälle - de räknas fram på nytt varje gång sidan
 // laddas, det finns ingen riktig "created_at" att visa - därför "–" i
 // Datum-kolumnen för dem (samma poster som redan är märkta med "Auto"-badgen).
-function EntriesTable({ entries }: { entries: Entry[] }) {
+// `onRequestDelete` skickas bara in från den pågående säsongens tabell
+// (se call sites längre ner) - arkivvyn för stängda år får ingen
+// radera-knapp, den ska förbli read-only. David bad om radera-knappen
+// 2026-09-23, framförallt för att kunna rätta felregistreringar (t.ex.
+// dubbla golfbetting-insatser) själv utan att behöva be mig ändra direkt i
+// databasen.
+function EntriesTable({
+  entries,
+  onRequestDelete,
+}: {
+  entries: Entry[];
+  onRequestDelete?: (entry: Entry) => void;
+}) {
   if (entries.length === 0) {
     return (
       <p className="rounded-xl bg-tdg-gray-light p-6 text-sm text-stone-500">
@@ -250,6 +262,11 @@ function EntriesTable({ entries }: { entries: Entry[] }) {
             <th className="px-4 py-2 font-medium">Kategori</th>
             <th className="px-4 py-2 font-medium">Datum</th>
             <th className="px-4 py-2 text-right font-medium">Belopp</th>
+            {onRequestDelete && (
+              <th className="px-3 py-2">
+                <span className="sr-only">Åtgärd</span>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -260,7 +277,7 @@ function EntriesTable({ entries }: { entries: Entry[] }) {
               <Fragment key={huvudkategori}>
                 <tr className="border-t border-stone-200 bg-tdg-gray-light">
                   <td
-                    colSpan={4}
+                    colSpan={onRequestDelete ? 5 : 4}
                     className="px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-tdg-green"
                   >
                     {huvudkategori} ({group.length})
@@ -296,6 +313,32 @@ function EntriesTable({ entries }: { entries: Entry[] }) {
                     >
                       {formatSek(e.belopp)}
                     </td>
+                    {onRequestDelete && (
+                      <td className="px-3 py-2 text-right">
+                        {e.deletable && (
+                          <button
+                            type="button"
+                            onClick={() => onRequestDelete(e)}
+                            title="Radera post"
+                            aria-label={`Radera ${e.kategori ?? e.detalj} för ${e.playerName}`}
+                            className="rounded-lg p-1.5 text-stone-400 transition hover:bg-red-50 hover:text-red-600"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              className="h-4 w-4"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </Fragment>
@@ -503,6 +546,38 @@ export default function UtlaggPage() {
     }
     setEntries((prev) => [mapEntryRow(data as EntryRow), ...prev]);
     return true;
+  }
+
+  // --- Radera post (David bad om detta 2026-09-23, som ett sätt att själv
+  // kunna rätta felregistreringar - t.ex. sin egen dubbla golfbetting-insats
+  // - utan att behöva be mig ändra direkt i databasen).Föregås alltid av en
+  // bekräftelse-popup (se modalen längst ner i JSX:en), aldrig en direkt
+  // radering vid klick. `deletingEntry.deletable` pekar ut vilken tabell och
+  // vilket id posten faktiskt ligger på (entries eller sweepstake_bets) - se
+  // Entry["deletable"] i betzExpz.ts. Auto-poster (golfbetting-vinster,
+  // sweepstake-utbetalningar) saknar `deletable` och får aldrig någon
+  // radera-knapp i EntriesTable ovan, de finns bara framräknade i minnet.
+  const [deletingEntry, setDeletingEntry] = useState<Entry | null>(null);
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+
+  async function confirmDeleteEntry() {
+    if (!deletingEntry?.deletable || deleteSubmitting) return;
+    setDeleteSubmitting(true);
+    const { table, id } = deletingEntry.deletable;
+    const { error } = await supabase.from(table).delete().eq("id", id);
+    setDeleteSubmitting(false);
+    if (error) {
+      console.error(error);
+      alert("Kunde inte radera posten - försök igen.");
+      return;
+    }
+    if (table === "entries") {
+      setEntries((prev) => prev.filter((e) => e.deletable?.table !== "entries" || e.deletable.id !== id));
+    } else {
+      setSweepstakeBets((prev) => prev.filter((b) => b.id !== id));
+    }
+    showToast(`${deletingEntry.kategori ?? deletingEntry.detalj} raderad för ${deletingEntry.playerName}`);
+    setDeletingEntry(null);
   }
 
   // --- Golfbetting (bara insats - vinster räknas fram automatiskt, se Resultat-rutan) ---
@@ -1321,7 +1396,7 @@ export default function UtlaggPage() {
             Inga poster registrerade ännu. Använd formulären ovan för att komma igång.
           </p>
         ) : (
-          <EntriesTable entries={allEntries} />
+          <EntriesTable entries={allEntries} onRequestDelete={setDeletingEntry} />
         )}
       </section>
 
@@ -1377,6 +1452,53 @@ export default function UtlaggPage() {
         >
           <span className="mr-1.5 inline-block">✓</span>
           {toast}
+        </div>
+      )}
+
+      {/* Radera-bekräftelse - popup som David bad om 2026-09-23, öppnas via
+          papperskorgs-knappen i EntriesTable ovan (bara på pågående säsongs
+          tabell, se onRequestDelete). Ingen radering sker förrän man
+          uttryckligen bekräftar här. */}
+      {deletingEntry && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 p-4"
+          onClick={() => !deleteSubmitting && setDeletingEntry(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-semibold text-stone-900">Radera post?</h3>
+            <p className="mt-2 text-sm text-stone-600">
+              Vill du radera{" "}
+              <span className="font-medium text-stone-900">
+                {deletingEntry.kategori ?? deletingEntry.detalj}
+              </span>{" "}
+              ({formatSek(deletingEntry.belopp)}) för{" "}
+              <span className="font-medium text-stone-900">{deletingEntry.playerName}</span>? Detta går
+              inte att ångra.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setDeletingEntry(null)}
+                disabled={deleteSubmitting}
+                className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-medium text-stone-600 transition hover:bg-stone-50 disabled:opacity-60"
+              >
+                Avbryt
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteEntry}
+                disabled={deleteSubmitting}
+                className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
+              >
+                {deleteSubmitting ? "Raderar…" : "Ja, radera"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

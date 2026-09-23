@@ -77,6 +77,16 @@ export type Entry = {
   belopp: number;
   /** Skiljer poster spelarna faktiskt knappat in från poster appen räknat fram själv (golfbetting-vinster + sweepstake-utbetalningar, se Resultat-rutan). Rent visuellt i tabellen - påverkar inte beloppen. */
   auto?: boolean;
+  /**
+   * Var i databasen posten faktiskt ligger lagrad, för radera-knappen (David
+   * bad om detta 2026-09-23). Saknas (undefined) för `auto`-poster - de har
+   * ingen egen rad, bara framräknade varje sidladdning, och kan därför aldrig
+   * raderas. Sweepstake-insatser lagras i `sweepstake_bets`-tabellen (inte
+   * `entries`), med sitt EGNA id (inte det förskjutna 1_000_000+-nummer som
+   * `id`-fältet ovan använder för att inte krocka med andra poster i listan)
+   * - därför en separat `table`+`id` här istället för att återanvända `id`.
+   */
+  deletable?: { table: "entries" | "sweepstake_bets"; id: number };
 };
 
 export type RoundResult = {
@@ -103,6 +113,7 @@ export function mapEntryRow(row: EntryRow): Entry {
     detalj: row.detalj,
     kategori: row.kategori ?? undefined,
     belopp: row.belopp,
+    deletable: { table: "entries", id: row.id },
   };
 }
 
@@ -285,6 +296,7 @@ export function computeSweepstakeInsatsEntries(sweepstakeBets: SweepstakeBet[]):
     )})`,
     kategori: CATEGORY_LABELS[b.kategori],
     belopp: -b.belopp,
+    deletable: { table: "sweepstake_bets", id: b.id },
   }));
 }
 
