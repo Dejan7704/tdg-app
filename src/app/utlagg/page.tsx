@@ -125,6 +125,81 @@ function AmountField({
   );
 }
 
+// Hopfällbar ruta - David bad om detta 2026-09-23 eftersom sidan blivit
+// ganska lång på mobil och man ofta bara vill åt EN av funktionsrutorna
+// (t.ex. bara registrera ett pokerresultat) utan att scrolla förbi allt
+// annat. Startar hopfälld (bara rubriken syns), och varje ruta har sitt
+// eget oberoende state - flera kan vara öppna samtidigt, det är medvetet
+// ingen "ren" accordion (där en ruta stängs när en annan öppnas), eftersom
+// man ofta vill fylla i t.ex. både Golfbetting och Resultat-rutan i samma
+// svep. Gäller både mobil och desktop, för enkelhetens skull (samma
+// komponent/beteende överallt) - även om själva problemet (lång scroll) är
+// störst på mobil. Kommer INTE ihåg vilken ruta som var öppen mellan
+// sidladdningar (ren React-state) - kan läggas till senare om det visar sig
+// irriterande i praktiken.
+//
+// I hopfällt läge ska rutan fortfarande se ut/kännas som toppen av den
+// befintliga gröna/gråa rutan (David var tydlig med detta, med en
+// skärmdump som referens) - därför ligger `bg-tdg-gray-light`/`rounded-xl`
+// på den YTTRE containern (oavsett öppet/stängt läge), inte bara på
+// innehållet. Hela rubrikraden är klickbar (inte bara en liten pil), för
+// att vara lättare att träffa på mobilen.
+function CollapsibleSection({
+  title,
+  extra,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  extra?: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="overflow-hidden rounded-xl bg-tdg-gray-light">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((o) => !o);
+          }
+        }}
+        className="flex cursor-pointer select-none items-center justify-between gap-2 p-4"
+      >
+        <span className="flex items-center text-sm font-semibold uppercase tracking-wide text-tdg-green">
+          {title}
+          {extra && (
+            // stopPropagation så ett klick på t.ex. (i)-ikonen inte också
+            // fäller till/från hela rutan.
+            <span onClick={(e) => e.stopPropagation()}>{extra}</span>
+          )}
+        </span>
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+          className={
+            "h-5 w-5 flex-shrink-0 text-tdg-green transition-transform " +
+            (open ? "rotate-180" : "")
+          }
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+      {open && <div className="flex flex-col gap-3 px-4 pb-4">{children}</div>}
+    </div>
+  );
+}
+
 // Den delade poster-tabellen - används både för den pågående säsongens
 // löpande lista och för att visa upp ett arkiverat års ögonblicksbild
 // (read-only i praktiken i båda fallen, arkivvyn har bara inga formulär
@@ -901,10 +976,7 @@ export default function UtlaggPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Golfbetting - bara insats */}
-        <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
-            Golfbetting
-          </h2>
+        <CollapsibleSection title="Golfbetting">
           <p className="text-xs text-stone-500">
             Bara årets insats registreras här - vinster per kategori räknas fram automatiskt
             från Resultat-rutan längst ner. En insats per spelare och säsong.
@@ -934,13 +1006,10 @@ export default function UtlaggPage() {
               Alla spelare har redan registrerat sin insats för TDG {activeYear}.
             </p>
           )}
-        </div>
+        </CollapsibleSection>
 
         {/* Pokerbetting */}
-        <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
-            Pokerbetting
-          </h2>
+        <CollapsibleSection title="Pokerbetting">
           <SelectField label="Spelare" value={pokerSpelare} onChange={setPokerSpelare}>
             <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
@@ -989,11 +1058,10 @@ export default function UtlaggPage() {
           >
             {pokerSubmitting ? "Registrerar…" : "Registrera"}
           </button>
-        </div>
+        </CollapsibleSection>
 
         {/* Utlägg */}
-        <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">Utlägg</h2>
+        <CollapsibleSection title="Utlägg">
           <SelectField label="Spelare" value={utlaggSpelare} onChange={setUtlaggSpelare}>
             <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
@@ -1027,18 +1095,19 @@ export default function UtlaggPage() {
           >
             {utlaggSubmitting ? "Registrerar…" : "Registrera"}
           </button>
-        </div>
+        </CollapsibleSection>
 
         {/* Sweepstake - fri insats, ingen Vinst-knapp */}
-        <div className="flex flex-col gap-3 rounded-xl bg-tdg-gray-light p-4">
-          <h2 className="flex items-center text-sm font-semibold uppercase tracking-wide text-tdg-green">
-            Sweepstake
+        <CollapsibleSection
+          title="Sweepstake"
+          extra={
             <InfoTooltip
               variant="light"
               label="Om Sweepstake"
               text="Valfritt sidospel, oberoende av golfbettingens insats. Gissa vem som vinner en kategori en given runda - vinnaren (eller de som gissat rätt, delat lika) tar hem hela potten automatiskt när rondresultatet registrerats."
             />
-          </h2>
+          }
+        >
           <SelectField label="Vem satsar" value={sweepBettor} onChange={setSweepBettor}>
             <option value="">Välj spelare…</option>
             {activePlayers.map((p) => (
@@ -1092,7 +1161,7 @@ export default function UtlaggPage() {
           >
             {sweepSubmitting ? "Registrerar…" : "Registrera satsning"}
           </button>
-        </div>
+        </CollapsibleSection>
       </div>
 
       {/* Resultat per golfrunda - facit som golfbetting-vinsterna och
@@ -1100,17 +1169,14 @@ export default function UtlaggPage() {
           (inte del av 3-kolumnsgridden) eftersom den rymmer mycket mer
           innehåll (alla 9 spelares nettoscore + 5 kategorivinnare) än de
           andra rutorna. */}
-      <section className="rounded-xl bg-tdg-gray-light p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
-          Resultat per golfrunda
-        </h2>
-        <p className="mt-1 text-xs text-stone-500">
+      <CollapsibleSection title="Resultat per golfrunda">
+        <p className="text-xs text-stone-500">
           Facit för en runda - nettoscore för samtliga 9 spelare, plus vem som vann varje
           betting-kategori. Poängbogey (tävlingens officiella huvudresultat) registreras inte
           här, det hanteras separat som idag.
         </p>
 
-        <div className="mt-3 max-w-xs">
+        <div className="max-w-xs">
           <SelectField
             label="Runda"
             value={String(resultRunda)}
@@ -1190,7 +1256,7 @@ export default function UtlaggPage() {
               ? "Uppdatera resultat"
               : "Registrera resultat"}
         </button>
-      </section>
+      </CollapsibleSection>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
