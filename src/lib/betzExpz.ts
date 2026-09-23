@@ -191,6 +191,52 @@ export function computeAutoEntries(
   return out;
 }
 
+export type CategoryWin = { playerId: string; category: BettingCategory };
+
+// Samma "vem vann vilken kategori vilken runda"-logik som computeAutoEntries
+// ovan, men returnerar en enkel lista vinsthändelser (spelare + kategori)
+// istället för färdigformaterade Entry-texter/belopp - tillagd 2026-09-23 för
+// att kunna bygga "Antal golfbetting-vinster per år"-stapeldiagrammet på
+// spelarsidan även för en pågående/avslutad säsong i Supabase (se
+// getSupabaseSeasonStats i liveBokslut.ts), på samma sätt som diagrammet
+// redan räknar kategorivinster ur de statiska business-*.json-filerna.
+// Sweepstake-utbetalningar räknas här som en vinst i kategorin "sweepstake"
+// (oavsett vilken av de fem golfkategorierna gissningen gällde) - samma
+// modell som de historiska 2016-2018-filerna använder (ett netto per runda,
+// inte per gissad kategori).
+export function computeCategoryWins(
+  roundResults: Record<number, RoundResult>,
+  sweepstakeBets: SweepstakeBet[],
+  roundCount = 4
+): CategoryWin[] {
+  const out: CategoryWin[] = [];
+
+  for (const kategori of RESULT_CATEGORIES) {
+    let carry = 0;
+    for (let runda = 1; runda <= roundCount; runda++) {
+      const result = roundResults[runda];
+      const winnerId = result?.winners[kategori];
+      if (!winnerId) continue;
+
+      out.push({ playerId: winnerId, category: kategori });
+
+      const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
+      const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
+      if (pot === 0) continue;
+
+      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      if (winners.length === 0) {
+        carry = pot;
+        continue;
+      }
+
+      carry = 0;
+      for (const w of winners) out.push({ playerId: w.bettorId, category: "sweepstake" });
+    }
+  }
+  return out;
+}
+
 // Sweepstake-insatserna visas också i tabellen (manuellt registrerade, till
 // skillnad från vinsterna ovan som räknas fram) - egen funktion av samma
 // anledning som computeAutoEntries.

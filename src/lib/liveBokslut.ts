@@ -1,13 +1,16 @@
 import { supabase, type EditionRow, type EntryRow, type RoundResultRow, type SweepstakeBetRow } from "@/lib/supabase";
 import { players } from "@/lib/data";
-import { type BettingCategory } from "@/lib/business";
+import { type BettingCategory, CATEGORY_ORDER } from "@/lib/business";
 import {
   RESULT_CATEGORIES,
+  SEASON_START_YEAR,
   GOLF_VINST_DEFAULT,
   mapEntryRow,
   mapSweepstakeBetRow,
   mapRoundResultRows,
   buildAllEntries,
+  computeAutoEntries,
+  computeCategoryWins,
   playerName,
   roundNumbers,
 } from "@/lib/betzExpz";
@@ -274,4 +277,143 @@ export async function getLiveEditionStandings(): Promise<LiveEditionStandings | 
     roundsRegistered,
     standings,
   };
+}
+
+// --- Historikdiagrammens Supabase-år (tillagd 2026-09-23) - David ville att
+// Bokslut-sidans "Totalt pengaflöde per år"-diagram och de tre diagrammen på
+// varje spelares detaljsida (placering/nettosnitt, kategorivinster,
+// ackumulerad betting/utlägg) ska kompletteras med TDG 2026 och framåt,
+// precis som Historik-sidan redan gör för de tabeller den visar. Samma
+// arkitekturval som där: de gamla åren (t.o.m. 2025) kommer fortfarande från
+// de statiska business-*.json/editions.json-filerna (rörs inte alls här) -
+// det här lagret täcker bara år från och med SEASON_START_YEAR, oavsett om
+// den editionen är öppen (pågående säsong) eller stängd (arkiverad via
+// "Bokslut"-knappen). Att skriva om de statiska filerna vid varje Bokslut
+// hade krävt att en serverless-funktion committar till git-repot (Vercel har
+// inget skrivbart filsystem i produktion) - att läsa Supabase direkt, precis
+// som den öppna säsongen redan gör, är den väg som faktiskt fungerar.
+export type SupabaseSeasonPlayerStats = {
+  /** 1-baserad nettoslag-placering, null om spelaren saknar registrerad rond. */
+  placering: number | null;
+  /** false om spelaren står i editionens non_participants - används för att bryta diagramlinjer, som getPlayerMissedYears gör för de statiska åren. */
+  participated: boolean;
+  nettoAvg: number | null;
+  /** Antal golfbetting-/sweepstake-vinster per kategori, se computeCategoryWins. */
+  categoryWinCounts: Partial<Record<BettingCategory, number>>;
+  /** Summan av spelarens automatiskt framräknade golfbetting-/sweepstake-vinster (kr), motsvarande de historiska årens r.wins-summa. */
+  bettingWon: number;
+  /** Summan av spelarens manuellt registrerade utläggsposter (kr). */
+  utlagg: number;
+};
+
+export type SupabaseSeasonStats = {
+  year: number;
+  /** Totalt utbetalt i golfbetting/sweepstake, samtliga spelare - motsvarande getYearlyTotals().bettingTotal. */
+  bettingTotal: number;
+  /** Totalt registrerat utlägg, samtliga spelare - motsvarande getYearlyTotals().utlaggTotal. */
+  utlaggTotal: number;
+  players: Record<string, SupabaseSeasonPlayerStats>;
+};
+
+export async function getSupabaseSeasonStats(): Promise<SupabaseSeasonStats[]> {
+  const { data: editionRows, error } = await supabase
+    .from("editions")
+    .select("*")
+    .gte("year", SEASON_START_YEAR)
+    .order("year", { ascending: true });
+  if (error || !editionRows || editionRows.length === 0) return [];
+
+  const playerIdByName = new Map(players.map((p) => [p.fullName, p.id]));
+
+  const results = await Promise.all(
+    (editionRows as EditionRow[]).map(async (edition): Promise<SupabaseSeasonStats | null> => {
+      const [entriesRes, betsRes, resultsRes] = await Promise.all([
+        supabase.from("entries").select("*").eq("edition_id", edition.id),
+        supabase.from("sweepstake_bets").select("*").eq("edition_id", edition.id),
+        supabase.from("round_results").select("*").eq("edition_id", edition.id),
+      ]);
+      if (entriesRes.error || betsRes.error || resultsRes.error) return null;
+
+      const entries = (entriesRes.data as EntryRow[]).map(mapEntryRow);
+      const sweepstakeBets = (betsRes.data as SweepstakeBetRow[]).map(mapSweepstakeBetRow);
+      const roundResults = mapRoundResultRows(resultsRes.data as RoundResultRow[]);
+      const roundCount = edition.round_count;
+      const nonParticipants = edition.non_participants ?? [];
+      const activePlayers = players.filter((p) => !nonParticipants.includes(p.id));
+
+      // Placering + nettosnitt - samma sortering/logik som
+      // getLiveEditionStandings ovan, oavsett om säsongen är öppen eller
+      // stängd (samma tabeller, bara olika `status` på edition-raden).
+      const withTotals = activePlayers.map((p) => {
+        const roundsArr = roundNumbers(roundCount).map((r) => roundResults[r]?.netto[p.id] ?? null);
+        const registered = roundsArr.filter((r): r is number => r != null);
+        const total = registered.length > 0 ? registered.reduce((a, b) => a + b, 0) : null;
+        const nettoAvg = registered.length > 0 ? total! / registered.length : null;
+        return { playerId: p.id, total, nettoAvg };
+      });
+      const sorted = [...withTotals].sort((a, b) => {
+        if (a.total != null && b.total != null) return a.total - b.total;
+        if (a.total != null) return -1;
+        if (b.total != null) return 1;
+        return 0;
+      });
+      let nextPlacering = 1;
+      const placeringByPlayer = new Map<string, number | null>();
+      const nettoByPlayer = new Map<string, number | null>();
+      for (const row of sorted) {
+        placeringByPlayer.set(row.playerId, row.total != null ? nextPlacering++ : null);
+        nettoByPlayer.set(row.playerId, row.nettoAvg);
+      }
+
+      // Kategorivinster per spelare (stapeldiagrammet).
+      const categoryCountByPlayer = new Map<string, Partial<Record<BettingCategory, number>>>();
+      for (const w of computeCategoryWins(roundResults, sweepstakeBets, roundCount)) {
+        const bucket = categoryCountByPlayer.get(w.playerId) ?? {};
+        bucket[w.category] = (bucket[w.category] ?? 0) + 1;
+        categoryCountByPlayer.set(w.playerId, bucket);
+      }
+
+      // Vunnet i kronor (golfbetting + sweepstake-utbetalningar) - de
+      // automatiskt framräknade posterna, samma som visas med "Auto"-badgen
+      // i Registrerade poster.
+      const bettingWonByPlayer = new Map<string, number>();
+      for (const e of computeAutoEntries(roundResults, sweepstakeBets, roundCount)) {
+        const playerId = playerIdByName.get(e.playerName);
+        if (!playerId) continue;
+        bettingWonByPlayer.set(playerId, (bettingWonByPlayer.get(playerId) ?? 0) + e.belopp);
+      }
+      const bettingTotal = Array.from(bettingWonByPlayer.values()).reduce((a, b) => a + b, 0);
+
+      // Utlägg per spelare (manuellt registrerade poster).
+      const utlaggByPlayer = new Map<string, number>();
+      for (const e of entries) {
+        if (e.huvudkategori !== "Utlägg") continue;
+        const playerId = playerIdByName.get(e.playerName);
+        if (!playerId) continue;
+        utlaggByPlayer.set(playerId, (utlaggByPlayer.get(playerId) ?? 0) + e.belopp);
+      }
+      const utlaggTotal = Array.from(utlaggByPlayer.values()).reduce((a, b) => a + b, 0);
+
+      const playersOut: SupabaseSeasonStats["players"] = {};
+      for (const p of players) {
+        const categoryWinCounts = Object.fromEntries(
+          CATEGORY_ORDER.map((c) => [c, categoryCountByPlayer.get(p.id)?.[c] ?? 0])
+        ) as Partial<Record<BettingCategory, number>>;
+        playersOut[p.id] = {
+          placering: placeringByPlayer.get(p.id) ?? null,
+          participated: !nonParticipants.includes(p.id),
+          nettoAvg: nettoByPlayer.get(p.id) ?? null,
+          categoryWinCounts,
+          bettingWon: bettingWonByPlayer.get(p.id) ?? 0,
+          utlagg: utlaggByPlayer.get(p.id) ?? 0,
+        };
+      }
+
+      return { year: edition.year, bettingTotal, utlaggTotal, players: playersOut };
+    })
+  );
+
+  return results
+    .filter((r): r is SupabaseSeasonStats => r !== null)
+    .sort((a, b) => a.year - b.year);
 }

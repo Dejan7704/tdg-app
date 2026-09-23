@@ -21,13 +21,21 @@ import {
   CATEGORY_ORDER,
   CATEGORY_LABELS,
   CATEGORY_COLORS,
+  type BettingCategory,
 } from "@/lib/business";
+import { getSupabaseSeasonStats } from "@/lib/liveBokslut";
 import { DualAxisLineChart } from "@/components/LineChart";
 import { StackedBarChart } from "@/components/StackedBarChart";
 
 export function generateStaticParams() {
   return players.map((p) => ({ slug: p.id }));
 }
+
+// Sidan måste renderas dynamiskt (per request), precis som Historik och
+// Bokslut - annars skulle Supabase-åren (se nedan) bara hämtas en gång vid
+// deploy istället för att uppdateras allteftersom nya rondresultat
+// registreras i Betz & Expz.
+export const dynamic = "force-dynamic";
 
 export default async function PlayerPage({
   params,
@@ -46,20 +54,75 @@ export default async function PlayerPage({
   const playedPct = totalEditions ? Math.round((history.length / totalEditions) * 100) : 0;
   const winsPct = totalEditions ? Math.round((wins / totalEditions) * 100) : 0;
 
-  const placeringSeries = getPlayerPlaceringSeries(player.id);
-  const nettoSeries = getPlayerNettoAverageSeries(player.id);
-  const missedYears = getPlayerMissedYears(player.id);
-  const bettingByCategory = getPlayerBettingWinsByCategorySeries(player.id);
-  const cumulativeBetting = getPlayerCumulativeBettingSeries(player.id);
-  const cumulativeUtlagg = getPlayerCumulativeUtlaggSeries(player.id);
+  // Diagrammen kompletteras med TDG 2026 och framåt (öppen ELLER stängd
+  // säsong) direkt från Supabase - David bad om detta 2026-09-23. De äldre
+  // åren (t.o.m. 2025) kommer fortfarande oförändrat från de statiska
+  // editions.json/business-*.json-filerna nedan, se getSupabaseSeasonStats i
+  // liveBokslut.ts för det fullständiga resonemanget kring varför det här
+  // görs vid läsning istället för att skriva om de statiska filerna.
+  const supabaseSeasonStats = await getSupabaseSeasonStats();
+  const supabasePlayerYears = supabaseSeasonStats.map((s) => ({
+    year: s.year,
+    stats: s.players[player.id],
+  }));
+
+  const placeringSeries = [
+    ...getPlayerPlaceringSeries(player.id),
+    ...supabasePlayerYears.map((s) => ({ year: s.year, value: s.stats?.placering ?? null })),
+  ];
+  const nettoSeries = [
+    ...getPlayerNettoAverageSeries(player.id),
+    ...supabasePlayerYears.map((s) => ({ year: s.year, value: s.stats?.nettoAvg ?? null })),
+  ];
+  const missedYears = [
+    ...getPlayerMissedYears(player.id),
+    ...supabasePlayerYears.filter((s) => s.stats && !s.stats.participated).map((s) => s.year),
+  ];
+  const bettingByCategory = [
+    ...getPlayerBettingWinsByCategorySeries(player.id),
+    ...supabasePlayerYears.map((s) => ({
+      year: s.year,
+      values: Object.fromEntries(
+        CATEGORY_ORDER.map((c) => [c, s.stats?.categoryWinCounts[c] ?? 0])
+      ) as Record<BettingCategory, number>,
+      participated: s.stats?.participated ?? true,
+    })),
+  ];
+
+  // Ackumulerade diagram - Supabase-årens värden fortsätter räkna vidare från
+  // där de statiska årens sista värde slutade, så kurvan blir sammanhängande
+  // över hela tidsspannet.
+  const staticCumulativeBetting = getPlayerCumulativeBettingSeries(player.id);
+  let cumulativeBettingRunning = staticCumulativeBetting.at(-1)?.value ?? 0;
+  const cumulativeBetting = [
+    ...staticCumulativeBetting,
+    ...supabasePlayerYears.map((s) => {
+      cumulativeBettingRunning += s.stats?.bettingWon ?? 0;
+      return { year: s.year, value: cumulativeBettingRunning };
+    }),
+  ];
+
+  const staticCumulativeUtlagg = getPlayerCumulativeUtlaggSeries(player.id);
+  let cumulativeUtlaggRunning = staticCumulativeUtlagg.at(-1)?.value ?? 0;
+  const cumulativeUtlagg = [
+    ...staticCumulativeUtlagg,
+    ...supabasePlayerYears.map((s) => {
+      cumulativeUtlaggRunning += s.stats?.utlagg ?? 0;
+      return { year: s.year, value: cumulativeUtlaggRunning };
+    }),
+  ];
+
   const bettingCategories = CATEGORY_ORDER.map((key) => ({
     key,
     label: CATEGORY_LABELS[key],
     color: CATEGORY_COLORS[key],
   }));
-  // Samma år-spann i båda diagrammen (2004–2025) så de går att jämföra
-  // år för år, trots att de visar olika mätvärden.
-  const yearDomain = { minYear: EDITIONS_MIN_YEAR, maxYear: EDITIONS_MAX_YEAR };
+  // Samma år-spann i samtliga diagram (2004– senaste registrerade Supabase-år)
+  // så de går att jämföra år för år, trots att de visar olika mätvärden.
+  const chartMaxYear = supabaseSeasonStats.length
+    ? Math.max(EDITIONS_MAX_YEAR, ...supabaseSeasonStats.map((s) => s.year))
+    : EDITIONS_MAX_YEAR;
+  const yearDomain = { minYear: EDITIONS_MIN_YEAR, maxYear: chartMaxYear };
 
   return (
     <div className="flex flex-col gap-6">

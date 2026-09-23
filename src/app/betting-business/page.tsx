@@ -14,7 +14,7 @@ import {
 } from "@/lib/business";
 import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection, getPlayer } from "@/lib/data";
 import { DualAxisLineChart } from "@/components/LineChart";
-import { getLiveBokslut, type LiveBokslut } from "@/lib/liveBokslut";
+import { getLiveBokslut, getSupabaseSeasonStats, type LiveBokslut } from "@/lib/liveBokslut";
 import { RESULT_CATEGORIES } from "@/lib/betzExpz";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
@@ -496,7 +496,24 @@ export default async function BettingBusinessPage({
   const year = allYears.includes(requestedYear) ? requestedYear : defaultYear;
   const isLiveYear = live !== null && live.year === year;
   const business = getBusinessYear(year);
-  const yearlyTotals = getYearlyTotals();
+
+  // "Totalt pengaflöde per år"-diagrammet kompletteras med TDG 2026 och
+  // framåt (öppen ELLER stängd säsong) direkt från Supabase - David bad om
+  // detta 2026-09-23. De äldre åren kommer fortfarande oförändrat från de
+  // statiska business-*.json-filerna (getYearlyTotals), se
+  // getSupabaseSeasonStats i liveBokslut.ts för det fullständiga resonemanget.
+  const supabaseSeasonStats = await getSupabaseSeasonStats();
+  const yearlyTotals = [
+    ...getYearlyTotals(),
+    ...supabaseSeasonStats.map((s) => ({
+      year: s.year,
+      bettingTotal: s.bettingTotal,
+      utlaggTotal: s.utlaggTotal,
+    })),
+  ];
+  const chartMaxYear = supabaseSeasonStats.length
+    ? Math.max(EDITIONS_MAX_YEAR, ...supabaseSeasonStats.map((s) => s.year))
+    : EDITIONS_MAX_YEAR;
 
   return (
     <div className="flex flex-col gap-6">
@@ -526,7 +543,7 @@ export default async function BettingBusinessPage({
               label: "Utlägg totalt",
               format: "sek",
             }}
-            yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: EDITIONS_MAX_YEAR }}
+            yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: chartMaxYear }}
           />
         </div>
       </section>
