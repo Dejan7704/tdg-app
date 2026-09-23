@@ -69,12 +69,26 @@ export default async function HistorikPage() {
   // Sorterad lista över de unika länderna (inte bara antalet) - David bad
   // 2026-09-22 om att flaggorna för samtliga listas i "Länder spelade
   // i"-rutan, inte bara siffran.
+  //
+  // Måste räkna med den pågående säsongens land/banor (live.country/
+  // live.courses, från Supabase) också, inte bara de historiska årens
+  // statiska editions.json - annars uppdateras inte rutorna när ett nytt
+  // land/en ny bana registreras för innevarande år på Betz & Expz (bugg
+  // som David hittade 2026-09-23: "Unika banor spelade" räknade inte med
+  // Omberg Golfklubb, som registrerades för TDG 2026 runda 1).
   const uniqueCountryList = Array.from(
-    new Set(editions.map((e) => e.country).filter((c): c is string => Boolean(c)))
+    new Set(
+      [...editions.map((e) => e.country), live?.country].filter(
+        (c): c is string => Boolean(c)
+      )
+    )
   ).sort((a, b) => a.localeCompare(b, "sv"));
   const uniqueCountries = uniqueCountryList.length;
   const uniqueCourses = new Set(
-    editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? []))
+    [
+      ...editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? [])),
+      ...(live?.courses ?? []),
+    ]
       .map((c) => c.trim())
       .filter(Boolean)
   ).size;
