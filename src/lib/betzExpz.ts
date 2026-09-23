@@ -12,13 +12,42 @@ import {
 // på samma rådata, istället för att Bokslut skulle behöva återimplementera
 // (och riskera att divergera från) registreringssidans beräkningar.
 
-// Standardbelopp för golfbetting, hämtade från samma logik/summor som i 2025
-// års utfall (se business-2025.json): insatsen är en fast årlig summa per
-// spelare (2 000 kr). Vinstbeloppet (700 kr) är inte längre något man
-// registrerar manuellt (se nedan) - det används bara som standardsumman för
-// de vinster som räknas fram automatiskt från Resultat-rutan.
+// Standardbelopp för golfbetting - förifyller bara insats-fältet i Betz &
+// Expz (samma årliga summa för alla spelare, men kan ändras år från år, se
+// Golfbetting-rutan). GOLF_VINST_DEFAULT används inte längre för att räkna
+// fram vinsterna (se computeGolfWinAmount nedan, tillagd 2026-09-23 på Davids
+// begäran) - vinstbeloppet är numera hela den insamlade insatspotten delad
+// jämnt över samtliga golfbetting-kategorivinster som kan uppstå under
+// säsongen, inte en fast klumpsumma. Konstanten finns kvar bara som
+// fallback-default för computeAutoEntries/computeSweepstakeRoundInfo ifall de
+// anropas utan en uträknad pott (t.ex. innan någon insats alls registrerats).
 export const GOLF_INSATS_DEFAULT = 2000;
 export const GOLF_VINST_DEFAULT = 700;
+
+// Summan av samtliga registrerade golfbetting-insatser (de manuella, ej
+// auto-framräknade, "Insats"-posterna) - detta ÄR potten som golfbetting-
+// vinsterna delas ut ifrån, se computeGolfWinAmount. Läggs i sin helhet i
+// egen ruta ("Golfbetting Insats"-kolumnen på Bokslut-sidan har blivit
+// rent informativ - se computeAutoEntries) snarare än att varje spelares
+// egen insats dras av individuellt, se "Snitt gemensamma kostnader" i
+// liveBokslut.ts.
+export function computeGolfInsatsPool(entries: Entry[]): number {
+  return entries
+    .filter((e) => e.huvudkategori === "Golfbetting" && !e.auto)
+    .reduce((sum, e) => sum + Math.abs(e.belopp), 0);
+}
+
+// Golfbetting-vinstbeloppet PER kategorivinst, framräknat som hela
+// insatspotten delad jämnt över samtliga kategorivinster som kan uppstå
+// under säsongen (5 kategorier × antal rundor) - David bad om detta
+// 2026-09-23 istället för en fast klumpsumma (GOLF_VINST_DEFAULT), så att
+// potten alltid går jämnt ut oavsett insatsbelopp eller antal rundor. Vid
+// t.ex. 3 rundor och en pott på 12 000 kr (6 spelare á 2 000 kr) blir det
+// 12 000 / (5*3) = 800 kr per vinst.
+export function computeGolfWinAmount(golfInsatsPool: number, roundCount = 4): number {
+  const slots = RESULT_CATEGORIES.length * roundCount;
+  return slots > 0 ? golfInsatsPool / slots : 0;
+}
 
 // Vilket år Betz & Expz-sidan börjar på (David bekräftat 2026-09-19) - sidan
 // byggdes "från och med 2026". Används bara om databasen mot förmodan saknar
@@ -132,7 +161,12 @@ export function computeAutoEntries(
   // med arkiverade år som saknar ett eget round_count-värde). David bad om
   // detta 2026-09-22 eftersom TDG 2026 bara spelar 3 rundor, inte 4 som
   // tidigare alltid antogs.
-  roundCount = 4
+  roundCount = 4,
+  // Golfbetting-vinst PER kategorivinst - hela insatspotten delad jämnt över
+  // säsongens kategorivinster, se computeGolfWinAmount. Default
+  // GOLF_VINST_DEFAULT bara som absolut sista utväg om anroparen inte räknat
+  // fram potten (t.ex. innan någon insats alls registrerats).
+  golfWinAmount = GOLF_VINST_DEFAULT
 ): Entry[] {
   const out: Entry[] = [];
   let syntheticId = -1;
@@ -144,8 +178,8 @@ export function computeAutoEntries(
       const winnerId = result?.winners[kategori];
       if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
 
-      // Golfbetting-vinst - schablonbeloppet (700 kr), samma som tidigare
-      // manuella standardvärde.
+      // Golfbetting-vinst - andel av insatspotten (se computeGolfWinAmount),
+      // inte längre en fast klumpsumma.
       out.push({
         id: syntheticId--,
         timestamp: 0,
@@ -153,7 +187,7 @@ export function computeAutoEntries(
         huvudkategori: "Golfbetting",
         detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}`,
         kategori: CATEGORY_LABELS[kategori],
-        belopp: GOLF_VINST_DEFAULT,
+        belopp: golfWinAmount,
         auto: true,
       });
 
@@ -263,7 +297,15 @@ export function buildAllEntries(
   roundResults: Record<number, RoundResult>,
   roundCount = 4
 ): Entry[] {
-  const autoEntries = computeAutoEntries(roundResults, sweepstakeBets, roundCount);
+  // Golfbetting-vinsten räknas ut från den faktiska insatspotten (summan av
+  // de registrerade insatserna i `entries`), inte en fast klumpsumma - se
+  // computeGolfWinAmount. Det gör att buildAllEntries kan behålla sin
+  // befintliga signatur (anroparna skickar redan in `entries`) samtidigt som
+  // både computeAutoEntries och den fristående getLiveBokslut-uträkningen i
+  // liveBokslut.ts alltid använder exakt samma pott/vinstbelopp.
+  const golfInsatsPool = computeGolfInsatsPool(entries);
+  const golfWinAmount = computeGolfWinAmount(golfInsatsPool, roundCount);
+  const autoEntries = computeAutoEntries(roundResults, sweepstakeBets, roundCount, golfWinAmount);
   const sweepstakeInsatsEntries = computeSweepstakeInsatsEntries(sweepstakeBets);
   return [...entries, ...sweepstakeInsatsEntries, ...autoEntries].sort((a, b) => {
     // Manuella poster (har ett riktigt timestamp) sorteras nyast-först;
@@ -272,4 +314,64 @@ export function buildAllEntries(
     if (a.timestamp !== b.timestamp) return b.timestamp - a.timestamp;
     return 0;
   });
+}
+
+export type SweepstakeRoundEvent = {
+  runda: number;
+  category: Exclude<BettingCategory, "sweepstake">;
+  /** Potten som avgjordes/rullade denna runda (insatser lagda denna runda + ev. inrullad pott). */
+  potAmount: number;
+  /** Den del av potten som rullade in från en tidigare runda (0 om ingen rullning skett). */
+  carriedIn: number;
+  /** "paid" = potten betalades ut till en eller flera vinnare denna runda. "rolled" = kategorin avgjord men ingen gissade rätt, potten rullar vidare till nästa runda. */
+  outcome: "paid" | "rolled";
+  /** Bara satt för outcome "paid". */
+  winners: { playerName: string; amount: number }[];
+};
+
+// Samma bas-loop som computeAutoEntries/computeCategoryWins (se resonemang
+// där), men med rikare utdata - tillagd 2026-09-23 på Davids begäran om en
+// synlig indikator på Bokslut-sidans "Betting rond för rond"-kort när en
+// sweepstake-pott INTE delas ut (ingen gissade rätt) och istället rullar
+// vidare till nästa runda för samma kategori, så det syns varför en senare
+// rundas utbetalning är större än insatsen just den rundan.
+export function computeSweepstakeRoundInfo(
+  roundResults: Record<number, RoundResult>,
+  sweepstakeBets: SweepstakeBet[],
+  roundCount = 4
+): SweepstakeRoundEvent[] {
+  const out: SweepstakeRoundEvent[] = [];
+
+  for (const kategori of RESULT_CATEGORIES) {
+    let carry = 0;
+    for (let runda = 1; runda <= roundCount; runda++) {
+      const result = roundResults[runda];
+      const winnerId = result?.winners[kategori];
+      if (!winnerId) continue; // inte avgjort än
+
+      const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
+      const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
+      if (pot === 0) continue; // inga insatser alls i den här kategorin/rundan
+
+      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      if (winners.length === 0) {
+        out.push({ runda, category: kategori, potAmount: pot, carriedIn: carry, outcome: "rolled", winners: [] });
+        carry = pot;
+        continue;
+      }
+
+      const carriedIn = carry;
+      carry = 0;
+      const payoutEach = pot / winners.length;
+      out.push({
+        runda,
+        category: kategori,
+        potAmount: pot,
+        carriedIn,
+        outcome: "paid",
+        winners: winners.map((w) => ({ playerName: playerName(w.bettorId), amount: payoutEach })),
+      });
+    }
+  }
+  return out;
 }

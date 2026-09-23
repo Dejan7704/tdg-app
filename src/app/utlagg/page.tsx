@@ -525,35 +525,42 @@ export default function UtlaggPage() {
     [activePlayers, golfRegisteredIds]
   );
 
-  const [golfSpelare, setGolfSpelare] = useState("");
+  // Insatsen är alltid samma för alla spelare i en given upplaga (kan
+  // variera år från år) - David förtydligade 2026-09-23 att golfbetting-
+  // insatsen aldrig är valfri, alla som deltar måste lägga in den. Rutan
+  // förenklad därför till EN summa + EN bekräftelseknapp istället för att
+  // registrera spelare för spelare - vilka spelare det gäller är redan
+  // beslutat via Deltagare-rutan (golfEligiblePlayers) innan man kommer hit.
   const [golfBelopp, setGolfBelopp] = useState(GOLF_INSATS_DEFAULT);
   const [golfSubmitting, setGolfSubmitting] = useState(false);
 
-  // Rensa valet om spelaren i fråga inte längre är valbar (t.ex. någon annan
-  // hann registrera samma spelares insats, eller deltagarlistan ändrades).
-  useEffect(() => {
-    if (golfSpelare && !golfEligiblePlayers.some((p) => p.id === golfSpelare)) {
-      setGolfSpelare("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [golfEligiblePlayers]);
-
-  async function registerGolfInsats() {
-    const player = golfEligiblePlayers.find((p) => p.id === golfSpelare);
-    if (!player || golfSubmitting) return;
+  async function registerGolfInsatsForAll() {
+    if (!activeEdition || golfEligiblePlayers.length === 0 || golfSubmitting) return;
     setGolfSubmitting(true);
-    const ok = await addEntry({
-      playerName: player.fullName,
-      huvudkategori: "Golfbetting",
-      detalj: "Insats",
-      belopp: -Math.abs(golfBelopp),
-    });
+    const belopp = -Math.abs(golfBelopp);
+    const { data, error } = await supabase
+      .from("entries")
+      .insert(
+        golfEligiblePlayers.map((p) => ({
+          edition_id: activeEdition.id,
+          player_name: p.fullName,
+          huvudkategori: "Golfbetting" as const,
+          detalj: "Insats",
+          kategori: null,
+          belopp,
+        }))
+      )
+      .select();
     setGolfSubmitting(false);
-    if (ok) {
-      setGolfSpelare("");
-      setGolfBelopp(GOLF_INSATS_DEFAULT);
-      showToast(`Insats registrerad för ${player.fullName}`);
+    if (error) {
+      console.error(error);
+      alert("Kunde inte registrera insatsen - försök igen.");
+      return;
     }
+    const antalSpelare = golfEligiblePlayers.length;
+    setEntries((prev) => [...(data as EntryRow[]).map(mapEntryRow), ...prev]);
+    setGolfBelopp(GOLF_INSATS_DEFAULT);
+    showToast(`Insats om ${golfBelopp.toLocaleString("sv-SE")} kr registrerad för ${antalSpelare} spelare`);
   }
 
   // --- Pokerbetting ---
@@ -623,7 +630,6 @@ export default function UtlaggPage() {
   useEffect(() => {
     if (activePlayers.length === 0) return;
     const activeIds = new Set(activePlayers.map((p) => p.id));
-    if (golfSpelare && !activeIds.has(golfSpelare)) setGolfSpelare("");
     if (pokerSpelare && !activeIds.has(pokerSpelare)) setPokerSpelare("");
     if (utlaggSpelare && !activeIds.has(utlaggSpelare)) setUtlaggSpelare("");
     if (sweepBettor && !activeIds.has(sweepBettor)) setSweepBettor("");
@@ -1024,30 +1030,29 @@ export default function UtlaggPage() {
       </section>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Golfbetting - bara insats */}
+        {/* Golfbetting - bara insats, samma summa för alla spelare */}
         <CollapsibleSection title="Golfbetting">
           <p className="text-xs text-stone-500">
-            Bara årets insats registreras här - vinster per kategori räknas fram automatiskt
-            från Resultat-rutan längst ner. En insats per spelare och säsong.
+            Insatsen är alltid samma för alla spelare i årets upplaga (men kan ändras år från
+            år). Vinster per kategori räknas fram automatiskt från Resultat-rutan längst ner, som
+            en jämn andel av den totala insatspotten.
           </p>
           {golfEligiblePlayers.length > 0 ? (
             <>
-              <SelectField label="Spelare" value={golfSpelare} onChange={setGolfSpelare}>
-                <option value="">Välj spelare…</option>
-                {golfEligiblePlayers.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.fullName}
-                  </option>
-                ))}
-              </SelectField>
-              <AmountField label="Insats (kr)" value={golfBelopp} onChange={setGolfBelopp} />
+              <AmountField
+                label={`Årets insats per spelare (kr) - gäller ${golfEligiblePlayers.length} spelare`}
+                value={golfBelopp}
+                onChange={setGolfBelopp}
+              />
               <button
                 type="button"
-                onClick={registerGolfInsats}
-                disabled={golfSubmitting || !golfSpelare}
+                onClick={registerGolfInsatsForAll}
+                disabled={golfSubmitting}
                 className="rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
               >
-                {golfSubmitting ? "Registrerar…" : "Registrera insats"}
+                {golfSubmitting
+                  ? "Registrerar…"
+                  : `Bekräfta insats för ${golfEligiblePlayers.length} spelare`}
               </button>
             </>
           ) : (

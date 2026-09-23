@@ -4,13 +4,16 @@ import { type BettingCategory, CATEGORY_ORDER } from "@/lib/business";
 import {
   RESULT_CATEGORIES,
   SEASON_START_YEAR,
-  GOLF_VINST_DEFAULT,
   mapEntryRow,
   mapSweepstakeBetRow,
   mapRoundResultRows,
   buildAllEntries,
   computeAutoEntries,
   computeCategoryWins,
+  computeGolfInsatsPool,
+  computeGolfWinAmount,
+  computeSweepstakeRoundInfo,
+  type SweepstakeRoundEvent,
   playerName,
   roundNumbers,
 } from "@/lib/betzExpz";
@@ -36,14 +39,34 @@ export type LiveBettingWin = {
 
 export type LiveRound = { round: number; wins: LiveBettingWin[] };
 
+// Justering/avräkning omgjord 2026-09-23 på Davids begäran (se
+// "Utlägg_Betting_Avräkning uppställning o logik.xlsx") - istället för att
+// varje spelares EGEN utläggs-snittkostnad OCH egen golfinsats dras av var
+// för sig, poolas hela gruppens utlägg + golfinsatser till en gemensam pott
+// som delas jämnt ("Snitt gemensamma kostnader", `sharedCost` nedan). Det gör
+// avräkningen mer rättvis om någon registrerar en avvikande insats eller
+// missar att registrera sin insats alls (poolningen delar då ut samma
+// gemensamma kostnad till alla ändå, istället för att bara räkna på vars och
+// ens egna, ojämna belopp).
 export type LiveSettlementRow = {
   playerId: string;
   playerName: string;
+  /** Vad spelaren själv lagt ut för gruppen (positiv - ett fördelaktigt bidrag). */
   utlagg: number;
-  poker: number;
-  golfbetting: number;
+  /** Spelarens egen golfbetting-insats (negativ) - rent informativ, ingår INTE separat i justeringen (den ligger redan i den poolade `sharedCost`). */
+  golfInsats: number;
+  /** Gruppens totala utlägg + golfinsatser delat jämnt över samtliga aktiva spelare (negativ, samma värde för alla). */
+  sharedCost: number;
+  /** Spelarens egna golfbetting-VINSTER (positiv) - till skillnad från `golfInsats` ovan är det bara vinsterna, inte nettot. */
+  golfbettingVinster: number;
+  /** utlagg + sharedCost + golfbettingVinster. */
+  justeringPrimar: number;
+  /** Sweepstake-netto (insatser + vinster). */
   sweepstake: number;
-  justering: number;
+  /** Pokerbetting-netto. */
+  poker: number;
+  /** justeringPrimar + sweepstake + poker - det slutgiltiga beloppet avräkningen (settleBalances) matchar mot. */
+  justeringTotal: number;
 };
 
 export type LiveBokslut = {
@@ -57,6 +80,8 @@ export type LiveBokslut = {
   courses: string[];
   rounds: LiveRound[];
   totals: Record<string, Partial<Record<Exclude<BettingCategory, "sweepstake">, number>>>;
+  /** Sweepstake-händelser (utbetalning eller rullande pott) per rond/kategori - tillagt 2026-09-23, se computeSweepstakeRoundInfo. Visas som en indikator på respektive rond-kort. */
+  sweepstakeEvents: SweepstakeRoundEvent[];
   settlement: LiveSettlementRow[];
   entryCount: number;
 };
@@ -81,6 +106,14 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
   const sweepstakeBets = (betsRes.data as SweepstakeBetRow[]).map(mapSweepstakeBetRow);
   const roundResults = mapRoundResultRows(resultsRes.data as RoundResultRow[]);
 
+  // Golfbetting-vinsten per kategorivinst räknas ut från den faktiska
+  // insatspotten (se computeGolfWinAmount) - samma pott/belopp som
+  // buildAllEntries (via computeAutoEntries) längre ner räknar med, så
+  // rond-för-rond-korten och Registrerade poster alltid visar exakt samma
+  // summor.
+  const golfInsatsPool = computeGolfInsatsPool(entries);
+  const golfWinAmount = computeGolfWinAmount(golfInsatsPool, edition.round_count);
+
   // Rond-för-rond golfbetting-segrare, samma form som den historiska
   // BusinessYear.rounds (se business.ts) men nyckelt på playerId istället
   // för smeknamn - getPlayerByNickname() i data.ts kan inte slå upp de
@@ -98,11 +131,13 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
         category: kategori,
         playerId: winnerId,
         playerName: playerName(winnerId),
-        amount: GOLF_VINST_DEFAULT,
+        amount: golfWinAmount,
       });
     }
     if (wins.length > 0) rounds.push({ round: runda, wins });
   }
+
+  const sweepstakeEvents = computeSweepstakeRoundInfo(roundResults, sweepstakeBets, edition.round_count);
 
   const totals: LiveBokslut["totals"] = {};
   for (const r of rounds) {
@@ -118,25 +153,24 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
   // registrerat något får en nollrad, så rutan visar hela gruppen från
   // start), byggd direkt från entries-ledgern (samma poster som "Registrerade
   // poster" på Betz & Expz) istället för de statiska business-*.json-filernas
-  // engångs-nettostruktur - varje spelare lägger här in sin egen
-  // golfbetting-insats individuellt, det finns ingen gemensam
-  // `stakePerPlayer` att utgå från (se "Föreslagen datamodell" i
-  // arkitektur-dokumentet).
+  // engångs-nettostruktur.
   //
-  // Antagande (ej bekräftat av David): utläggens snittkostnad delas här per
-  // AKTIV spelare (hela gruppen), inte bara de som redan lagt ut något -
-  // till skillnad från den historiska modellen där bara de som faktiskt har
-  // en utläggsrad får en avräkningsrad alls. Samma justerings-formel som
-  // getSettlement() i business.ts i övrigt (utlägg - snittutlägg + poker +
-  // betting), plus sweepstake-netto som en egen post (den historiska
-  // modellen saknar sweepstake i avräkningen helt).
+  // Poolad kostnadsmodell (se "Utlägg_Betting_Avräkning uppställning o
+  // logik.xlsx", 2026-09-23): utlägg + golfinsatser läggs i en gemensam pott
+  // och delas jämnt över samtliga AKTIVA spelare (`sharedCost`) - istället
+  // för att bara dra av var och ens egna, ojämna belopp. Golfbetting-insatsen
+  // är obligatorisk för alla som deltar (David bekräftat), så `sharedCost`
+  // och en enkel "dra av egen insats" ger normalt exakt samma resultat - men
+  // poolningen blir korrekt även om någon registrerar en avvikande summa
+  // eller missar att registrera sin insats.
   const nonParticipants = edition.non_participants ?? [];
   const activePlayers = players.filter((p) => !nonParticipants.includes(p.id));
   const playerIdByName = new Map(players.map((p) => [p.fullName, p.id]));
 
   const utlaggByPlayer = new Map<string, number>();
   const pokerByPlayer = new Map<string, number>();
-  const golfByPlayer = new Map<string, number>();
+  const golfInsatsByPlayer = new Map<string, number>();
+  const golfVinstByPlayer = new Map<string, number>();
   const sweepByPlayer = new Map<string, number>();
 
   for (const e of allEntries) {
@@ -147,29 +181,47 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
     } else if (e.huvudkategori === "Pokerbetting") {
       pokerByPlayer.set(playerId, (pokerByPlayer.get(playerId) ?? 0) + e.belopp);
     } else if (e.huvudkategori === "Golfbetting") {
-      golfByPlayer.set(playerId, (golfByPlayer.get(playerId) ?? 0) + e.belopp);
+      // `e.auto` skiljer den manuellt registrerade insatsen (negativ, en per
+      // spelare) från de automatiskt framräknade vinsterna (positiva, en per
+      // kategorivinst) - se Entry-typen i betzExpz.ts.
+      if (e.auto) {
+        golfVinstByPlayer.set(playerId, (golfVinstByPlayer.get(playerId) ?? 0) + e.belopp);
+      } else {
+        golfInsatsByPlayer.set(playerId, (golfInsatsByPlayer.get(playerId) ?? 0) + e.belopp);
+      }
     } else if (e.huvudkategori === "Sweepstake") {
       sweepByPlayer.set(playerId, (sweepByPlayer.get(playerId) ?? 0) + e.belopp);
     }
   }
 
-  const totalUtlagg = Array.from(utlaggByPlayer.values()).reduce((a, b) => a + b, 0);
-  const avgUtlagg = activePlayers.length > 0 ? totalUtlagg / activePlayers.length : 0;
+  const totalUtlagg = Array.from(utlaggByPlayer.values()).reduce((a, b) => a + b, 0); // positivt
+  const totalGolfInsats = Array.from(golfInsatsByPlayer.values()).reduce((a, b) => a + b, 0); // negativt
+  // -(summa utlägg + summa golfinsatser)/antal aktiva spelare, se
+  // Excel-exemplet - `totalGolfInsats` är redan negativt lagrat här, så
+  // "minus dess belopp" blir `totalGolfInsats - totalUtlagg` istället för
+  // ett synligt minustecken framför hela uttrycket.
+  const sharedCost =
+    activePlayers.length > 0 ? (totalGolfInsats - totalUtlagg) / activePlayers.length : 0;
 
   const settlement: LiveSettlementRow[] = activePlayers.map((p) => {
     const utlagg = utlaggByPlayer.get(p.id) ?? 0;
+    const golfInsats = golfInsatsByPlayer.get(p.id) ?? 0;
+    const golfbettingVinster = golfVinstByPlayer.get(p.id) ?? 0;
     const poker = pokerByPlayer.get(p.id) ?? 0;
-    const golfbetting = golfByPlayer.get(p.id) ?? 0;
     const sweepstake = sweepByPlayer.get(p.id) ?? 0;
-    const justering = utlagg - avgUtlagg + poker + golfbetting + sweepstake;
+    const justeringPrimar = utlagg + sharedCost + golfbettingVinster;
+    const justeringTotal = justeringPrimar + sweepstake + poker;
     return {
       playerId: p.id,
       playerName: p.fullName,
       utlagg,
-      poker,
-      golfbetting,
+      golfInsats,
+      sharedCost,
+      golfbettingVinster,
+      justeringPrimar,
       sweepstake,
-      justering,
+      poker,
+      justeringTotal,
     };
   });
 
@@ -181,6 +233,7 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
     courses: edition.courses,
     rounds,
     totals,
+    sweepstakeEvents,
     settlement,
     entryCount: allEntries.length,
   };
@@ -377,9 +430,13 @@ export async function getSupabaseSeasonStats(): Promise<SupabaseSeasonStats[]> {
 
       // Vunnet i kronor (golfbetting + sweepstake-utbetalningar) - de
       // automatiskt framräknade posterna, samma som visas med "Auto"-badgen
-      // i Registrerade poster.
+      // i Registrerade poster. Golfvinsten per kategori räknas ut från
+      // samma insatspott som buildAllEntries använder (se
+      // computeGolfWinAmount), inte en fast klumpsumma.
+      const golfInsatsPool = computeGolfInsatsPool(entries);
+      const golfWinAmount = computeGolfWinAmount(golfInsatsPool, roundCount);
       const bettingWonByPlayer = new Map<string, number>();
-      for (const e of computeAutoEntries(roundResults, sweepstakeBets, roundCount)) {
+      for (const e of computeAutoEntries(roundResults, sweepstakeBets, roundCount, golfWinAmount)) {
         const playerId = playerIdByName.get(e.playerName);
         if (!playerId) continue;
         bettingWonByPlayer.set(playerId, (bettingWonByPlayer.get(playerId) ?? 0) + e.belopp);
