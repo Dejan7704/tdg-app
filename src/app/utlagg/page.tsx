@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { players } from "@/lib/data";
 import { CATEGORY_LABELS, type BettingCategory } from "@/lib/business";
 import { InfoTooltip } from "@/components/InfoTooltip";
@@ -28,7 +28,17 @@ import {
   type SweepstakeBet,
 } from "@/lib/betzExpz";
 
-const UTLAGG_KATEGORIER = ["Mat", "Dryck", "Hyrbil", "Övrigt"] as const;
+// "Boende", "Golfbil/vagn" och "Taxi" tillagda 2026-09-23 på Davids begäran -
+// "Övrigt" hålls medvetet sist som en catch-all-kategori.
+const UTLAGG_KATEGORIER = [
+  "Mat",
+  "Dryck",
+  "Hyrbil",
+  "Boende",
+  "Golfbil/vagn",
+  "Taxi",
+  "Övrigt",
+] as const;
 type UtlaggKategori = (typeof UTLAGG_KATEGORIER)[number];
 
 function SelectField({
@@ -200,10 +210,29 @@ function CollapsibleSection({
   );
 }
 
+// Ordningen grupperna visas i - David bad om detta 2026-09-23 ("Golfbetting,
+// poker, sweepstake, utlägg").
+const HUVUDKATEGORI_ORDER: Entry["huvudkategori"][] = [
+  "Golfbetting",
+  "Pokerbetting",
+  "Sweepstake",
+  "Utlägg",
+];
+
 // Den delade poster-tabellen - används både för den pågående säsongens
 // löpande lista och för att visa upp ett arkiverat års ögonblicksbild
 // (read-only i praktiken i båda fallen, arkivvyn har bara inga formulär
 // ovanför sig att lägga till fler poster ifrån).
+//
+// Omgjord 2026-09-23 på Davids begäran: Huvudkategori är inte längre en egen
+// kolumn utan en grupperande underrubrik-rad (Golfbetting/Pokerbetting/
+// Sweepstake/Utlägg, i den ordningen) - varje registrering hamnar i
+// Kategori-kolumnen direkt under sin huvudkategori. En ny Datum-kolumn visar
+// när posten registrerades. De automatiskt framräknade posterna (golfbetting-
+// vinster, sweepstake-utbetalningar, se computeAutoEntries i betzExpz.ts) har
+// inget eget registreringstillfälle - de räknas fram på nytt varje gång sidan
+// laddas, det finns ingen riktig "created_at" att visa - därför "–" i
+// Datum-kolumnen för dem (samma poster som redan är märkta med "Auto"-badgen).
 function EntriesTable({ entries }: { entries: Entry[] }) {
   if (entries.length === 0) {
     return (
@@ -218,40 +247,60 @@ function EntriesTable({ entries }: { entries: Entry[] }) {
         <thead className="bg-stone-50 text-left text-stone-500">
           <tr>
             <th className="px-4 py-2 font-medium">Spelare</th>
-            <th className="px-4 py-2 font-medium">Huvudkategori</th>
             <th className="px-4 py-2 font-medium">Kategori</th>
+            <th className="px-4 py-2 font-medium">Datum</th>
             <th className="px-4 py-2 text-right font-medium">Belopp</th>
           </tr>
         </thead>
         <tbody>
-          {entries.map((e) => (
-            <tr key={e.id} className="border-t border-stone-100">
-              <td className="px-4 py-2 font-medium">{e.playerName}</td>
-              <td className="px-4 py-2 text-stone-600">
-                <span className="inline-flex items-center gap-1.5">
-                  {e.huvudkategori}
-                  {e.auto && (
-                    <span
-                      title="Beräknad automatiskt från Resultat-rutan"
-                      className="rounded-full bg-tdg-gray-light px-1.5 py-0.5 text-[10px] font-semibold uppercase text-stone-500"
+          {HUVUDKATEGORI_ORDER.map((huvudkategori) => {
+            const group = entries.filter((e) => e.huvudkategori === huvudkategori);
+            if (group.length === 0) return null;
+            return (
+              <Fragment key={huvudkategori}>
+                <tr className="border-t border-stone-200 bg-tdg-gray-light">
+                  <td
+                    colSpan={4}
+                    className="px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-tdg-green"
+                  >
+                    {huvudkategori} ({group.length})
+                  </td>
+                </tr>
+                {group.map((e) => (
+                  <tr key={e.id} className="border-t border-stone-100">
+                    <td className="px-4 py-2 font-medium">{e.playerName}</td>
+                    <td className="px-4 py-2 text-stone-600">
+                      <span className="inline-flex items-center gap-1.5">
+                        {e.kategori ?? e.detalj}
+                        {e.auto && (
+                          <span
+                            title="Beräknad automatiskt från Resultat-rutan"
+                            className="rounded-full bg-tdg-gray-light px-1.5 py-0.5 text-[10px] font-semibold uppercase text-stone-500"
+                          >
+                            Auto
+                          </span>
+                        )}
+                      </span>
+                      {e.kategori && e.detalj !== e.kategori && (
+                        <div className="text-xs text-stone-400">{e.detalj}</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-stone-500">
+                      {e.timestamp > 0 ? new Date(e.timestamp).toLocaleDateString("sv-SE") : "–"}
+                    </td>
+                    <td
+                      className={
+                        "px-4 py-2 text-right font-semibold " +
+                        (e.belopp >= 0 ? "text-tdg-green" : "text-red-600")
+                      }
                     >
-                      Auto
-                    </span>
-                  )}
-                </span>
-                <div className="text-xs text-stone-400">{e.detalj}</div>
-              </td>
-              <td className="px-4 py-2 text-stone-600">{e.kategori ?? "–"}</td>
-              <td
-                className={
-                  "px-4 py-2 text-right font-semibold " +
-                  (e.belopp >= 0 ? "text-tdg-green" : "text-red-600")
-                }
-              >
-                {formatSek(e.belopp)}
-              </td>
-            </tr>
-          ))}
+                      {formatSek(e.belopp)}
+                    </td>
+                  </tr>
+                ))}
+              </Fragment>
+            );
+          })}
         </tbody>
       </table>
     </div>
