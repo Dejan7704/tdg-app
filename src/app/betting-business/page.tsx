@@ -119,8 +119,6 @@ function settleBalances(
 
 type SettlementDisplay = {
   textByPlayer: Record<string, string>;
-  /** true om minst en TBD-rad förekommer (potten inte helt utbetald än) - styr en kort förklarande fotnot i UI:t. */
-  hasOutstanding: boolean;
 };
 
 // Omgjord 2026-09-23 på Davids begäran: bara den som ska BETALA får text i
@@ -129,6 +127,8 @@ type SettlementDisplay = {
 // mottagaren). Den som ska FÅ pengar behöver ingen text alls i sin cell -
 // "dubbeladmin" enligt David, informationen finns redan i motpartens
 // betalar-cell. Går varken att betala eller få (nollställd) visas "Kvitt".
+// (Den tidigare förklarande TBD-fotnoten under tabellen togs bort 2026-09-23
+// på Davids begäran - onödig text, TBD i cellen talar för sig själv.)
 function settlementDisplay(
   rows: { playerId: string; playerName: string; justering: number }[]
 ): SettlementDisplay {
@@ -145,7 +145,7 @@ function settlementDisplay(
       textByPlayer[r.playerId] = getsSomething ? "" : "Kvitt";
     }
   }
-  return { textByPlayer, hasOutstanding: transactions.some((t) => t.toId === TBD_ID) };
+  return { textByPlayer };
 }
 
 // --- Live-vy för den pågående säsongen (tillagd 2026-09-22) - samma sorts
@@ -407,13 +407,6 @@ function LiveSettlementTable({ live }: { live: LiveBokslut }) {
           </tbody>
         </table>
       </div>
-      {settlement.hasOutstanding && (
-        <p className="text-xs text-stone-400">
-          TBD = den delen av golfbetting-/sweepstake-potten är insatt men ännu inte utbetald till
-          en specifik vinnare (fler rondresultat saknas) - avräkningen uppdateras automatiskt
-          allteftersom fler rundor registreras.
-        </p>
-      )}
     </div>
   );
 }
