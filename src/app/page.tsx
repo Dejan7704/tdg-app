@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { editions, getWinner, getSegerrekord, getPlayerByNickname } from "@/lib/data";
+import { editions, getWinner, getPlayerByNickname } from "@/lib/data";
 import { getProjectedWinnerForNextSeason } from "@/lib/prognosis";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
@@ -14,7 +14,6 @@ export default async function Home() {
   const latest = editions[editions.length - 1];
   const winner = editions[editions.length - 1] ? getWinner(latest) : undefined;
   const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
-  const segerrekord = getSegerrekord().slice(0, 3);
   const projected = await getProjectedWinnerForNextSeason();
 
   return (
@@ -78,21 +77,17 @@ export default async function Home() {
         />
       </section>
 
-      <section className="rounded-xl bg-tdg-green-dark p-6">
-        <h2 className="text-lg font-semibold text-white">Flest segrar genom tiderna</h2>
-        <ol className="mt-4 flex flex-col gap-2">
-          {segerrekord.map((s, i) => (
-            <li key={s.player.id} className="flex items-center justify-between text-sm">
-              <Link
-                href={`/spelare/${s.player.id}`}
-                className="font-medium text-tdg-yellow hover:underline"
-              >
-                {i + 1}. {s.player.fullName}
-              </Link>
-              <span className="text-white/85">{s.segrar} segrar</span>
-            </li>
-          ))}
-        </ol>
+      {/* Vänner-bilden ersatte "Flest segrar genom tiderna"-rutan här
+          2026-09-23, på Davids begäran - ren bild, ingen egen ruta/bakgrund
+          eftersom bilden (filmremsa-collage) redan har sin egen skugga. */}
+      <section className="flex justify-center">
+        <Image
+          src="/photos/vanner-filmremsa.png"
+          alt="Filmremsa med bilder på TDG-vänner"
+          width={1681}
+          height={936}
+          className="h-auto w-full max-w-2xl"
+        />
       </section>
 
       {/* "In partnership with"-sektion, tillagd 2026-09-20 på Davids begäran,
