@@ -308,6 +308,8 @@ export type SupabaseSeasonPlayerStats = {
 
 export type SupabaseSeasonStats = {
   year: number;
+  /** "closed" först när "Bokslut <år>"-knappen tryckts på Betz & Expz-sidan - används av spelarsidans siffrutor (Upplagor spelade/Segrar/Bästa placering/Snittplacering) för att bara räkna med FÄRDIGA år, se getPlayerCareerTotals nedan. Diagrammen längre ner på spelarsidan/Bokslut-sidan räknar däremot in "open" också (uppdateras löpande). */
+  status: "open" | "closed";
   /** Totalt utbetalt i golfbetting/sweepstake, samtliga spelare - motsvarande getYearlyTotals().bettingTotal. */
   bettingTotal: number;
   /** Totalt registrerat utlägg, samtliga spelare - motsvarande getYearlyTotals().utlaggTotal. */
@@ -409,7 +411,7 @@ export async function getSupabaseSeasonStats(): Promise<SupabaseSeasonStats[]> {
         };
       }
 
-      return { year: edition.year, bettingTotal, utlaggTotal, players: playersOut };
+      return { year: edition.year, status: edition.status, bettingTotal, utlaggTotal, players: playersOut };
     })
   );
 

@@ -46,14 +46,6 @@ export default async function PlayerPage({
   const player = getPlayer(slug);
   if (!player) return notFound();
 
-  const history = getPlayerHistory(player.id);
-  const wins = history.filter((h) => h.standing.placering === 1).length;
-  const best = history.length ? Math.min(...history.map((h) => h.standing.placering)) : null;
-  const avgPlacering = getPlayerAveragePlacering(player.id);
-  const totalEditions = editions.length;
-  const playedPct = totalEditions ? Math.round((history.length / totalEditions) * 100) : 0;
-  const winsPct = totalEditions ? Math.round((wins / totalEditions) * 100) : 0;
-
   // Diagrammen kompletteras med TDG 2026 och framåt (öppen ELLER stängd
   // säsong) direkt från Supabase - David bad om detta 2026-09-23. De äldre
   // åren (t.o.m. 2025) kommer fortfarande oförändrat från de statiska
@@ -65,6 +57,40 @@ export default async function PlayerPage({
     year: s.year,
     stats: s.players[player.id],
   }));
+
+  // Siffrutorna (Upplagor spelade/Segrar/Bästa placering/Snittplacering)
+  // ska INTE uppdateras löpande under en pågående säsong - David var tydlig
+  // 2026-09-23 om att de bara ska räkna med det FÄRDIGA, slutgiltiga
+  // facit som finns när ett år stängs via "Bokslut"-knappen (till skillnad
+  // från diagrammen ovan/nedan, som medvetet uppdateras direkt). Filtrerar
+  // därför bort "open"-editionen (den pågående säsongen) här.
+  const closedSupabaseYears = supabasePlayerYears.filter(
+    (s) => supabaseSeasonStats.find((season) => season.year === s.year)?.status === "closed"
+  );
+  const closedSupabasePlayed = closedSupabaseYears.filter(
+    (s) => s.stats?.participated && s.stats.placering != null
+  );
+
+  const history = getPlayerHistory(player.id);
+  const wins =
+    history.filter((h) => h.standing.placering === 1).length +
+    closedSupabasePlayed.filter((s) => s.stats!.placering === 1).length;
+  const staticBest = history.length ? Math.min(...history.map((h) => h.standing.placering)) : null;
+  const supabaseBest = closedSupabasePlayed.length
+    ? Math.min(...closedSupabasePlayed.map((s) => s.stats!.placering!))
+    : null;
+  const best =
+    staticBest != null && supabaseBest != null
+      ? Math.min(staticBest, supabaseBest)
+      : (staticBest ?? supabaseBest);
+  const playedCount = history.length + closedSupabasePlayed.length;
+  const avgPlaceringSum =
+    history.reduce((sum, h) => sum + h.standing.placering, 0) +
+    closedSupabasePlayed.reduce((sum, s) => sum + s.stats!.placering!, 0);
+  const avgPlacering = playedCount > 0 ? avgPlaceringSum / playedCount : null;
+  const totalEditions = editions.length + closedSupabaseYears.length;
+  const playedPct = totalEditions ? Math.round((playedCount / totalEditions) * 100) : 0;
+  const winsPct = totalEditions ? Math.round((wins / totalEditions) * 100) : 0;
 
   const placeringSeries = [
     ...getPlayerPlaceringSeries(player.id),
@@ -154,7 +180,7 @@ export default async function PlayerPage({
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Stat label="Upplagor spelade" value={history.length} sub={`${playedPct}%`} />
+        <Stat label="Upplagor spelade" value={playedCount} sub={`${playedPct}%`} />
         <Stat label="Segrar" value={wins} sub={`${winsPct}%`} />
         <Stat label="Bästa placering" value={best ? `${best}:a` : "–"} />
         <Stat label="Snittplacering" value={avgPlacering != null ? avgPlacering.toFixed(1) : "–"} />
