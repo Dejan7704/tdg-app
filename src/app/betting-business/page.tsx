@@ -608,6 +608,14 @@ export default async function BettingBusinessPage({
   const chartMaxYear = supabaseSeasonStats.length
     ? Math.max(EDITIONS_MAX_YEAR, ...supabaseSeasonStats.map((s) => s.year))
     : EDITIONS_MAX_YEAR;
+  // Vertikal "data saknas"-markering (David bad om detta 2026-09-23, samma
+  // visuella mönster som `missedYears` redan ger spelarprofilens diagram,
+  // fast här handlar det inte om att en spelare inte deltog utan om att
+  // betting-/utläggsdata helt saknas för året, t.ex. 2008-2010) - se
+  // `missedYearsLabel`-propen i LineChart.tsx.
+  const yearlyTotalsMissingYears = yearlyTotals
+    .filter((d) => d.bettingTotal == null && d.utlaggTotal == null)
+    .map((d) => d.year);
 
   return (
     <div className="flex flex-col gap-6">
@@ -638,6 +646,8 @@ export default async function BettingBusinessPage({
               format: "sek",
             }}
             yearDomain={{ minYear: EDITIONS_MIN_YEAR, maxYear: chartMaxYear }}
+            missedYears={yearlyTotalsMissingYears}
+            missedYearsLabel="Data saknas"
           />
         </div>
       </section>

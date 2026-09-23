@@ -74,13 +74,32 @@ function yearDomain(seriesList: LineChartPoint[][]): { minYear: number; maxYear:
   return { minYear: Math.min(...years), maxYear: Math.max(...years) };
 }
 
+// Genererar jämnt utspridda årtalsetiketter över [minYear, maxYear]. `span`
+// delar sällan jämnt med `step`, så det sista steget innan `maxYear` kan
+// hamna GANSKA nära `maxYear` (t.ex. steg om 3 år: ...2019, 2022, 2025 - och
+// maxYear råkar vara 2026, bara 1 år bort). Tidigare pushades `maxYear`
+// alltid som en extra etikett rakt efter, vilket gav ett synbart hopklämt
+// par ("25"/"26" tätt intill varandra) - David flaggade detta 2026-09-23 på
+// Bokslut-sidans "Totalt pengaflöde"-diagram efter att den pågående säsongen
+// (2026) började dra ut år-spannet dynamiskt. Fixat genom att slå ihop det
+// sista genererade steget med `maxYear` istället för att lägga till en extra
+// etikett, om avståndet mellan dem är mindre än halva stegstorleken - annars
+// behålls båda (avståndet är då tillräckligt stort för att inte se hopklämt
+// ut).
 export function yearTicks(minYear: number, maxYear: number): number[] {
   const span = maxYear - minYear;
   if (span <= 0) return [minYear];
   const step = Math.max(1, Math.ceil(span / 10));
   const ticks: number[] = [];
-  for (let y = minYear; y < maxYear; y += step) ticks.push(y);
-  ticks.push(maxYear);
+  for (let y = minYear; y <= maxYear; y += step) ticks.push(y);
+  const last = ticks[ticks.length - 1];
+  if (last !== maxYear) {
+    if (ticks.length > 1 && maxYear - last < step / 2) {
+      ticks[ticks.length - 1] = maxYear;
+    } else {
+      ticks.push(maxYear);
+    }
+  }
   return ticks;
 }
 
@@ -196,8 +215,10 @@ type DualAxisLineChartProps = {
   height?: number;
   /** Tvinga ett fast år-spann (t.ex. 2004–2025) så x-axeln linjerar med andra diagram på samma sida. */
   yearDomain?: { minYear: number; maxYear: number };
-  /** År spelaren inte deltog (se getPlayerMissedYears) - markeras med ett ljust streck och en tydlig, fetstilad årsetikett. */
+  /** År spelaren inte deltog (se getPlayerMissedYears), ELLER år där data helt saknas för ett aggregerat diagram (t.ex. Bokslut-sidans "Totalt pengaflöde", se `missedYearsLabel` nedan) - markeras med ett ljust streck och en tydlig, fetstilad årsetikett. */
   missedYears?: number[];
+  /** Texten i legend/tooltip för `missedYears` ovan - "Deltog inte" (default, spelarvyerna) eller t.ex. "Data saknas" för diagram som inte handlar om en enskild spelares deltagande. Tillagd 2026-09-23. */
+  missedYearsLabel?: string;
 };
 
 // Delad av DualAxisLineChart och StackedBarChart så de två diagrammen märker
@@ -260,7 +281,14 @@ export const AXIS_YEAR_FONT_SIZE = 17;
 // formatera sina egna axelvärden (t.ex. en ackumulerad kronsumma) konsekvent.
 export { formatValue };
 
-export function DualAxisLineChart({ left, right, height = 260, yearDomain: forcedDomain, missedYears = [] }: DualAxisLineChartProps) {
+export function DualAxisLineChart({
+  left,
+  right,
+  height = 260,
+  yearDomain: forcedDomain,
+  missedYears = [],
+  missedYearsLabel = "Deltog inte",
+}: DualAxisLineChartProps) {
   const uid = useId();
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoverYear, setHoverYear] = useState<number | null>(null);
@@ -392,7 +420,7 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
               fill="#78716c"
               fillOpacity={0.08}
             >
-              <title>{`${y}: Deltog inte`}</title>
+              <title>{`${y}: ${missedYearsLabel}`}</title>
             </rect>
           ))}
 
@@ -569,7 +597,7 @@ export function DualAxisLineChart({ left, right, height = 260, yearDomain: force
         {missedYears.length > 0 && (
           <span className="inline-flex items-center gap-1.5 text-xs font-normal text-stone-500">
             <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: MISSED_TICK_COLOR, opacity: 0.35 }} />
-            Deltog inte
+            {missedYearsLabel}
           </span>
         )}
       </div>
