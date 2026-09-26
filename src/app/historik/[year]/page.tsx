@@ -231,6 +231,25 @@ export default async function EditionPage({
 
       {availableSections.map((key) => {
         const section = edition.sections[key]!;
+        // Slag efter ledaren, totalt och per runda - David bad om detta
+        // 2026-09-26, samma princip som redan fanns för den pågående/live-
+        // säsongen (se historik/page.tsx och live-blocket ovan), men nu
+        // även för de historiska årens statiska tabeller. Uttryckligen
+        // bara Nettoslag-tabellen - Bruttoslag/Poängbogey får ingen
+        // parentes.
+        const leaderTotal =
+          key === "nettoslag"
+            ? (section.standings.find((s) => s.placering === 1)?.total ?? null)
+            : null;
+        const roundLeaders =
+          key === "nettoslag"
+            ? section.courses.map((_, i) => {
+                const values = section.standings
+                  .map((s) => s.rounds[i])
+                  .filter((v): v is number => v != null);
+                return values.length > 0 ? Math.min(...values) : null;
+              })
+            : [];
         return (
           <div key={key} className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
@@ -276,12 +295,39 @@ export default async function EditionPage({
                             <span className="font-medium">{s.name}</span>
                           )}
                         </td>
-                        {s.rounds.map((r, i) => (
-                          <td key={i} className="px-4 py-2 text-stone-600">
-                            {r ?? "–"}
-                          </td>
-                        ))}
-                        <td className="px-4 py-2 font-semibold">{s.total ?? "–"}</td>
+                        {s.rounds.map((r, i) => {
+                          const roundLeader = roundLeaders[i];
+                          return (
+                            <td key={i} className="px-4 py-2 text-stone-600">
+                              {r != null ? (
+                                <>
+                                  {r}
+                                  {roundLeader != null && (
+                                    <span className="ml-1 text-stone-400">
+                                      ({r === roundLeader ? "0" : `+${r - roundLeader}`})
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                "–"
+                              )}
+                            </td>
+                          );
+                        })}
+                        <td className="px-4 py-2 font-semibold">
+                          {s.total != null ? (
+                            <>
+                              {s.total}
+                              {leaderTotal != null && (
+                                <span className="ml-1 font-normal text-stone-400">
+                                  ({s.total === leaderTotal ? "0" : `+${s.total - leaderTotal}`})
+                                </span>
+                              )}
+                            </>
+                          ) : (
+                            "–"
+                          )}
+                        </td>
                       </tr>
                     );
                   })}
