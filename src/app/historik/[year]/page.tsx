@@ -94,6 +94,22 @@ export default async function EditionPage({
               Inga rondresultat registrerade än.
             </p>
           ) : (
+            (() => {
+              // Slag efter ledaren inom parentes bredvid totalsumman -
+              // David bad om detta 2026-09-26, bara för den pågående
+              // säsongen (2026+), se samma logik i historik/page.tsx.
+              const leaderTotal =
+                live.standings.find((s) => s.placering === 1)?.total ?? null;
+              // Samma sak per runda (David bad om detta 2026-09-26, direkt
+              // efter totalsumme-varianten) - rondledaren är lägsta
+              // registrerade nettoscore för just den rundan.
+              const roundLeaders = roundNumbers(live.roundCount).map((_, i) => {
+                const values = live.standings
+                  .map((s) => s.rounds[i])
+                  .filter((v): v is number => v != null);
+                return values.length > 0 ? Math.min(...values) : null;
+              });
+              return (
             <div className="flex flex-col gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
                 Nettoslag
@@ -134,12 +150,39 @@ export default async function EditionPage({
                             {s.playerName}
                           </Link>
                         </td>
-                        {s.rounds.map((r, i) => (
-                          <td key={i} className="px-4 py-2 text-stone-600">
-                            {r ?? "–"}
-                          </td>
-                        ))}
-                        <td className="px-4 py-2 font-semibold">{s.total ?? "–"}</td>
+                        {s.rounds.map((r, i) => {
+                          const roundLeader = roundLeaders[i];
+                          return (
+                            <td key={i} className="px-4 py-2 text-stone-600">
+                              {r != null ? (
+                                <>
+                                  {r}
+                                  {roundLeader != null && (
+                                    <span className="ml-1 text-stone-400">
+                                      ({r === roundLeader ? "0" : `+${r - roundLeader}`})
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                "–"
+                              )}
+                            </td>
+                          );
+                        })}
+                        <td className="px-4 py-2 font-semibold">
+                          {s.total != null ? (
+                            <>
+                              {s.total}
+                              {leaderTotal != null && (
+                                <span className="ml-1 font-normal text-stone-400">
+                                  ({s.total === leaderTotal ? "0" : `+${s.total - leaderTotal}`})
+                                </span>
+                              )}
+                            </>
+                          ) : (
+                            "–"
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -150,6 +193,8 @@ export default async function EditionPage({
                 nettoscore när alla 4 rundor är spelade avgör vinnaren.
               </p>
             </div>
+              );
+            })()
           )}
         </div>
       );
