@@ -3,6 +3,7 @@ import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/
 import { getCountryFlag } from "@/lib/countryFlags";
 import { getLiveEditionStandings, getSupabaseSeasonStats, type LiveEditionStandings } from "@/lib/liveBokslut";
 import { roundNumbers } from "@/lib/betzExpz";
+import { getSeasonPhase, editionRoman } from "@/lib/seasonPhase";
 
 // Sidan måste renderas dynamiskt (per request) - annars skulle den pågående
 // säsongens live-kort bara hämtas en gång vid deploy (Vercel-bygget) istället
@@ -106,7 +107,13 @@ function LiveStandingsTable({ live }: { live: LiveEditionStandings }) {
 }
 
 export default async function HistorikPage() {
-  const live = await getLiveEditionStandings();
+  const liveRaw = await getLiveEditionStandings();
+  // Datumspärr (David 2026-10-02, se seasonPhase.ts): "locked" (innan 1
+  // mars) döljer kortet helt, "upcoming" (1 mars+, Upplaga ej sparad) visar
+  // det med en "Nästa säsong"-badge istället för "Pågår", "active" (Upplaga
+  // sparad) är dagens befintliga beteende.
+  const livePhase = liveRaw ? getSeasonPhase(liveRaw.year, liveRaw.country) : null;
+  const live = livePhase === "locked" ? null : liveRaw;
 
   // Redan AVSLUTADE Supabase-säsonger (David tryckte "Bokslut 2026" på Betz
   // & Expz 2026-10-02) hamnar varken i den statiska `editions`-listan (den
@@ -138,11 +145,15 @@ export default async function HistorikPage() {
   // räknade inte med Omberg Golfklubb, som registrerades för TDG 2026 runda
   // 1), och de försvinner inte ur räkningen bara för att säsongen avslutas
   // (upptäckt 2026-10-02).
+  // Bara den FAKTISKT aktiva pågående säsongen räknas in här (inte en
+  // "upcoming" säsong, som per definition ännu saknar land/banor eftersom
+  // Upplaga-rutan inte sparats) - se livePhase ovan.
+  const activeLive = livePhase === "active" ? live : null;
   const uniqueCountryList = Array.from(
     new Set(
       [
         ...editions.map((e) => e.country),
-        live?.country,
+        activeLive?.country,
         ...closedLiveEditions.map((e) => e.country),
       ].filter((c): c is string => Boolean(c))
     )
@@ -151,7 +162,7 @@ export default async function HistorikPage() {
   const uniqueCourses = new Set(
     [
       ...editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? [])),
-      ...(live?.courses ?? []),
+      ...(activeLive?.courses ?? []),
       ...closedLiveEditions.flatMap((e) => e.courses),
     ]
       .map((c) => c.trim())
@@ -194,7 +205,7 @@ export default async function HistorikPage() {
             <div className="flex flex-wrap items-center justify-between gap-2 bg-tdg-green-dark px-4 py-3 text-white">
               <div className="flex items-baseline gap-3">
                 <span className="rounded-full bg-tdg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-tdg-green-dark">
-                  Pågår
+                  {livePhase === "active" ? "Pågår" : "Nästa säsong"}
                 </span>
                 <Link
                   href={`/historik/${live.year}`}
@@ -235,7 +246,7 @@ export default async function HistorikPage() {
             <div className="flex flex-wrap items-center justify-between gap-2 bg-tdg-gray-light px-4 py-3">
               <div className="flex items-baseline gap-3">
                 <span className="rounded-full bg-stone-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-stone-600">
-                  Avslutad
+                  TDG {editionRoman(e.year)}
                 </span>
                 <Link
                   href={`/historik/${e.year}`}

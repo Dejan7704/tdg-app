@@ -10,6 +10,7 @@ import {
 import { getLiveEditionStandings } from "@/lib/liveBokslut";
 import { getCountryFlag } from "@/lib/countryFlags";
 import { roundNumbers } from "@/lib/betzExpz";
+import { getSeasonPhase, editionRoman } from "@/lib/seasonPhase";
 
 export function generateStaticParams() {
   return editions.map((e) => ({ year: String(e.year) }));
@@ -57,7 +58,13 @@ export default async function EditionPage({
     // (t.ex. TDG 2026 efter "Bokslut 2026") gav 404 här - precis som
     // motsvarande bugg på Bokslut-sidan, se liveBokslut.ts för resonemanget.
     const live = await getLiveEditionStandings(Number(year));
-    if (live && live.year === Number(year)) {
+    // Datumspärr (David 2026-10-02, se seasonPhase.ts): en öppen edition som
+    // ännu inte är "active" (innan 1 mars, eller Upplaga inte sparad än)
+    // ska inte ha en egen synlig detaljsida alls - 404 precis som om
+    // editionen inte fanns, matchar att den döljs helt på Historik-listan
+    // också (historik/page.tsx).
+    const livePhase = live ? getSeasonPhase(live.year, live.country) : null;
+    if (live && live.year === Number(year) && livePhase !== "locked") {
       return (
         <div className="flex flex-col gap-6">
           <div>
@@ -67,7 +74,11 @@ export default async function EditionPage({
             <h1 className="mt-1 flex items-center gap-3 text-2xl font-bold text-stone-900">
               TDG {live.year}
               <span className="rounded-full bg-tdg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-tdg-green-dark">
-                {live.status === "open" ? "Pågår" : "Avslutad"}
+                {live.status === "closed"
+                  ? editionRoman(live.year)
+                  : livePhase === "active"
+                    ? "Pågår"
+                    : "Nästa säsong"}
               </span>
             </h1>
             <p className="mt-1 flex flex-wrap items-center gap-x-3 text-stone-500">

@@ -1,6 +1,7 @@
 import { supabase, type EditionRow, type EntryRow, type RoundResultRow, type SweepstakeBetRow } from "@/lib/supabase";
 import { players } from "@/lib/data";
 import { type BettingCategory, CATEGORY_ORDER } from "@/lib/business";
+import { getSeasonPhase } from "@/lib/seasonPhase";
 import {
   RESULT_CATEGORIES,
   SEASON_START_YEAR,
@@ -501,7 +502,18 @@ export async function getSupabaseSeasonStats(): Promise<SupabaseSeasonStats[]> {
     })
   );
 
-  return results
-    .filter((r): r is SupabaseSeasonStats => r !== null)
-    .sort((a, b) => a.year - b.year);
+  return (
+    results
+      .filter((r): r is SupabaseSeasonStats => r !== null)
+      // Datumspärr (David 2026-10-02, se seasonPhase.ts): en öppen edition
+      // som ännu inte är "active" (innan 1 mars, eller Upplaga-rutan inte
+      // sparad än) ska inte synas i NÅGON tabell/graf på Bokslut- eller
+      // Spelare-sidorna - den filtreras bort redan här, en gång, så alla
+      // konsumenter av den här funktionen automatiskt får rätt beteende
+      // utan att varje sida behöver upprepa samma kontroll. En STÄNGD
+      // säsong (status "closed") är alltid redan spelad/konfigurerad och
+      // filtreras aldrig bort här.
+      .filter((r) => r.status === "closed" || getSeasonPhase(r.year, r.country) === "active")
+      .sort((a, b) => a.year - b.year)
+  );
 }

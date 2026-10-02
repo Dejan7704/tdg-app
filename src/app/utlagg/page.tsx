@@ -27,6 +27,7 @@ import {
   type RoundResult,
   type SweepstakeBet,
 } from "@/lib/betzExpz";
+import { isSeasonConfigured } from "@/lib/seasonPhase";
 
 // "Boende", "Golfbil/vagn" och "Taxi" tillagda 2026-09-23 på Davids begäran -
 // "Övrigt" hålls medvetet sist som en catch-all-kategori.
@@ -945,11 +946,18 @@ export default function UtlaggPage() {
       </div>
 
       {/* Säsongsindikator - visar vilket års tävling formulären nedanför
-          gäller just nu, och knappen som avslutar/arkiverar den. */}
+          gäller just nu, och knappen som avslutar/arkiverar den.
+
+          "Kommande säsong" tills Upplaga-rutans "Spara"-knapp tryckts (dvs
+          `activeEdition.country` är satt) - först då blir det "Pågående
+          säsong", David 2026-10-02: "Att den ändras till 'Pågående säsong
+          2027 öppen' först när man gjort val vilket land[et] spela i".
+          Menyerna/formulären nedanför är oförändrat alltid tillgängliga
+          oavsett rubrikens ordval - bara ordvalet skiljer. */}
       <div className="flex flex-col gap-3 rounded-xl bg-tdg-green-dark p-4 text-white sm:flex-row sm:items-center sm:justify-between">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wide text-white/70">
-            Pågående säsong
+            {isSeasonConfigured(activeEdition?.country) ? "Pågående säsong" : "Kommande säsong"}
           </span>
           <p className="mt-0.5 text-lg font-bold">
             TDG {activeYear} <span className="font-normal text-white/80">– Öppen</span>

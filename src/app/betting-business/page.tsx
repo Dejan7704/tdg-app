@@ -16,6 +16,7 @@ import { EDITIONS_MIN_YEAR, EDITIONS_MAX_YEAR, getEdition, getMainSection, getPl
 import { DualAxisLineChart } from "@/components/LineChart";
 import { getLiveBokslut, getSupabaseSeasonStats, type LiveBokslut } from "@/lib/liveBokslut";
 import { RESULT_CATEGORIES } from "@/lib/betzExpz";
+import { getSeasonPhase } from "@/lib/seasonPhase";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
 // David bad 2026-09-23 om att ta bort "kr"-enheten i alla Bokslut-tabellernas
@@ -584,7 +585,15 @@ export default async function BettingBusinessPage({
   // egen, tydligt märkt gren av sidan istället för de arkiverade
   // business-*.json-åren nedan. `null` om databasen (mot förmodan) inte har
   // någon öppen edition-rad - då faller sidan tillbaka på tidigare beteende.
-  const openLive = await getLiveBokslut();
+  const openLiveRaw = await getLiveBokslut();
+  // Datumspärr (David 2026-10-02, se seasonPhase.ts): den öppna editionen
+  // räknas bara som "den pågående säsongen" i UI:t här när den är "active"
+  // (1 mars har passerat OCH Upplaga-rutan sparats på Betz & Expz) - annars
+  // behandlas Bokslut-sidan som om ingen ny säsong finns alls än, så t.ex.
+  // "2027" varken dyker upp som en egen årsknapp eller blir förvalt år bara
+  // för att "Bokslut 2026" nyss tryckts.
+  const openLivePhase = openLiveRaw ? getSeasonPhase(openLiveRaw.year, openLiveRaw.country) : null;
+  const openLive = openLivePhase === "active" ? openLiveRaw : null;
 
   // "Totalt pengaflöde per år"-diagrammet kompletteras med TDG 2026 och
   // framåt (öppen ELLER stängd säsong) direkt från Supabase - David bad om

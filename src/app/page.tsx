@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { editions, getWinner, getPlayerByNickname } from "@/lib/data";
 import { getProjectedWinnerForNextSeason } from "@/lib/prognosis";
+import { getLiveBokslut } from "@/lib/liveBokslut";
+import { getSeasonPhase } from "@/lib/seasonPhase";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
 // force-dynamic sedan 2026-09-23 (tidigare statisk sida) - "Projected
@@ -14,7 +16,18 @@ export default async function Home() {
   const latest = editions[editions.length - 1];
   const winner = editions[editions.length - 1] ? getWinner(latest) : undefined;
   const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
-  const projected = await getProjectedWinnerForNextSeason();
+
+  // Datumspärr för nästa säsongs prognos (David 2026-10-02, se
+  // seasonPhase.ts) - "Projected winner {år}" ska inte dyka upp samma dag
+  // som "Bokslut {år-1}" trycks. Den öppna editionens egna år+land avgör
+  // fasen: "locked" (innan 1 mars) visar inget alls om nästa säsong,
+  // "upcoming" (1 mars+, Upplaga ej sparad) visar fältet men med en
+  // platshållartext istället för ett namn, "active" (Upplaga sparad) visar
+  // den riktiga, uträknade prognosen precis som innan.
+  const openLive = await getLiveBokslut();
+  const nextSeasonPhase = openLive ? getSeasonPhase(openLive.year, openLive.country) : null;
+  const projected =
+    nextSeasonPhase === "active" ? await getProjectedWinnerForNextSeason() : null;
 
   return (
     <div className="flex flex-col gap-8">
@@ -49,17 +62,35 @@ export default async function Home() {
             2026-09-19 på Davids begäran. Bara favoriten visas direkt i
             rutan (inte hela topplistan) - metodiken och favoritens
             nyckelsiffror förklaras i en (i)-tooltip istället för att lassa på
-            texten i själva raden. Logik i src/lib/prognosis.ts. */}
-        <p className="mt-1 text-white/85">
-          <span className="font-medium text-white">🔮 Projected winner {projected.year}:</span>{" "}
-          <Link
-            href={`/spelare/${projected.entry.player.id}`}
-            className="font-semibold text-tdg-yellow hover:underline"
-          >
-            {projected.entry.player.fullName}
-          </Link>
-          <InfoTooltip text={projected.explanation} label="Så räknas prognosen ut" />
-        </p>
+            texten i själva raden. Logik i src/lib/prognosis.ts.
+
+            Datumspärr tillagd 2026-10-02 (se seasonPhase.ts): raden visas
+            inte alls förrän 1 mars nästa säsongs år ("locked"), och visar en
+            platshållartext istället för ett namn tills Upplaga-rutan sparats
+            på Betz & Expz ("upcoming") - annars pekades en favorit ut långt
+            innan nästa års TDG ens är planerad. */}
+        {nextSeasonPhase && nextSeasonPhase !== "locked" && (
+          <p className="mt-1 text-white/85">
+            <span className="font-medium text-white">
+              🔮 Projected winner {openLive!.year}:
+            </span>{" "}
+            {projected ? (
+              <>
+                <Link
+                  href={`/spelare/${projected.entry.player.id}`}
+                  className="font-semibold text-tdg-yellow hover:underline"
+                >
+                  {projected.entry.player.fullName}
+                </Link>
+                <InfoTooltip text={projected.explanation} label="Så räknas prognosen ut" />
+              </>
+            ) : (
+              <span className="italic text-white/70">
+                Beräknas när Land + deltagare är klart
+              </span>
+            )}
+          </p>
+        )}
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
