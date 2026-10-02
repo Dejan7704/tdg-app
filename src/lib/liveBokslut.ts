@@ -125,14 +125,19 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
     if (!result) continue;
     const wins: LiveBettingWin[] = [];
     for (const kategori of RESULT_CATEGORIES) {
-      const winnerId = result.winners[kategori];
-      if (!winnerId) continue;
-      wins.push({
-        category: kategori,
-        playerId: winnerId,
-        playerName: playerName(winnerId),
-        amount: golfWinAmount,
-      });
+      const winnerIds = result.winners[kategori];
+      if (!winnerIds || winnerIds.length === 0) continue;
+      // Delad vinst (2+ spelare) - dela golfWinAmount jämnt mellan dem, se
+      // samma logik i computeAutoEntries (betzExpz.ts).
+      const amountEach = golfWinAmount / winnerIds.length;
+      for (const winnerId of winnerIds) {
+        wins.push({
+          category: kategori,
+          playerId: winnerId,
+          playerName: playerName(winnerId),
+          amount: amountEach,
+        });
+      }
     }
     if (wins.length > 0) rounds.push({ round: runda, wins });
   }

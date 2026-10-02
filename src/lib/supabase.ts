@@ -59,6 +59,10 @@ export type RoundResultRow = {
   edition_id: number;
   runda: number;
   netto: Record<string, number | undefined>;
-  winners: Partial<Record<string, string>>;
+  // Sträng (äldre rader, innan delade vinster fanns) eller array (ett eller
+  // flera spelar-id:n som delar vinsten i kategorin) - normaliseras alltid
+  // till array vid inläsning, se mapRoundResultRows/normalizeWinners i
+  // betzExpz.ts. Tillagt 2026-10-02.
+  winners: Partial<Record<string, string | string[]>>;
   updated_at: string;
 };

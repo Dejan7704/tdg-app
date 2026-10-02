@@ -92,7 +92,14 @@ export type Entry = {
 export type RoundResult = {
   runda: number;
   netto: Record<string, number | undefined>;
-  winners: Partial<Record<Exclude<BettingCategory, "sweepstake">, string>>;
+  // Lista av spelar-id:n per kategori (oftast ett, men flera när David
+  // registrerat en delad vinst - se "Delad vinst"-kryssen i Resultat-rutan,
+  // tillagt 2026-10-02 på Davids begäran, t.ex. Martin Werner + David
+  // Hedlund delar "1:a nio" på en runda). Redan live-lagrad data från innan
+  // dess kan fortfarande ligga som en enkel sträng i databasen - se
+  // normaliseringen i mapRoundResultRows nedan som alltid gör om det till en
+  // array innan resten av koden rör vid det.
+  winners: Partial<Record<Exclude<BettingCategory, "sweepstake">, string[]>>;
 };
 
 export type SweepstakeBet = {
@@ -128,10 +135,28 @@ export function mapSweepstakeBetRow(row: SweepstakeBetRow): SweepstakeBet {
   };
 }
 
+// Normaliserar `winners`-fältet från databasen till alltid vara en array per
+// kategori - äldre rader (lagrade innan delade vinster fanns, dvs hela TDG
+// 2026-säsongen fram till 2026-10-02) har ett enkelt spelar-id (sträng) per
+// kategori istället för en array. Utan den här normaliseringen skulle all
+// nedströms-kod (computeAutoEntries m.fl.) behöva känna till båda formaten.
+function normalizeWinners(
+  raw: Partial<Record<string, string | string[]>> | null | undefined
+): Partial<Record<Exclude<BettingCategory, "sweepstake">, string[]>> {
+  const out: Partial<Record<Exclude<BettingCategory, "sweepstake">, string[]>> = {};
+  if (!raw) return out;
+  for (const kategori of RESULT_CATEGORIES) {
+    const value = raw[kategori];
+    if (!value) continue;
+    out[kategori] = Array.isArray(value) ? value : [value];
+  }
+  return out;
+}
+
 export function mapRoundResultRows(rows: RoundResultRow[]): Record<number, RoundResult> {
   const out: Record<number, RoundResult> = {};
   for (const row of rows) {
-    out[row.runda] = { runda: row.runda, netto: row.netto, winners: row.winners };
+    out[row.runda] = { runda: row.runda, netto: row.netto, winners: normalizeWinners(row.winners) };
   }
   return out;
 }
@@ -186,27 +211,34 @@ export function computeAutoEntries(
     let carry = 0;
     for (let runda = 1; runda <= roundCount; runda++) {
       const result = roundResults[runda];
-      const winnerId = result?.winners[kategori];
-      if (!winnerId) continue; // inte avgjort än - rör varken utbetalning eller carry
+      const winnerIds = result?.winners[kategori];
+      if (!winnerIds || winnerIds.length === 0) continue; // inte avgjort än - rör varken utbetalning eller carry
 
       // Golfbetting-vinst - andel av insatspotten (se computeGolfWinAmount),
-      // inte längre en fast klumpsumma.
-      out.push({
-        id: syntheticId--,
-        timestamp: 0,
-        playerName: playerName(winnerId),
-        huvudkategori: "Golfbetting",
-        detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}`,
-        kategori: CATEGORY_LABELS[kategori],
-        belopp: golfWinAmount,
-        auto: true,
-      });
+      // delad jämnt mellan samtliga vinnare om det registrerats en delad
+      // vinst för kategorin (David 2026-10-02, t.ex. Martin Werner + David
+      // Hedlund delar "1:a nio" på en runda).
+      const golfPayoutEach = golfWinAmount / winnerIds.length;
+      for (const winnerId of winnerIds) {
+        out.push({
+          id: syntheticId--,
+          timestamp: 0,
+          playerName: playerName(winnerId),
+          huvudkategori: "Golfbetting",
+          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]}${
+            winnerIds.length > 1 ? ` (delad vinst, ${winnerIds.length} spelare)` : ""
+          }`,
+          kategori: CATEGORY_LABELS[kategori],
+          belopp: golfPayoutEach,
+          auto: true,
+        });
+      }
 
       const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
       const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
       if (pot === 0) continue;
 
-      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      const winners = betsR.filter((b) => winnerIds.includes(b.gissningId));
       if (winners.length === 0) {
         carry = pot;
         continue;
@@ -215,17 +247,16 @@ export function computeAutoEntries(
       const rolledIn = carry;
       carry = 0;
       const payoutEach = pot / winners.length;
+      const winnerNames = winnerIds.map((id) => playerName(id)).join(" & ");
       for (const w of winners) {
         out.push({
           id: syntheticId--,
           timestamp: 0,
           playerName: playerName(w.bettorId),
           huvudkategori: "Sweepstake",
-          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]} (gissade ${playerName(
-            winnerId
-          )}${winners.length > 1 ? `, delad mellan ${winners.length}` : ""}${
-            rolledIn > 0 ? `, varav ${formatSek(rolledIn).replace("+", "")} rullat från tidigare runda` : ""
-          })`,
+          detalj: `Vinst – Runda ${runda}, ${CATEGORY_LABELS[kategori]} (gissade ${winnerNames}${
+            winners.length > 1 ? `, delad mellan ${winners.length}` : ""
+          }${rolledIn > 0 ? `, varav ${formatSek(rolledIn).replace("+", "")} rullat från tidigare runda` : ""})`,
           kategori: CATEGORY_LABELS[kategori],
           belopp: payoutEach,
           auto: true,
@@ -260,16 +291,16 @@ export function computeCategoryWins(
     let carry = 0;
     for (let runda = 1; runda <= roundCount; runda++) {
       const result = roundResults[runda];
-      const winnerId = result?.winners[kategori];
-      if (!winnerId) continue;
+      const winnerIds = result?.winners[kategori];
+      if (!winnerIds || winnerIds.length === 0) continue;
 
-      out.push({ playerId: winnerId, category: kategori });
+      for (const winnerId of winnerIds) out.push({ playerId: winnerId, category: kategori });
 
       const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
       const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
       if (pot === 0) continue;
 
-      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      const winners = betsR.filter((b) => winnerIds.includes(b.gissningId));
       if (winners.length === 0) {
         carry = pot;
         continue;
@@ -358,14 +389,14 @@ export function computeSweepstakeRoundInfo(
     let carry = 0;
     for (let runda = 1; runda <= roundCount; runda++) {
       const result = roundResults[runda];
-      const winnerId = result?.winners[kategori];
-      if (!winnerId) continue; // inte avgjort än
+      const winnerIds = result?.winners[kategori];
+      if (!winnerIds || winnerIds.length === 0) continue; // inte avgjort än
 
       const betsR = sweepstakeBets.filter((b) => b.runda === runda && b.kategori === kategori);
       const pot = betsR.reduce((sum, b) => sum + b.belopp, 0) + carry;
       if (pot === 0) continue; // inga insatser alls i den här kategorin/rundan
 
-      const winners = betsR.filter((b) => b.gissningId === winnerId);
+      const winners = betsR.filter((b) => winnerIds.includes(b.gissningId));
       if (winners.length === 0) {
         out.push({ runda, category: kategori, potAmount: pot, carriedIn: carry, outcome: "rolled", winners: [] });
         carry = pot;

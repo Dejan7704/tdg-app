@@ -747,7 +747,7 @@ export default function UtlaggPage() {
   const [resultRunda, setResultRunda] = useState(1);
   const [resultNetto, setResultNetto] = useState<Record<string, number | undefined>>({});
   const [resultWinners, setResultWinners] = useState<
-    Partial<Record<Exclude<BettingCategory, "sweepstake">, string>>
+    Partial<Record<Exclude<BettingCategory, "sweepstake">, string[]>>
   >({});
   const [resultSubmitting, setResultSubmitting] = useState(false);
 
@@ -797,7 +797,7 @@ export default function UtlaggPage() {
     const row = data as RoundResultRow;
     setRoundResults((prev) => ({
       ...prev,
-      [row.runda]: { runda: row.runda, netto: row.netto, winners: row.winners },
+      [row.runda]: mapRoundResultRows([row])[row.runda],
     }));
     showToast(`Resultat för Runda ${row.runda} sparat`);
   }
@@ -996,14 +996,11 @@ export default function UtlaggPage() {
           försvinner de från rullistorna i formulären nedan - man slipper då
           bläddra förbi dem varje gång. Redan registrerade poster/facit
           påverkas inte om man ändrar valet i efterhand. */}
-      <section className="rounded-xl bg-tdg-gray-light p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
-          Deltagare TDG {activeYear}
-        </h2>
-        <p className="mt-1 text-xs text-stone-500">
+      <CollapsibleSection title={`Deltagare TDG ${activeYear}`}>
+        <p className="text-xs text-stone-500">
           Klicka på den/de som inte är med i år - de försvinner då från rullistorna nedan.
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {players.map((p) => {
             const participating = !nonParticipants.includes(p.id);
             return (
@@ -1032,7 +1029,7 @@ export default function UtlaggPage() {
             );
           })}
         </div>
-      </section>
+      </CollapsibleSection>
 
       {/* Upplaga: land, antal rundor och bannamn per runda (David bad om
           detta 2026-09-22 - nytt för TDG 2026 är att bara 3 rundor spelas,
@@ -1040,14 +1037,11 @@ export default function UtlaggPage() {
           Resultat-rutans rondval ovan/nedan, samt Historik-sidans live-vy
           (flagga + bannamn per runda). Eget utkast-state, sparas explicit
           med en knapp (inte varje knapptryck) eftersom bannamnen är fritext. */}
-      <section className="rounded-xl bg-tdg-gray-light p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-tdg-green">
-          Upplaga TDG {activeYear}
-        </h2>
-        <p className="mt-1 text-xs text-stone-500">
+      <CollapsibleSection title={`Upplaga TDG ${activeYear}`}>
+        <p className="text-xs text-stone-500">
           Land, antal rundor och bannamn - styr rondvalen ovan/nedan samt Historik-sidan.
         </p>
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
           <div className="max-w-xs flex-1">
             <TextField
               label="Land"
@@ -1083,7 +1077,7 @@ export default function UtlaggPage() {
             </div>
           </div>
         </div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {roundNumbers(draftRoundCount).map((r) => (
             <TextField
               key={r}
@@ -1098,11 +1092,11 @@ export default function UtlaggPage() {
           type="button"
           onClick={saveUpplagaDetails}
           disabled={upplagaSubmitting}
-          className="mt-3 rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
+          className="self-start rounded-lg bg-tdg-green px-3 py-2 text-sm font-semibold text-white transition hover:bg-tdg-green-dark disabled:opacity-60"
         >
           {upplagaSubmitting ? "Sparar…" : "Spara"}
         </button>
-      </section>
+      </CollapsibleSection>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Golfbetting - bara insats, samma summa för alla spelare */}
@@ -1351,24 +1345,64 @@ export default function UtlaggPage() {
             <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Kategorivinnare
             </h3>
-            <div className="mt-2 flex flex-col gap-2">
-              {RESULT_CATEGORIES.map((c) => (
-                <SelectField
-                  key={c}
-                  label={CATEGORY_LABELS[c]}
-                  value={resultWinners[c] ?? ""}
-                  onChange={(v) =>
-                    setResultWinners((prev) => ({ ...prev, [c]: v === "" ? undefined : v }))
-                  }
-                >
-                  <option value="">Inte avgjort</option>
-                  {activePlayers.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.fullName}
-                    </option>
-                  ))}
-                </SelectField>
-              ))}
+            <p className="mt-1 text-xs text-stone-500">
+              Klicka på flera spelare för att registrera en delad vinst (de delar då
+              vinstsumman jämnt).
+            </p>
+            <div className="mt-2 flex flex-col gap-3">
+              {RESULT_CATEGORIES.map((c) => {
+                const selected = resultWinners[c] ?? [];
+                function toggleWinner(playerId: string) {
+                  setResultWinners((prev) => {
+                    const current = prev[c] ?? [];
+                    const next = current.includes(playerId)
+                      ? current.filter((id) => id !== playerId)
+                      : [...current, playerId];
+                    return { ...prev, [c]: next.length === 0 ? undefined : next };
+                  });
+                }
+                return (
+                  <div key={c} className="flex flex-col gap-1">
+                    <span className="text-sm font-medium text-stone-600">
+                      {CATEGORY_LABELS[c]}
+                      {selected.length > 1 && (
+                        <span className="ml-1.5 text-xs font-normal text-stone-400">
+                          (delad vinst, {selected.length} spelare)
+                        </span>
+                      )}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {activePlayers.map((p) => {
+                        const isSelected = selected.includes(p.id);
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => toggleWinner(p.id)}
+                            className={
+                              "flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition " +
+                              (isSelected
+                                ? "bg-tdg-green-dark text-tdg-yellow"
+                                : "bg-white text-stone-400 hover:text-stone-600")
+                            }
+                          >
+                            {isSelected && (
+                              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 flex-shrink-0">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.704 5.29a1 1 0 010 1.415l-7.5 7.5a1 1 0 01-1.415 0l-3.5-3.5a1 1 0 111.415-1.415L8.5 12.086l6.79-6.79a1 1 0 011.415 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                            {p.fullName}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
