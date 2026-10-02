@@ -74,6 +74,8 @@ export type LiveBokslut = {
   editionId: number;
   /** Antal rundor upplagan spelar (1-4) - tillagt 2026-09-22, se `courses` nedan. */
   roundCount: number;
+  /** "open" = pågående säsong, "closed" = avslutad via "Bokslut {år}"-knappen men ännu inte migrerad till de statiska business-*.json/editions.json-filerna - tillagt 2026-10-02, se felnotering vid getLiveBokslut() nedan. */
+  status: "open" | "closed";
   /** Fritext, t.ex. "Spanien" - null om inte ifyllt än. Tillagt 2026-09-22. */
   country: string | null;
   /** Bannamn per runda, index 0 = Runda 1 osv (längd roundCount). Tillagt 2026-09-22 - används av LiveRoundCard istället för den tidigare (trasiga) getEdition()-uppslagningen, som aldrig kan hitta den pågående säsongen i den statiska editions.json. */
@@ -86,12 +88,20 @@ export type LiveBokslut = {
   entryCount: number;
 };
 
-export async function getLiveBokslut(): Promise<LiveBokslut | null> {
-  const { data: editionRows, error } = await supabase
-    .from("editions")
-    .select("*")
-    .eq("status", "open")
-    .limit(1);
+// `year` tillagt 2026-10-02: utan argument hämtas (som tidigare) den
+// EN edition-rad som har `status = 'open'` - den pågående säsongen. Med ett
+// uttryckligt år hämtas den raden oavsett status, så en redan AVSLUTAD
+// Supabase-säsong (t.ex. TDG 2026 efter att "Bokslut 2026" tryckts) också
+// kan visas - annars försvann den helt ur Bokslut-/Historik-sidorna så fort
+// den stängdes, eftersom den varken längre räknas som "pågående" eller
+// någonsin skrivits till de statiska arkivfilerna (`getBusinessYear()` vet
+// bara om år t.o.m. 2025). Upptäckt av David 2026-10-02 direkt efter att
+// TDG 2026 avslutades - "på sidan Bokslut så kommer man inte åt detaljerna
+// för 2026".
+export async function getLiveBokslut(year?: number): Promise<LiveBokslut | null> {
+  const query = supabase.from("editions").select("*");
+  const { data: editionRows, error } =
+    year != null ? await query.eq("year", year).limit(1) : await query.eq("status", "open").limit(1);
   if (error || !editionRows || editionRows.length === 0) return null;
   const edition = editionRows[0] as EditionRow;
 
@@ -233,6 +243,7 @@ export async function getLiveBokslut(): Promise<LiveBokslut | null> {
   return {
     year: edition.year,
     editionId: edition.id,
+    status: edition.status,
     roundCount: edition.round_count,
     country: edition.country,
     courses: edition.courses,
@@ -270,6 +281,8 @@ export type LiveStandingRow = {
 export type LiveEditionStandings = {
   year: number;
   editionId: number;
+  /** "open" = pågående säsong, "closed" = avslutad men ännu inte migrerad till de statiska filerna - tillagt 2026-10-02, se getLiveEditionStandings(). */
+  status: "open" | "closed";
   /** Antal rundor upplagan spelar (1-4). Tillagt 2026-09-22 - styr hur många R-kolumner tabellen visar. */
   roundCount: number;
   /** Fritext, t.ex. "Spanien" - null om inte ifyllt än. Tillagt 2026-09-22. */
@@ -281,12 +294,13 @@ export type LiveEditionStandings = {
   standings: LiveStandingRow[];
 };
 
-export async function getLiveEditionStandings(): Promise<LiveEditionStandings | null> {
-  const { data: editionRows, error } = await supabase
-    .from("editions")
-    .select("*")
-    .eq("status", "open")
-    .limit(1);
+// `year` tillagt 2026-10-02, samma resonemang som getLiveBokslut() ovan - gör
+// att en redan avslutad Supabase-säsong (t.ex. TDG 2026 efter "Bokslut 2026")
+// fortfarande kan visas på Historik-sidans årsdetaljvy istället för 404.
+export async function getLiveEditionStandings(year?: number): Promise<LiveEditionStandings | null> {
+  const query = supabase.from("editions").select("*");
+  const { data: editionRows, error } =
+    year != null ? await query.eq("year", year).limit(1) : await query.eq("status", "open").limit(1);
   if (error || !editionRows || editionRows.length === 0) return null;
   const edition = editionRows[0] as EditionRow;
 
@@ -329,6 +343,7 @@ export async function getLiveEditionStandings(): Promise<LiveEditionStandings | 
   return {
     year: edition.year,
     editionId: edition.id,
+    status: edition.status,
     roundCount: edition.round_count,
     country: edition.country,
     courses: edition.courses,

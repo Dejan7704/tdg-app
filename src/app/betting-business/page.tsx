@@ -577,26 +577,47 @@ export default async function BettingBusinessPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const allYears = getAllBusinessYears();
+  const allYearsStatic = getAllBusinessYears();
   const yearsWithData = getBusinessYears();
   // Pågående säsong, hämtad live från Supabase (David bad om detta
   // 2026-09-22) - visas som standardår när ingen ?year= anges, och som en
   // egen, tydligt märkt gren av sidan istället för de arkiverade
   // business-*.json-åren nedan. `null` om databasen (mot förmodan) inte har
   // någon öppen edition-rad - då faller sidan tillbaka på tidigare beteende.
-  const live = await getLiveBokslut();
-  const requestedYear = Number(resolvedSearchParams?.year);
-  const defaultYear = live?.year ?? yearsWithData[0];
-  const year = allYears.includes(requestedYear) ? requestedYear : defaultYear;
-  const isLiveYear = live !== null && live.year === year;
-  const business = getBusinessYear(year);
+  const openLive = await getLiveBokslut();
 
   // "Totalt pengaflöde per år"-diagrammet kompletteras med TDG 2026 och
   // framåt (öppen ELLER stängd säsong) direkt från Supabase - David bad om
   // detta 2026-09-23. De äldre åren kommer fortfarande oförändrat från de
   // statiska business-*.json-filerna (getYearlyTotals), se
   // getSupabaseSeasonStats i liveBokslut.ts för det fullständiga resonemanget.
+  // Samma lista används nedan (2026-10-02) för att hålla årsväljaren och
+  // "har data"-färgsättningen i synk med VARJE Supabase-år (öppet eller
+  // stängt) - inte bara det som råkar vara öppet just nu.
   const supabaseSeasonStats = await getSupabaseSeasonStats();
+  const supabaseYears = supabaseSeasonStats.map((s) => s.year);
+
+  // Årsväljaren ska visa samtliga statiskt arkiverade år (t.o.m. 2025, eller
+  // innevarande kalenderår om det är senare) OCH samtliga Supabase-år
+  // (2026+, öppna eller stängda) - annars kan ett nyss stängt år (t.ex. TDG
+  // 2026 efter "Bokslut 2026") sakna en egen knapp om kalenderåret ännu inte
+  // hunnit ikapp. Upptäckt och fixat 2026-10-02.
+  const allYears = Array.from(new Set([...allYearsStatic, ...supabaseYears])).sort((a, b) => b - a);
+
+  const requestedYear = Number(resolvedSearchParams?.year);
+  const defaultYear = openLive?.year ?? yearsWithData[0];
+  const year = allYears.includes(requestedYear) ? requestedYear : defaultYear;
+  const isOpenLiveYear = openLive !== null && openLive.year === year;
+  const business = getBusinessYear(year);
+  // Valt år har varken statisk arkivdata eller är den just nu öppna
+  // säsongen, men FINNS som ett Supabase-år (öppet eller stängt) - det är
+  // t.ex. läget för ett redan avslutat 2026-år: hämta det explicit med år,
+  // se getLiveBokslut()-kommentaren i liveBokslut.ts för bakgrunden.
+  const closedLive =
+    !business && !isOpenLiveYear && supabaseYears.includes(year) ? await getLiveBokslut(year) : null;
+  const live = isOpenLiveYear ? openLive : closedLive;
+  const isLiveYear = live !== null;
+
   const yearlyTotals = [
     ...getYearlyTotals(),
     ...supabaseSeasonStats.map((s) => ({
@@ -657,9 +678,13 @@ export default async function BettingBusinessPage({
       </h2>
       <div className="flex flex-wrap gap-2 text-sm">
         {allYears.map((y) => {
-          const hasData = yearsWithData.includes(y);
+          const hasData = yearsWithData.includes(y) || supabaseYears.includes(y);
           const isSelected = y === year;
-          const isLive = live !== null && live.year === y;
+          // "Pågår"-badgen ska bara visas på den FAKTISKT öppna säsongen,
+          // inte på ett redan stängt Supabase-år (se `openLive` ovan,
+          // 2026-10-02) - annars skulle ett avslutat år felaktigt se ut som
+          // att det fortfarande pågår.
+          const isLive = openLive !== null && openLive.year === y;
           return (
             <Link
               key={y}
@@ -693,19 +718,26 @@ export default async function BettingBusinessPage({
           <div className="flex flex-col gap-1 rounded-xl bg-tdg-green-dark p-4 text-white sm:flex-row sm:items-center sm:justify-between">
             <div>
               <span className="flex items-center text-xs font-semibold uppercase tracking-wide text-tdg-yellow">
-                Pågående säsong
+                {live.status === "open" ? "Pågående säsong" : "Avslutad säsong"}
                 <InfoTooltip
-                  label="Om pågående säsong"
-                  text={`Siffrorna byggs löpande från registring i Betz & Expz. Först när säsongen avslutas via "Bokslut ${live.year}" så får vi en komplett avräkning.`}
+                  label={live.status === "open" ? "Om pågående säsong" : "Om avslutad säsong"}
+                  text={
+                    live.status === "open"
+                      ? `Siffrorna byggs löpande från registring i Betz & Expz. Först när säsongen avslutas via "Bokslut ${live.year}" så får vi en komplett avräkning.`
+                      : `Säsongen avslutades via "Bokslut ${live.year}" på Betz & Expz - det här är det färdiga bokslutet. Ligger ännu kvar i databasen, inte i det statiska arkivet med de äldre åren.`
+                  }
                 />
               </span>
               <p className="mt-0.5 text-lg font-bold">
-                TDG {live.year} <span className="font-normal text-white/80">– ej avslutad</span>
+                TDG {live.year}{" "}
+                <span className="font-normal text-white/80">
+                  {live.status === "open" ? "– ej avslutad" : "– avslutad"}
+                </span>
               </p>
             </div>
             <p className="text-sm text-white/80">
-              {live.entryCount} {live.entryCount === 1 ? "post" : "poster"} registrerade hittills
-              i Betz &amp; Expz.
+              {live.entryCount} {live.entryCount === 1 ? "post" : "poster"} registrerade{" "}
+              {live.status === "open" ? "hittills " : ""}i Betz &amp; Expz.
             </p>
           </div>
 
@@ -744,7 +776,11 @@ export default async function BettingBusinessPage({
               <InfoTooltip
                 variant="light"
                 label="Om betting och avräkning"
-                text="Golfbetting är obligatoriskt för alla i upplagan. Poker och Sweepstake är frivilliga - regleras direkt mellan de som deltog i just den satsningen, och påverkar aldrig gruppens snittutlägg. Preliminärt tills säsongen avslutas."
+                text={
+                  live.status === "open"
+                    ? "Golfbetting är obligatoriskt för alla i upplagan. Poker och Sweepstake är frivilliga - regleras direkt mellan de som deltog i just den satsningen, och påverkar aldrig gruppens snittutlägg. Preliminärt tills säsongen avslutas."
+                    : "Golfbetting är obligatoriskt för alla i upplagan. Poker och Sweepstake är frivilliga - regleras direkt mellan de som deltog i just den satsningen, och påverkar aldrig gruppens snittutlägg. Säsongen är avslutad - detta är den färdiga avräkningen."
+                }
               />
             </h2>
             <LiveSettlementTable live={live} />

@@ -52,7 +52,11 @@ export default async function EditionPage({
   // David 2026-09-22), så nettoslaget här är inte en "preliminär" siffra
   // som väntar på något annat facit, det ÄR facit.
   if (!edition) {
-    const live = await getLiveEditionStandings();
+    // `Number(year)` tillagt 2026-10-02: utan ett uttryckligt år hämtades
+    // bara den pågående (öppna) säsongen, så ett redan avslutat Supabase-år
+    // (t.ex. TDG 2026 efter "Bokslut 2026") gav 404 här - precis som
+    // motsvarande bugg på Bokslut-sidan, se liveBokslut.ts för resonemanget.
+    const live = await getLiveEditionStandings(Number(year));
     if (live && live.year === Number(year)) {
       return (
         <div className="flex flex-col gap-6">
@@ -63,7 +67,7 @@ export default async function EditionPage({
             <h1 className="mt-1 flex items-center gap-3 text-2xl font-bold text-stone-900">
               TDG {live.year}
               <span className="rounded-full bg-tdg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-tdg-green-dark">
-                Pågår
+                {live.status === "open" ? "Pågår" : "Avslutad"}
               </span>
             </h1>
             <p className="mt-1 flex flex-wrap items-center gap-x-3 text-stone-500">
@@ -78,8 +82,8 @@ export default async function EditionPage({
                 </span>
               )}
               <span>
-                {live.roundsRegistered} av {live.roundCount} rundor spelade – uppdateras live från
-                Betz &amp; Expz.
+                {live.roundsRegistered} av {live.roundCount} rundor spelade
+                {live.status === "open" ? " – uppdateras live från Betz & Expz." : "."}
               </span>
             </p>
             {live.courses.some(Boolean) && (

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { editions, getWinner, getMainSection, getPlayerByNickname } from "@/lib/data";
 import { getCountryFlag } from "@/lib/countryFlags";
-import { getLiveEditionStandings, type LiveEditionStandings } from "@/lib/liveBokslut";
+import { getLiveEditionStandings, getSupabaseSeasonStats, type LiveEditionStandings } from "@/lib/liveBokslut";
 import { roundNumbers } from "@/lib/betzExpz";
 
 // Sidan måste renderas dynamiskt (per request) - annars skulle den pågående
@@ -107,23 +107,44 @@ function LiveStandingsTable({ live }: { live: LiveEditionStandings }) {
 
 export default async function HistorikPage() {
   const live = await getLiveEditionStandings();
+
+  // Redan AVSLUTADE Supabase-säsonger (David tryckte "Bokslut 2026" på Betz
+  // & Expz 2026-10-02) hamnar varken i den statiska `editions`-listan (den
+  // migreras aldrig dit automatiskt - se liveBokslut.ts) eller i `live`
+  // (den pekar numera bara på nästa öppna år, t.ex. 2027). Utan det här
+  // skulle ett avslutat år bara försvinna spårlöst från Historik-listan.
+  // Visas med en egen, nedtonad "Avslutad"-badge (inte den gröna/gula
+  // "Pågår") - samma rådata (round_results), bara inte längre föränderlig.
+  const supabaseSeasonStats = await getSupabaseSeasonStats();
+  const closedSupabaseYears = supabaseSeasonStats
+    .filter((s) => s.status === "closed" && !editions.some((e) => e.year === s.year))
+    .map((s) => s.year)
+    .sort((a, b) => b - a);
+  const closedLiveEditions = (
+    await Promise.all(closedSupabaseYears.map((y) => getLiveEditionStandings(y)))
+  ).filter((e): e is LiveEditionStandings => e !== null);
+
   const sorted = [...editions].sort((a, b) => b.year - a.year);
 
   // Sorterad lista över de unika länderna (inte bara antalet) - David bad
   // 2026-09-22 om att flaggorna för samtliga listas i "Länder spelade
   // i"-rutan, inte bara siffran.
   //
-  // Måste räkna med den pågående säsongens land/banor (live.country/
-  // live.courses, från Supabase) också, inte bara de historiska årens
-  // statiska editions.json - annars uppdateras inte rutorna när ett nytt
-  // land/en ny bana registreras för innevarande år på Betz & Expz (bugg
-  // som David hittade 2026-09-23: "Unika banor spelade" räknade inte med
-  // Omberg Golfklubb, som registrerades för TDG 2026 runda 1).
+  // Måste räkna med den pågående säsongens OCH redan avslutade (men ännu
+  // inte arkiverade) Supabase-säsongers land/banor också, inte bara de
+  // historiska årens statiska editions.json - annars uppdateras inte
+  // rutorna när ett nytt land/en ny bana registreras för innevarande år på
+  // Betz & Expz (bugg som David hittade 2026-09-23: "Unika banor spelade"
+  // räknade inte med Omberg Golfklubb, som registrerades för TDG 2026 runda
+  // 1), och de försvinner inte ur räkningen bara för att säsongen avslutas
+  // (upptäckt 2026-10-02).
   const uniqueCountryList = Array.from(
     new Set(
-      [...editions.map((e) => e.country), live?.country].filter(
-        (c): c is string => Boolean(c)
-      )
+      [
+        ...editions.map((e) => e.country),
+        live?.country,
+        ...closedLiveEditions.map((e) => e.country),
+      ].filter((c): c is string => Boolean(c))
     )
   ).sort((a, b) => a.localeCompare(b, "sv"));
   const uniqueCountries = uniqueCountryList.length;
@@ -131,6 +152,7 @@ export default async function HistorikPage() {
     [
       ...editions.flatMap((e) => Object.values(e.sections).flatMap((s) => s?.courses ?? [])),
       ...(live?.courses ?? []),
+      ...closedLiveEditions.flatMap((e) => e.courses),
     ]
       .map((c) => c.trim())
       .filter(Boolean)
@@ -208,6 +230,39 @@ export default async function HistorikPage() {
             )}
           </div>
         )}
+        {closedLiveEditions.map((e) => (
+          <div key={e.year} className="overflow-hidden rounded-xl border border-stone-200 bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-tdg-gray-light px-4 py-3">
+              <div className="flex items-baseline gap-3">
+                <span className="rounded-full bg-stone-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-stone-600">
+                  Avslutad
+                </span>
+                <Link
+                  href={`/historik/${e.year}`}
+                  className="text-lg font-bold text-tdg-green hover:underline"
+                >
+                  {e.year}
+                </Link>
+              </div>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-stone-600">
+                {e.country && (
+                  <span>
+                    {getCountryFlag(e.country) && (
+                      <span aria-hidden="true" className="mr-1">
+                        {getCountryFlag(e.country)}
+                      </span>
+                    )}
+                    {e.country}
+                  </span>
+                )}
+                <span>
+                  {e.roundsRegistered} av {e.roundCount} rundor spelade
+                </span>
+              </div>
+            </div>
+            <LiveStandingsTable live={e} />
+          </div>
+        ))}
         {sorted.map((e) => {
           const winner = getWinner(e);
           const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
