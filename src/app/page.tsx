@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { editions, getWinner, getPlayerByNickname } from "@/lib/data";
+import { editions, getWinner, getPlayerByNickname, getPlayer } from "@/lib/data";
 import { getProjectedWinnerForNextSeason } from "@/lib/prognosis";
-import { getLiveBokslut } from "@/lib/liveBokslut";
+import { getLiveBokslut, getSupabaseSeasonStats } from "@/lib/liveBokslut";
 import { getSeasonPhase } from "@/lib/seasonPhase";
 import { InfoTooltip } from "@/components/InfoTooltip";
 
@@ -13,9 +13,41 @@ import { InfoTooltip } from "@/components/InfoTooltip";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const latest = editions[editions.length - 1];
-  const winner = editions[editions.length - 1] ? getWinner(latest) : undefined;
-  const winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
+  // "Regerande mästare" - senaste AVSLUTADE upplagan. Fram till 2026-10-02
+  // kom den alltid från den statiska arkivfilen editions.json (t.o.m. 2025),
+  // så sidan fortsatte visa föregående års mästare efter att "Bokslut
+  // <år>"-knappen tryckts på Betz & Expz - en ny Supabase-säsong migreras
+  // aldrig automatiskt till editions.json (se liveBokslut.ts), den blir bara
+  // `status: "closed"` på edition-raden. David upptäckte detta 2026-10-02
+  // ("Regerande mästare för 2026 inte uppdaterats, står fortfarande 2025 års
+  // vinnare"). Samma mönster som Historik-sidans closedSupabaseYears: om den
+  // senaste avslutade Supabase-säsongen är nyare än den senaste statiska
+  // editions.json-posten, hämta vinnaren (placering 1) därifrån istället.
+  const supabaseSeasonStats = await getSupabaseSeasonStats();
+  const latestClosedSupabaseSeason = supabaseSeasonStats
+    .filter((s) => s.status === "closed" && !editions.some((e) => e.year === s.year))
+    .sort((a, b) => b.year - a.year)[0];
+  const latestStaticEdition = editions.length > 0 ? editions[editions.length - 1] : undefined;
+
+  let latestYear: number | undefined;
+  let winner: { name: string } | undefined;
+  let winnerPlayer: ReturnType<typeof getPlayer>;
+
+  if (
+    latestClosedSupabaseSeason &&
+    (!latestStaticEdition || latestClosedSupabaseSeason.year > latestStaticEdition.year)
+  ) {
+    latestYear = latestClosedSupabaseSeason.year;
+    const winnerId = Object.entries(latestClosedSupabaseSeason.players).find(
+      ([, p]) => p.placering === 1
+    )?.[0];
+    winnerPlayer = winnerId ? getPlayer(winnerId) : undefined;
+    winner = winnerPlayer ? { name: winnerPlayer.nicknames[0] ?? winnerPlayer.fullName } : undefined;
+  } else if (latestStaticEdition) {
+    latestYear = latestStaticEdition.year;
+    winner = getWinner(latestStaticEdition);
+    winnerPlayer = winner ? getPlayerByNickname(winner.name) : undefined;
+  }
 
   // Datumspärr för nästa säsongs prognos (David 2026-10-02, se
   // seasonPhase.ts) - "Projected winner {år}" ska inte dyka upp samma dag
@@ -55,7 +87,7 @@ export default async function Home() {
             ) : (
               <span className="font-semibold text-white">{winner.name}</span>
             )}{" "}
-            ({winner.name}, {latest.year})
+            ({winner.name}, {latestYear})
           </p>
         )}
         {/* "Projected winner" - lekfull prognos inför nästa upplaga, tillagd
